@@ -2,11 +2,21 @@ import React, { useState, useEffect } from "react";
 import authSlice from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Logo, LogoutBtn } from "../index";
+import { Logo, LogoutBtn, PostForm } from "../index";
 import { useDispatch } from "react-redux";
 import authService from "../../appwrite/auth";
 import { logout } from "../../store/authSlice";
-import { FaBeer, FaHome, FaPlus, FaList, FaSignOutAlt, FaSignInAlt, FaUserPlus} from "react-icons/fa";
+import {Outlet} from 'react-router-dom'
+
+import {
+  FaBeer,
+  FaHome,
+  FaPlus,
+  FaList,
+  FaSignOutAlt,
+  FaSignInAlt,
+  FaUserPlus,
+} from "react-icons/fa";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
@@ -77,54 +87,77 @@ function Header() {
   ];
 
   return (
-    <header className="text-white sm:w-1/4 sm:border-r py-3 px-3 shadow sm:min-h-screen border-teal-800 fixed sm:static w-full  bottom-0 bg-black ">
-      <nav className="flex sm:flex-col justify-center items-center">
-        <div className="sm:items-start mb-10">{isLogo ? "" : <Logo width="70px" />}</div>
-        <div className="w-full sm:w-fit">
-        <ul className="flex sm:flex-col w-full sm:items-start justify-around sm:gap-5">
-          {navItems.map((item) =>
-            item.active ? (
-              <li key={item?.name}>
-                {item.name === "Logout" ? (
-                  <button
-                    onClick={() => {
-                      navigate(item.slug);
-                      logoutHandler();
-
-                    }}
-                    className="text-2xl  md:text-lg duration-200 flex hover:text-red-300 "
-                  >
-                    {isSmallScreen ? (
-                      item.symbol
+    <div className="sm:flex">
+      <header className="text-white w-full sm:border-r md:w-1/5 py-3 px-3 shadow sm:min-h-screen border-teal-800 sm:w-1/5 fixed sm:static  bottom-0 bg-black ">
+        <nav className="flex sm:flex-col justify-center items-center">
+          <div className="sm:items-start mb-10">
+            {isLogo ? "" : <Logo width="70px" />}
+          </div>
+          <div className="w-full sm:w-fit">
+            <ul className="flex sm:flex-col w-full sm:items-start justify-around sm:gap-5">
+              {navItems.map((item) =>
+                item.active ? (
+                  <li key={item?.name}>
+                    {item.name === "Logout" ? (
+                      <button
+                        onClick={() => {
+                          navigate(item.slug);
+                          logoutHandler();
+                        }}
+                        className="text-2xl  md:text-lg duration-200 flex hover:text-red-300 "
+                      >
+                        {isSmallScreen ? (
+                          item.symbol
+                        ) : (
+                          <>
+                            <span className="text-2xl pr-4">{item.symbol}</span>
+                            {item?.name}
+                          </>
+                        )}
+                      </button>
                     ) : (
-                      <>
-                        <span className="text-2xl pr-4">{item.symbol}</span>
-                        {item?.name}
-                      </>
+                      <button
+                        onClick={() => navigate(item.slug)}
+                        className="text-2xl md:text-lg  duration-200   hover:text-red-300 flex"
+                      >
+                        {isSmallScreen ? (
+                          item.symbol
+                        ) : (
+                          <>
+                            <span className="text-2xl pr-4">{item.symbol}</span>
+                            {item?.name}
+                          </>
+                        )}
+                      </button>
                     )}
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => navigate(item.slug)}
-                    className="text-2xl md:text-lg  duration-200   hover:text-red-300 flex"
-                  >
-                    {isSmallScreen ? (
-                      item.symbol
-                    ) : (
-                      <>
-                      <span className="text-2xl pr-4">{item.symbol}</span>
-                      {item?.name}
-                      </>
-                    )}
-                  </button>
-                )}
-              </li>
-            ) : null
-          )}
-        </ul>
+                  </li>
+                ) : null
+              )}
+            </ul>
+          </div>
+        </nav>
+      </header>
+      {authStatus ? (
+        <div className="h-screen overflow-y-scroll hide-scrollbar sm:w-3/5 md:w-2/5">
+        <div className="flex flex-col min-h-screen border-r border-teal-800 w-full">
+          <div className="border-b my-16 border-teal-800">
+            <div>
+              <PostForm />
+            </div>
+            <div className="text-white text-center sticky top-0 bg-black-rgba backdrop-blur-[3px] border-y border-teal-800 py-4">
+              <h3>Posts</h3>
+            </div>
+           <Outlet/>
+          </div>
         </div>
-      </nav>
-    </header>
+      </div>
+      ) : 
+      (
+    <Outlet />
+      )
+      }
+      
+    </div>
   );
 }
 

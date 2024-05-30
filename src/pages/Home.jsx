@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import appwriteService from "../appwrite/config";
-import {PostCard, PostForm} from '../components'
+import {LoadingSpinner, PostCard} from '../components'
 import {useDispatch, useSelector} from 'react-redux'
 import '../index.css'
 import { setPosts, deleteAllPost } from '../store/configSlice'
+
 
 
 function Home() {
@@ -33,13 +34,21 @@ function Home() {
     },[authStatus])
 
   
-    if (posts === null && authStatus !== "false") {
+    if (posts === null) {
         return (
             <div className="py-8 sm:w-96 text-center min-h-screen">
                     <div className="flex flex-wrap">
                         <div className="p-2 w-full">
                             <h1 className="text-2xl font-bold text-white">
+                            {authStatus ? (
+                                <h1>
+                                    Loading...
+                                </h1>
+                            ): (
+                                <h1>
                                 Login to read posts
+                                </h1>
+                            )}
                             </h1>
                         </div>
                     </div>
@@ -48,24 +57,13 @@ function Home() {
 
     }else{
         return (
-            <div className='h-screen overflow-y-scroll hide-scrollbar'>
-    
-            <div className='flex flex-col min-h-screen border-r border-teal-800 w-full sm:w-96 md:w-[500px]'>
-            <div className='border-b my-16   border-teal-800'>
-            <div>
-                <PostForm/>
-            </div>
-            <div className='text-white text-center sticky top-0 bg-black-rgba backdrop-blur-[3px] border-y border-teal-800 py-4'>
-                <h3>Posts</h3>
-            </div>
-                {posts!==null && posts.map((post, index) => (
-                    <div key={post?.$id} className='w-full'>
-                        <PostCard {...post} idx={index}/>
-                    </div>
-                ))}
-            </div>
-            </div>
-    </div>
+           <>
+             {posts!==null && posts.map((post, index) => (
+                <div key={post?.$id} className='w-full'>
+                    <PostCard {...post} idx={index}/>
+                </div>
+            ))}
+           </>
         )
     }
 }

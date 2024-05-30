@@ -10,6 +10,8 @@ import PostForm from './Post-Form/PostForm'
 import Select from './Select'
 import RTE from './RTE'
 import PostCard from "./PostCard"
+import LoadingSpinner from "./animation/loader";
+LoadingSpinner
 
 export  {
     Footer,
@@ -23,5 +25,6 @@ export  {
     PostForm,
     Select,
     RTE,
-    PostCard
+    PostCard,
+    LoadingSpinner
 }

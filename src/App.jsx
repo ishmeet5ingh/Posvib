@@ -28,13 +28,8 @@ function App() {
 
   return !loading ? (
     <div className='bg-[#000000] '>
-    <div className='sm:flex'>
+    <div className='sm:flex '>
     <Header/>
-    <main>
-    <Outlet />
-    </main>
-    {/* <Footer/> */}
-
     </div>
     </div>
   ) : null
