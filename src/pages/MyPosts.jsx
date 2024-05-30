@@ -8,7 +8,7 @@ function MyPosts() {
 
     const userData = useSelector(state => state.auth.userData)
 
-    const posts = useSelector(state => state.config.posts?.filter(doc => doc.userId === userData?.$id))
+    const posts = useSelector(state => state.config.posts.filter(doc => doc.userId === userData?.$id))
  
     return (
       <div className='h-screen overflow-y-scroll hide-scrollbar'>
