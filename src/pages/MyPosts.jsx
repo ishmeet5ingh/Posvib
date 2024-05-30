@@ -18,6 +18,9 @@ function MyPosts() {
       <div>
           <PostForm/>
       </div>
+      <div className='text-white text-center sticky top-0 bg-black-rgba backdrop-blur-[3px] border-y border-teal-800 py-4'>
+            <h3>Posts</h3>
+        </div>
           {posts!==null && posts.map((post) => (
               <div key={post.$id} className='w-full'>
                   <PostCard {...post} />
