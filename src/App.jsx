@@ -6,6 +6,7 @@ import {login, logout} from './store/authSlice'
 import {Header} from './components'
 import {Outlet} from 'react-router-dom'
 import './index.css'
+import LoadingSpinner from './components/animation/loader'
 
 // import './App.css'
 
@@ -27,7 +28,7 @@ function App() {
   }, [])
 
   return !loading ? (
-    <div className='bg-[#000000] '>
+    <div>
     <div className='sm:flex'>
     <Header/>
     <main>
@@ -37,7 +38,7 @@ function App() {
 
     </div>
     </div>
-  ) : null
+  ) : <LoadingSpinner/>
 
 }
 

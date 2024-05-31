@@ -3,7 +3,7 @@ import  authService  from '../appwrite/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import {login as authLogin} from '../store/authSlice'
-import {Logo, Input, Button} from './index'
+import {Logo, Input, Button, AuthContainer} from './index'
 import {Link, useNavigate} from 'react-router-dom'
 import { useState } from 'react'
 // import { }
@@ -35,14 +35,7 @@ function Login() {
   console.log("error--",error);
 
   return (
-    <div className=' sm:w-96 min-h-screen flex items-center flex-col text-white  py-10 gap-5'>
-      <div className='underline underline-offset-4'>
-        <Logo/>
-      </div>
-      <h2 className="text-center text-2xl font-bold leading-tight">
-          Sign in to your account
-        </h2>
-      
+    <AuthContainer inup={"in"}>
       <form className='flex flex-col' onSubmit={handleSubmit(login)}>
         <Input
           label="email: "
@@ -81,7 +74,7 @@ function Login() {
           className='py-2 rounded-xl'
         />
       </form>
-    </div>
+      </AuthContainer>
   )
 }
 

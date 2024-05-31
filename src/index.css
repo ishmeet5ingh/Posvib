@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@keyframes yt-spin {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.animated {
+  animation: yt-spin 0.5s linear infinite;
+}
+
+
 /* styles.css */
   .hide-scrollbar {
     -ms-overflow-style: none;  /* Internet Explorer and Edge */

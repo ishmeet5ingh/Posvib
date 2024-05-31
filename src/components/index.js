@@ -10,6 +10,10 @@ import PostForm from './Post-Form/PostForm'
 import Select from './Select'
 import RTE from './RTE'
 import PostCard from "./PostCard"
+import PostsContainer from "./containers/PostsContainer";
+import AuthContainer from "./containers/AuthContainer";
+
+
 
 export  {
     Footer,
@@ -23,5 +27,7 @@ export  {
     PostForm,
     Select,
     RTE,
-    PostCard
+    PostCard,
+    PostsContainer,
+    AuthContainer
 }

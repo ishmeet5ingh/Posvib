@@ -6,7 +6,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import authService from '../appwrite/auth'
 
 import {login as authLogin} from '../store/authSlice'
-import {Logo, Input, Button} from './index'
+import {Logo, Input, Button, AuthContainer} from './index'
 
 function Signup() {
 
@@ -34,13 +34,7 @@ function Signup() {
   }
 
   return (
-    <div className='sm:w-96  min-h-screen flex items-center flex-col text-white py-10 gap-5'>
-    <div className='underline underline-offset-4'>
-      <Logo/>
-    </div>
-    <h2 className="text-center text-2xl font-bold leading-tight">
-        Sign up to your account
-      </h2>
+    <AuthContainer inup={"up"}>
     {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
     <form className='flex flex-col' onSubmit={handleSubmit(signup)}>
       <Input
@@ -86,7 +80,7 @@ function Signup() {
         className='py-2 rounded-xl'
       />
     </form>
-  </div>
+    </AuthContainer>
 )
 }
 
