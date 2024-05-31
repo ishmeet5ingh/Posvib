@@ -5,18 +5,18 @@ import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaImage } from "react-icons/fa";
-import { FaUpload } from "react-icons/fa";
-import { createPost, updatePost } from "../../store/configSlice";
+import { FaUpload } from "react-icons/fa"
+import {createPost, updatePost} from '../../store/configSlice'
 import "../../index.css";
 
-function PostForm({ post, idx }) {
+function PostForm({ post, idx}) {
   const { register, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       content: post?.content || "",
       slug: post?.$id || "",
       status: post?.status || "active",
       username: post?.username || "",
-      avatar: post?.avatar || "",
+      avatar: post?.avatar || ""
     },
   });
 
@@ -28,8 +28,9 @@ function PostForm({ post, idx }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  const avatarUrl = appwriteService.getAvatars(userData?.name);
+  const avatarUrl = appwriteService.getAvatars(userData?.name)
 
+  
   const submit = async (data, e) => {
     if (post) {
       const file = data.image[0]
@@ -45,7 +46,7 @@ function PostForm({ post, idx }) {
       });
 
       if (dbPost) {
-        dispatch(updatePost({ idx, dbPost }));
+        dispatch(updatePost({idx, dbPost}))
         navigate(`/post/${dbPost.$id}`);
       }
     } else {
@@ -56,16 +57,19 @@ function PostForm({ post, idx }) {
       if (file !== undefined) {
         const fileId = file.$id;
         data.featuredImage = fileId;
+        
       }
       const dbPost = await appwriteService.createPost({
         ...data,
         userId: userData?.$id,
         username: userData?.name,
-        avatar: appwriteService.getAvatars(userData?.name),
+        avatar: appwriteService.getAvatars(userData?.name)
       });
-
+    
+      
+      
       if (dbPost) {
-        dispatch(createPost(dbPost));
+        dispatch(createPost(dbPost))
         // navigate(`/post/${dbPost.$id}`);
       }
       e.target.reset();
@@ -124,25 +128,26 @@ function PostForm({ post, idx }) {
     //This cleanup function ensures that the subscription is removed to avoid memory leaks and unnecessary updates after the component is no longer in use.
   }, [watch, slugTransform, setValue]);
 
+
   const handleTextareaInput = (e) => {
     e.target.style.height = "auto"; //reset
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const fileName = file.name;
 
-      const lastDotIndex = fileName.lastIndexOf(".");
-      const fileNameWithoutExtension = fileName.slice(0, lastDotIndex);
-      const fileExtension = fileName.slice(lastDotIndex);
-      const truncatedFileName =
-        fileNameWithoutExtension.length > 12
-          ? `${fileNameWithoutExtension.slice(0, 12)}..${fileExtension}`
-          : fileName;
-
-      setSelectedFile(truncatedFileName);
+    const lastDotIndex = fileName.lastIndexOf('.');
+    const fileNameWithoutExtension = fileName.slice(0, lastDotIndex);
+    const fileExtension = fileName.slice(lastDotIndex);
+    const truncatedFileName = fileNameWithoutExtension.length > 12
+    ? `${fileNameWithoutExtension.slice(0, 12)}..${fileExtension}`
+    : fileName;
+      
+    setSelectedFile(truncatedFileName);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -154,13 +159,18 @@ function PostForm({ post, idx }) {
     }
   };
 
+
   return (
     <div className="w-full border-t border-teal-800  overflow-y-scroll hide-scrollbar text-white p-5 sm:p-3 lg:p-6 flex">
       <div>
-        <img className="max-w-9 max-h-9 rounded-full" src={avatarUrl} alt="" />
+        <img
+          className="max-w-9 max-h-9 rounded-full"
+          src={avatarUrl}
+          alt=""
+        />
       </div>
       <form
-      onSubmit={handleSubmit(submit)}
+        onSubmit={handleSubmit(submit)}
         className="w-full flex px-3 flex-wrap gap-2 justify-center"
       >
         <div className="flex w-full flex-col">
@@ -172,34 +182,35 @@ function PostForm({ post, idx }) {
           ></textarea>
         </div>
 
-        <div className="flex relative  h-12 justify-between w-full  items-center">
-          <div className="flex gap-2">
-            <input
-              type="file"
-              id="fileInput"
-              {...register("image", { required: false })}
-              className="hidden"
-              onChange={handleFileChange}
-            />
-            <label
-              htmlFor="fileInput"
-              className="cursor-pointer text-white rounded flex items-center "
-            >
-              <FaImage className="w-8 h-8 text-blue-500 hover:text-blue-600" />
-            </label>
-            {selectedFile && (
-              <div className="flex items-center space-x-4  p-2">
-                <span className="text-gray-500 text-xs">{selectedFile}</span>
-                {preview && (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="w-6 h-6 object-cover rounded"
-                  />
-                )}
-              </div>
-            )}
-          </div>
+      <div className="flex relative  h-12 justify-between w-full  items-center">
+      <div className="flex gap-2">
+        <input
+        type="file"
+        id="fileInput"
+        {...register("image", { required: false })}
+        className="hidden"
+        onChange={handleFileChange}
+      />
+      <label
+        htmlFor="fileInput"
+        className="cursor-pointer text-white rounded flex items-center "
+      >
+        <FaImage className="w-8 h-8 text-blue-500 hover:text-blue-600" />
+        
+      </label>
+      {selectedFile && (
+        <div className="flex items-center space-x-4  p-2">
+          <span className="text-gray-500 text-xs">{selectedFile}</span>
+          {preview && (
+            <img src={preview} 
+            alt="Preview" 
+            className="w-6 h-6 object-cover rounded" />
+          )}
+          
+        </div>
+      )}
+      </div>
+          
 
           <Button
             type="submit"
@@ -207,9 +218,9 @@ function PostForm({ post, idx }) {
             className="w-fit h-fit py-1 px-4 rounded-full text-center"
           >
             {post ? "Update" : "post"}
-          </Button>
+          </Button> 
         </div>
-        <div>
+        {/* <div>
           {post && post.featuredImage !== null && (
             <div className="w-full mb-4">
               <img
@@ -219,10 +230,10 @@ function PostForm({ post, idx }) {
               />
             </div>
           )}
-        </div>
-      </form>
-    </div>
-  );
+          </div> */}
+</form>
+</div>
+  )
 }
 
-export default PostForm;
+export default PostForm
