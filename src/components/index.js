@@ -12,7 +12,7 @@ import RTE from './RTE'
 import PostCard from "./PostCard"
 import PostsContainer from "./containers/PostsContainer";
 import AuthContainer from "./containers/AuthContainer";
-
+import ProgressBar from "./animation/ProgressBar";
 
 
 export  {
@@ -29,5 +29,6 @@ export  {
     RTE,
     PostCard,
     PostsContainer,
-    AuthContainer
+    AuthContainer,
+    ProgressBar
 }

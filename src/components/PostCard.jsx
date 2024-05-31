@@ -4,8 +4,9 @@ import authService from "../appwrite/auth";
 import { Link, useNavigate } from "react-router-dom";
 import {useDispatch, useSelector } from "react-redux";
 import { FaCircle } from "react-icons/fa";
-import { Button } from "../components";
+import { Button, ProgressBar } from "../components";
 import {deletePost} from "../store/configSlice"
+
 
 // import authUsers from "../appwrite/users";
 
@@ -29,12 +30,14 @@ function PostCard({
   const isAuthor = $id && userData ? userId === userData.$id : false;
   const avatarUrl = appwriteService.getAvatars();
   const dropdownRef = useRef(null);
+  const [imageLoading, setImageLoading] = useState(true); // State for image loading
+
 
   function calculateHoursElapsed($createdAt) {
     const startDate = new Date($createdAt);
     const currentDate = new Date();
     const timeDifference = currentDate - startDate;
-
+    const [loader, setLoader] = useState(false)
     if (timeDifference >= 3600000) {
       return `${Math.floor(timeDifference / (1000 * 60 * 60))} h`;
     } else if (timeDifference < 3600000 && timeDifference >= 60000) {
@@ -64,8 +67,14 @@ function PostCard({
   const delpost = async () => {
     dispatch(deletePost(idx))
     await appwriteService.deletePost($id)
+    if(featuredImage!==null){
+      await appwriteService.deleteFile(featuredImage)
+    }
     navigate("/")
   };
+
+
+
 
 
 
@@ -131,12 +140,16 @@ function PostCard({
           <div className="pl-12 ">
             <h2 className="text-sm pb-2 text-white">{content}</h2>
             {featuredImage !== null ? (
-              <div className="justify-center mb-4 ">
+              <div className="relative justify-center mb-4">
+              {imageLoading && <ProgressBar progress={0} indeterminate={true} />} {/* Display loading progress bar */}
                 <img
                   width=""
                   src={appwriteService.getFilePreview(featuredImage)}
                   alt={content}
-                  className="rounded-xl border border-teal-800"
+                  className={`rounded-xl border border-teal-800 ${
+                    imageLoading ? 'hidden' : 'block'
+                  }`}
+                  onLoad={() => setImageLoading(false)} // Hide loader and show image when loaded
                 />
               </div>
             ) : null}

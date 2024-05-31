@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input, Select } from "..";
+import { Button, Input, ProgressBar, Select } from "..";
 import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaImage } from "react-icons/fa";
 import { FaUpload } from "react-icons/fa"
 import {createPost, updatePost} from '../../store/configSlice'
-import "../../index.css";
+
 
 function PostForm({ post, idx}) {
-  const { register, handleSubmit, watch, setValue, getValues } = useForm({
+  const { register, handleSubmit, watch, setValue, getValues, reset } = useForm({
     defaultValues: {
       content: post?.content || "",
       slug: post?.$id || "",
@@ -27,11 +27,13 @@ function PostForm({ post, idx}) {
   const [textareaHeight, setTextareaHeight] = useState("auto");
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(1)
 
   const avatarUrl = appwriteService.getAvatars(userData?.name)
 
   
-  const submit = async (data, e) => {
+  const submit = async (data) => {
+    setLoading(2)
     if (post) {
       const file = data.image[0]
         ? await appwriteService.uploadFile(data.image[0])
@@ -72,8 +74,11 @@ function PostForm({ post, idx}) {
         dispatch(createPost(dbPost))
         // navigate(`/post/${dbPost.$id}`);
       }
-      e.target.reset();
     }
+    setLoading(3)
+    reset();
+    setSelectedFile(null);
+    setPreview(null);
   };
 
   const slugTransform = useCallback((value) => {
@@ -143,19 +148,24 @@ function PostForm({ post, idx}) {
     const lastDotIndex = fileName.lastIndexOf('.');
     const fileNameWithoutExtension = fileName.slice(0, lastDotIndex);
     const fileExtension = fileName.slice(lastDotIndex);
-    const truncatedFileName = fileNameWithoutExtension.length > 12
+    const finalFileName = fileNameWithoutExtension.length > 12
     ? `${fileNameWithoutExtension.slice(0, 12)}..${fileExtension}`
     : fileName;
       
-    setSelectedFile(truncatedFileName);
+    setSelectedFile(finalFileName);
       const reader = new FileReader();
+      //  The FileReader API provides methods to read the contents of File objects asynchronously.
+
+      console.log("reader", reader)
+
       reader.onloadend = () => {
         setPreview(reader.result);
+        console.log("reader.result", reader.result)
       };
       reader.readAsDataURL(file);
-    } else {
-      setSelectedFile(null);
-      setPreview(null);
+
+      console.log("reader.readAsDataUrl", reader.readAsDataURL(file))
+
     }
   };
 
@@ -189,7 +199,7 @@ function PostForm({ post, idx}) {
         id="fileInput"
         {...register("image", { required: false })}
         className="hidden"
-        onChange={handleFileChange}
+        onInput={handleFileChange}
       />
       <label
         htmlFor="fileInput"
@@ -220,20 +230,21 @@ function PostForm({ post, idx}) {
             {post ? "Update" : "post"}
           </Button> 
         </div>
-        {/* <div>
-          {post && post.featuredImage !== null && (
+        {loading === 2 &&  
+          <ProgressBar progress={0} indeterminate={true} />}
+        
+        {post && (
             <div className="w-full mb-4">
-              <img
-                src={appwriteService.getFilePreview(post.featuredImage)}
-                alt={post.content}
-                className="rounded-lg"
-              />
+                <img
+                    src={appwriteService.getFilePreview(post.featuredImage)}
+                    alt={post.title}
+                    className="rounded-lg"
+                />
             </div>
-          )}
-          </div> */}
-</form>
-</div>
-  )
+        )} 
+      </form>
+    </div>
+  );
 }
 
-export default PostForm
+export default PostForm;

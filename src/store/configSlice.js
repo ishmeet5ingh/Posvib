@@ -4,7 +4,6 @@ const initialState = {
     posts: null
 }
 
-
 const configSlice = createSlice({
     name: "config",
     initialState,

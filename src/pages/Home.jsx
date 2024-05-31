@@ -25,11 +25,11 @@ function Home() {
   let posts = useSelector((state) => state.config.posts);
   console.log(posts);
 
-//   useEffect(() => {
-//     if (!authStatus) {
-//       dispatch(deleteAllPost());
-//     }
-//   }, [authStatus]);
+  useEffect(() => {
+    if (!authStatus) {
+      dispatch(deleteAllPost());
+    }
+  }, [authStatus]);
 
   if (posts === null && authStatus !== "false") {
     return (
@@ -58,7 +58,6 @@ function Home() {
           posts.map((post, index) => (
             <div key={post?.$id} className="w-full">
               <PostCard {...post} idx={index} />
-
             </div>
           ))}
       </PostsContainer>
