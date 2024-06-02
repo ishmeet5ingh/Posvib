@@ -80,7 +80,7 @@ function PostCard({
 
 
   return (
-    <div className="border border-x-0 border-b-0 border-teal-800 flex p-5 sm:p-3 lg:p-6 flex-col">
+    <div className="border relative  border-x-0 border-b-0 border-teal-800 flex p-5 sm:p-3 lg:p-6 flex-col">
       <div className="flex gap-2">
         <img className="w-9 h-9 rounded-[50%]" src={avatar} alt="" />
         <div className="w-full">
@@ -135,29 +135,32 @@ function PostCard({
           </div>
         </div>
       </div>
-      <Link to={`/post/${$id}`}>
-        <div className="">
+      <Link  to={`/post/${$id}`}>
+
           <div className="pl-12 ">
             <h2 className="text-sm pb-2 text-white">{content}</h2>
             {featuredImage !== null ? (
-              <div className="relative justify-center mb-4">
-              {imageLoading && <ProgressBar progress={0} indeterminate={true} />} {/* Display loading progress bar */}
+              <div className="relative  justify-center mb-4">
+              
                 <img
                   width=""
                   src={appwriteService.getFilePreview(featuredImage)}
                   alt={content}
-                  className={`rounded-xl border border-teal-800 ${
-                    imageLoading ? 'hidden' : 'block'
-                  }`}
-                  onLoad={() => setImageLoading(false)} // Hide loader and show image when loaded
+                  className={`rounded-xl sm:w-full w-5/6 border border-teal-800 `}
+                  onLoad={() => setImageLoading(false)} 
                 />
               </div>
             ) : null}
           </div>
-        </div>
       </Link>
     </div>
   );
 }
 
 export default PostCard;
+
+// {imageLoading && <ProgressBar/>} {/* progress bar */}
+// <div className={`${
+//             imageLoading ? 'hidden' : 'block'
+//           }`}>
+// </div>

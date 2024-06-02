@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import appwriteService from "../appwrite/config";
-import { PostCard, PostForm, PostsContainer } from "../components";
+import { PostCard,} from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import "../index.css";
 import { setPosts, deleteAllPost } from "../store/configSlice";
@@ -12,24 +12,17 @@ function Home() {
   const authStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (authStatus) {
-      appwriteService.getPosts([]).then((posts) => {
-        if (posts) {
-          dispatch(setPosts(posts.documents));
-        }
-      });
-    }
-  }, []);
 
   let posts = useSelector((state) => state.config.posts);
   console.log(posts);
 
-  useEffect(() => {
-    if (!authStatus) {
-      dispatch(deleteAllPost());
-    }
-  }, [authStatus]);
+  // useEffect(() => {
+  //   if (!authStatus) {
+  //     dispatch(deleteAllPost());
+  //   }
+  // }, [authStatus]);
+
+
 
   if (posts === null && authStatus !== "false") {
     return (
@@ -53,16 +46,16 @@ function Home() {
     );
   } else {
     return (
-      <PostsContainer>
-        {posts !== null &&
-          posts.map((post, index) => (
+      <>
+      {posts !== null &&
+          posts?.map((post, index) => (
             <div key={post?.$id} className="w-full">
               <PostCard {...post} idx={index} />
             </div>
           ))}
-      </PostsContainer>
+    </>
     );
   }
 }
 
-export default Home;
+export default Home

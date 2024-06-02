@@ -3,7 +3,7 @@ import { PostsContainer } from '../components'
 
 function AddPost() {
   return (
-    <PostsContainer/>
+    <></>
   )
 }
 

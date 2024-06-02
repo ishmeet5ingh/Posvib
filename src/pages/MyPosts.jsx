@@ -17,18 +17,17 @@ function MyPosts() {
 
   let posts = useSelector(getPosts);
 
+
   return (
-    <PostsContainer>
-    <div>
+    <>
       {posts !== null &&
-        posts?.map((post) => (
-          <div key={post.$id} className="w-full">
-            <PostCard {...post} />
-          </div>
-        ))}
-    </div>
-    </PostsContainer>
+          posts?.map((post, index) => (
+            <div key={post?.$id} className="w-full">
+              <PostCard {...post} idx={index} />
+            </div>
+          ))}
+    </>
   );
 }
 
-export default MyPosts;
+export default MyPosts
