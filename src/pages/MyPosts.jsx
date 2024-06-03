@@ -4,30 +4,45 @@ import { PostCard, PostForm, PostsContainer } from "../components";
 import { useSelector, useDispatch } from "react-redux";
 import { setPosts } from "../store/configSlice";
 import { createSelector } from "reselect";
+import LoadingSpinner from "../components/animation/loader";
+
 
 function MyPosts() {
   const userData = useSelector((state) => state.auth.userData);
   const authStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
 
-  const getPosts = createSelector(
-    state => state.config.posts,
-    posts => posts?.filter((doc) => doc.userId === userData?.$id)
-  )
-
-  let posts = useSelector(getPosts);
+  let posts = useSelector((state) => state.config.posts);
 
 
-  return (
-    <>
-      {posts !== null &&
+
+  console.log("posts", posts)
+
+  if (posts === null && authStatus !== "false") {
+    return (
+      <>
+            {authStatus && (
+              <h1 className="text-white">
+                <LoadingSpinner />
+              </h1>
+            )}
+      </>
+    );
+  } else {
+    return (
+      <>
+        {posts !== null &&
           posts?.map((post, index) => (
-            <div key={post?.$id} className="w-full">
+            <div key={post?.$id} 
+            className="w-full">
+            {post.userId === userData?.$id &&
               <PostCard {...post} idx={index} />
+            }
             </div>
           ))}
-    </>
-  );
+      </>
+    );
+  }
 }
 
 export default MyPosts

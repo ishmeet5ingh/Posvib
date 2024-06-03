@@ -1,8 +1,8 @@
 import React from 'react';
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({}) => {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center  py-10">
       <div className="relative animated w-16 h-16">
         {[...Array(8)].map((_, i) => (
           <div

@@ -70,17 +70,15 @@ function PostCard({
     if(featuredImage!==null){
       await appwriteService.deleteFile(featuredImage)
     }
-    navigate("/")
   };
 
 
-
-
-
-
-
   return (
+
     <div className="border relative  border-x-0 border-b-0 border-teal-800 flex p-5 sm:p-3 lg:p-6 flex-col">
+      {/* <div className="loader-container">
+      <div className="loader"></div>
+    </div> */}
       <div className="flex gap-2">
         <img className="w-9 h-9 rounded-[50%]" src={avatar} alt="" />
         <div className="w-full">

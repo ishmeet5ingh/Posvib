@@ -13,6 +13,7 @@ import PostCard from "./PostCard"
 import PostsContainer from "./containers/PostsContainer";
 import AuthContainer from "./containers/AuthContainer";
 import ProgressBar from "./animation/ProgressBar";
+import PostCardSkeletonLoading from "./SkeletonLoading/PostCardSkeletonLoading";
 
 
 export  {
@@ -30,5 +31,6 @@ export  {
     PostCard,
     PostsContainer,
     AuthContainer,
-    ProgressBar
+    ProgressBar,
+    PostCardSkeletonLoading
 }

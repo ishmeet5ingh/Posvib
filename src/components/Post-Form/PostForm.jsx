@@ -31,7 +31,7 @@ function PostForm({ post, idx }) {
   const [loading, setLoading] = useState(1);
 
   const avatarUrl = appwriteService.getAvatars(userData?.name);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState();
 
   const submit = async (data) => {
     setProgress(0);
@@ -45,7 +45,7 @@ function PostForm({ post, idx }) {
           return prevProgress;
         }
       });
-    }, 100);
+    }, 50);
 
     setLoading(2);
     if (post) {
@@ -263,8 +263,8 @@ function PostForm({ post, idx }) {
                     style={{
                       width: `${progress}%`,
                       height: "100%",
-                      backgroundColor: "green",
-                      transition: "width 1s ease",
+                      backgroundColor: "white",
+                      transition: "width 2s ease",
                     }}
                   />
                 </div>
