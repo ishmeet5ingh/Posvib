@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import appwriteService from "../appwrite/config";
-import { PostCard, PostForm, PostsContainer } from "../components";
+import { PostCard, PostCardSkeletonLoading, PostForm, PostsContainer } from "../components";
 import { useSelector, useDispatch } from "react-redux";
 import { setPosts } from "../store/configSlice";
 import { createSelector } from "reselect";
 import LoadingSpinner from "../components/animation/loader";
-
 
 function MyPosts() {
   const userData = useSelector((state) => state.auth.userData);
@@ -14,35 +13,37 @@ function MyPosts() {
 
   let posts = useSelector((state) => state.config.posts);
 
+  console.log("posts", posts);
 
-
-  console.log("posts", posts)
-
-  if (posts === null && authStatus !== "false") {
+  // if (posts === null && authStatus !== "false") {
+  //   return (
+  //     <>
+  //       {authStatus && (
+  //         <h1 className="text-white">
+  //           {/* <LoadingSpinner /> */}
+  //         </h1>
+  //       )}
+  //     </>
+  //   );
+  // } else {
     return (
       <>
-            {authStatus && (
-              <h1 className="text-white">
-                <LoadingSpinner />
-              </h1>
-            )}
-      </>
-    );
-  } else {
-    return (
-      <>
-        {posts !== null &&
-          posts?.map((post, index) => (
-            <div key={post?.$id} 
-            className="w-full">
-            {post.userId === userData?.$id &&
-              <PostCard {...post} idx={index} />
-            }
-            </div>
-          ))}
+        {posts !== null
+          ? posts.map((post, index) => (
+              <div key={post?.$id} className="w-full">
+                {post.userId === userData?.$id && (
+                  <PostCard {...post} idx={index} />
+                )}
+              </div>
+            ))
+          : [1, 2, 3, 4].map((_, index) => (
+              <div key={index} className="w-full">
+                <PostCardSkeletonLoading />
+              </div>
+            ))}
       </>
     );
   }
-}
 
-export default MyPosts
+
+export default MyPosts;

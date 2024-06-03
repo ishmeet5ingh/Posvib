@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import authService from './appwrite/auth'
 import appwriteService from './appwrite/config'
 import {login, logout} from './store/authSlice'
-import {Header, PostsContainer} from './components'
+import {Header, PostCardSkeletonLoading, PostsContainer} from './components'
 import {Outlet} from 'react-router-dom'
 import './index.css'
 import LoadingSpinner from './components/animation/loader'
@@ -66,8 +66,23 @@ function App() {
 
     </div>
     </div>
-  ) : <LoadingSpinner/>
-
+  ) : (
+    <div>
+    <div className='sm:flex'>
+    <Header/>
+    <main>
+    {authStatus ? (
+    <PostsContainer>
+    <Outlet />
+    </PostsContainer>
+    ) : null
+    }
+    
+    </main>
+    {/* <Footer/> */}
+    </div>
+    </div>
+  )
 }
 
 export default App
