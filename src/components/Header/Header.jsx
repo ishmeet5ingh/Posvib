@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import authSlice from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Logo, LogoutBtn } from "../index";
+import { Logo } from "../index";
 import { useDispatch } from "react-redux";
 import authService from "../../appwrite/auth";
 import { logout } from "../../store/authSlice";
-import { FaBeer, FaHome, FaPlus, FaList, FaSignOutAlt, FaSignInAlt, FaUserPlus} from "react-icons/fa";
+import { FaHome, FaPlus, FaList, FaSignOutAlt, FaSignInAlt, FaUserPlus} from "react-icons/fa";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);

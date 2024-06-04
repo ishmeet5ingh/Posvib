@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
-    posts: null
+    posts: JSON.parse(localStorage.getItem("posts")) || null
 }
 
 const configSlice = createSlice({

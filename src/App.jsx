@@ -6,7 +6,6 @@ import {login, logout} from './store/authSlice'
 import {Header, PostCardSkeletonLoading, PostsContainer} from './components'
 import {Outlet} from 'react-router-dom'
 import './index.css'
-import LoadingSpinner from './components/animation/loader'
 import { setPosts, deleteAllPost } from "./store/configSlice";
 
 
