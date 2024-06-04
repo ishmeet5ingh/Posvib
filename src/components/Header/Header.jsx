@@ -94,10 +94,10 @@ function Header() {
                     className="text-2xl  md:text-lg duration-200 flex hover:text-red-300 "
                   >
                     {isSmallScreen ? (
-                      item.symbol
+                      <li className="flex flex-col items-center" >{item.symbol} <span className="text-xs mt-1"> {item.name}</span></li>
                     ) : (
                       <>
-                        <span className="text-2xl pr-4">{item.symbol}</span>
+                        <span className="text-2xl pr-3 ">{item.symbol}</span>
                         {item?.name}
                       </>
                     )}
@@ -108,7 +108,7 @@ function Header() {
                     className="text-2xl md:text-lg  duration-200   hover:text-red-300 flex"
                   >
                     {isSmallScreen ? (
-                      item.symbol
+                      <li className="flex flex-col items-center" >{item.symbol} <span className="text-xs mt-1"> {item.name}</span></li>
                     ) : (
                       <>
                       <span className="text-2xl pr-4">{item.symbol}</span>
