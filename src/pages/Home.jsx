@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from "react";
-import appwriteService from "../appwrite/config";
+import React, { useEffect} from "react";
 import { PostCard, PostCardSkeletonLoading } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import "../index.css";
-import { setPosts, deleteAllPost } from "../store/configSlice";
-import { Circles } from "react-loader-spinner";
-import LoadingSpinner from "../components/animation/loader";
+import { deleteAllPost } from "../store/configSlice";
 
 function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const authStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
 
-  let posts = useSelector((state) => state.config.posts);
+  const posts = useSelector((state) => state.config.posts);
   console.log(posts);
 
   useEffect(() => {

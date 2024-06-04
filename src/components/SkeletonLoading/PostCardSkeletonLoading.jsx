@@ -8,15 +8,15 @@ function PostCardSkeletonLoading() {
         <div className="w-full">
           <div className="flex w-full justify-between">
             <div className="flex w-full gap-2 text-sm">
-              <div className="w-24 h-4 bg-gray-700"></div>
-              <div className="w-12 h-4 bg-gray-700"></div>
+              <div className="w-24 h-4 rounded-md bg-gray-700"></div>
+              <div className="w-12 h-4 rounded-md bg-gray-700"></div>
             </div>
           </div>
         </div>
       </div>
       <div className="pl-12 w-full">
-        <div className="w-full h-6 bg-gray-700 mb-2"></div>
-        <div className="w-full h-40 bg-gray-700"></div>
+        <div className="w-full h-6 rounded-md bg-gray-700 mb-2"></div>
+        <div className="w-full h-40 rounded-md bg-gray-700"></div>
       </div>
     </div>
   );

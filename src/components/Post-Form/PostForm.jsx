@@ -5,7 +5,7 @@ import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaImage } from "react-icons/fa";
-import { FaUpload } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import { createPost, updatePost } from "../../store/configSlice";
 
 function PostForm({ post, idx }) {
@@ -31,10 +31,11 @@ function PostForm({ post, idx }) {
   const [loading, setLoading] = useState(1);
 
   const avatarUrl = appwriteService.getAvatars(userData?.name);
-  const [progress, setProgress] = useState();
+  const [progress, setProgress] = useState(0);
 
   const submit = async (data) => {
     setProgress(0);
+    setLoading(2);
     let progressInterval = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress < 100) {
@@ -45,9 +46,8 @@ function PostForm({ post, idx }) {
           return prevProgress;
         }
       });
-    }, 50);
+    }, 30);
 
-    setLoading(2);
     if (post) {
       const file = data.image[0]
         ? await appwriteService.uploadFile(data.image[0])
@@ -181,7 +181,7 @@ function PostForm({ post, idx }) {
   };
 
   return (
-    <div className="w-full border-t border-teal-800  overflow-y-scroll hide-scrollbar text-white p-5 sm:p-3 lg:p-6 flex">
+    <div  className="w-full border-t border-teal-800  overflow-y-scroll hide-scrollbar text-white p-5 sm:p-3 lg:p-6 flex">
       <div>
         <img className="max-w-9 max-h-9 rounded-full" src={avatarUrl} alt="" />
       </div>
@@ -236,7 +236,7 @@ function PostForm({ post, idx }) {
           </Button>
         </div>
         {loading === 2 && (
-          <div className="border border-teal-800 w-full flex items-center ">
+          <div className="border border-teal-800 w-full flex items-center gap-2">
             {selectedFile && (
               <div className="flex items-center space-x-4 p-2">
                 <span className="text-gray-500 text-xs">{selectedFile}</span>
@@ -250,13 +250,11 @@ function PostForm({ post, idx }) {
               </div>
             )}
             <div className="w-3/4">
-              <div>
                 <div
                   style={{
                     border: "1px solid #000",
                     width: "100%",
                     height: "20px",
-                    marginTop: "20px",
                   }}
                 >
                   <div
@@ -268,7 +266,6 @@ function PostForm({ post, idx }) {
                     }}
                   />
                 </div>
-              </div>
             </div>
           </div>
         )}

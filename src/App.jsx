@@ -69,16 +69,15 @@ function App() {
   ) : (
     <div>
     <div className='sm:flex'>
-    <Header/>
-    <main>
     {authStatus ? (
+      <>
+    <Header/>
     <PostsContainer>
     <Outlet />
     </PostsContainer>
+      </>
     ) : null
     }
-    
-    </main>
     {/* <Footer/> */}
     </div>
     </div>
