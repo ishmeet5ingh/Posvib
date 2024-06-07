@@ -1,7 +1,6 @@
 import {Client, Databases, Storage, ID, Avatars} from 'appwrite'
 import conf from '../conf/conf'
 
-
 export class Service{
     client = new Client()
     databases
@@ -25,7 +24,7 @@ export class Service{
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
+                conf.appwritePostsCollectionId,
                 slug,
                 {
                     content,
@@ -33,7 +32,7 @@ export class Service{
                     status,
                     userId,
                     username,
-                    avatar
+                    avatar,
                 }
             )
         } catch (error) {
@@ -45,7 +44,7 @@ export class Service{
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
+                conf.appwritePostsCollectionId,
                 slug,
                 {
                     content,
@@ -58,11 +57,12 @@ export class Service{
         }
     }
 
+
     async deletePost(slug){
         try{
             await this.databases.deleteDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
+                conf.appwritePostsCollectionId,
                 slug
             )
             return true
@@ -76,7 +76,7 @@ export class Service{
         try {
             return await  this.databases.getDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
+                conf.appwritePostsCollectionId,
                 slug
             )
         } catch (error) {
@@ -89,7 +89,7 @@ export class Service{
         try {
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
+                conf.appwritePostsCollectionId,
                 queries,
             )
         } catch (error) {
@@ -105,7 +105,7 @@ export class Service{
             return await this.bucket.createFile( // get the id 
                 conf.appwriteBucketId,
                 ID.unique(),
-                file
+                file,
             )
         } catch (error) {
             console.log("Appwrite serive :: uploadFile :: error", error);

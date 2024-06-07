@@ -1,17 +1,18 @@
 import {configureStore} from '@reduxjs/toolkit'
 import authSlice from './authSlice'
 import configSlice from './configSlice'
-import localStorageMiddleware from '../middleware/localStorageMiddleware';
-
+import uploadSlice from './uploadSlice'
+// import localStorageMiddleware from '../middleware/localStorageMiddleware';
 
 
 const store = configureStore({
     reducer: {
         auth: authSlice,
-        config: configSlice
+        config: configSlice,
+        upload: uploadSlice
     },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(localStorageMiddleware),
+    // middleware: (getDefaultMiddleware) =>
+    //     getDefaultMiddleware().concat(localStorageMiddleware),
     });
 
 export default store

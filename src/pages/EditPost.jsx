@@ -25,10 +25,11 @@ function EditPost() {
         } else navigate("/");
       }, [slug, navigate]);
   return post ? (
-    <div className='h-screen overflow-y-scroll hide-scrollbar border-r border-teal-800 py-16'>
-    <div className='border-b border-teal-800'>
+    <div className=" h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen border-r border-teal-800 w-full sm:w-96 md:w-[500px] ">
+      <div className=" mt-16 mb-28 border-y border-teal-800">
         <PostForm post={post} idx={idx}/>
-    </div>
+
+      </div>
     </div>
   ) : null
 }

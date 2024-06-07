@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import appwriteService from "../appwrite/config";
-import { Button, PostCard } from "../components";
+import { Button, PostCard, PostCardSkeletonLoading, PostsContainer } from "../components";
 import { useSelector } from "react-redux";
-import '../index.css'
-
-
+import "../index.css";
 
 export default function Post() {
-
-  const avatarsUrl = appwriteService.getAvatars()
+  const avatarsUrl = appwriteService.getAvatars();
   const [post, setPost] = useState(null);
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -19,28 +16,17 @@ export default function Post() {
 
   useEffect(() => {
     if (slug) {
-      posts && posts.map((post) =>
-      slug===post?.$id && setPost(post)
-        
-      )
+      posts && posts.map((post) => slug === post?.$id && setPost(post));
     } else navigate("/");
   }, [slug, navigate]);
 
-
-
-  return post ? (
-    <div className="py-16 h-screen overflow-y-scroll border-r border-teal-800 sm:w-96 md:w-[500px] hide-scrollbar">
-<div className="border-b border-teal-800">
-    <PostCard {...post} />
-</div>
-     
-     
-</div>
-
-  ) : null;
+  return (
+    <div className=" h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen border-r border-teal-800 w-full sm:w-96 md:w-[500px] ">
+      <div className=" mt-16 mb-28 border-y border-teal-800">
+      {post ? <PostCard {...post} />
+      : <PostCardSkeletonLoading/>
+      }
+      </div>
+    </div>
+  )
 }
-
-
-
-
-      

@@ -1,20 +1,18 @@
-import { useEffect, useState } from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import authService from './appwrite/auth'
-import appwriteService from './appwrite/config'
-import {login, logout} from './store/authSlice'
-import {Header, PostCardSkeletonLoading, PostsContainer} from './components'
-import {Outlet} from 'react-router-dom'
-import './index.css'
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import authService from "./appwrite/auth";
+import appwriteService from "./appwrite/config";
+import { login, logout } from "./store/authSlice";
+import { Header, PostsContainer } from "./components";
+import { Outlet } from "react-router-dom";
+import "./index.css";
 import { setPosts, deleteAllPost } from "./store/configSlice";
-
 
 // import './App.css'
 
 function App() {
-
-  const [loading, setLoading] = useState(true)
-  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
 
   useEffect(() => {
@@ -22,6 +20,7 @@ function App() {
       try {
         const userData = await authService.getUserData();
         if (userData) {
+          console.log("userdata",userData)
           dispatch(login({ userData }));
 
           if (authStatus) {
@@ -30,8 +29,7 @@ function App() {
               dispatch(setPosts(posts.documents));
               console.log("hello 1");
             }
-          }
-          else{
+          } else {
             dispatch(deleteAllPost());
           }
         } else {
@@ -47,40 +45,27 @@ function App() {
     fetchData();
   }, [dispatch, authStatus]);
 
-
-
   return !loading ? (
     <div>
-    <div className='sm:flex'>
-    <Header/>
-    <main>
-    {authStatus ? (<PostsContainer>
-    <Outlet />
-    </PostsContainer>) : (
-      <Outlet/>
-    )}
-    
-    </main>
-    {/* <Footer/> */}
-
-    </div>
+      <div className="sm:flex">
+        <Header />
+        <main>{authStatus ? <Outlet /> : <Outlet />}</main>
+        {/* <Footer/> */}
+      </div>
     </div>
   ) : (
     <div>
-    <div className='sm:flex'>
-    {authStatus ? (
-      <>
-    <Header/>
-    <PostsContainer>
-    <Outlet />
-    </PostsContainer>
-      </>
-    ) : null
-    }
-    {/* <Footer/> */}
+      <div className="sm:flex">
+        {authStatus ? (
+          <>
+            <Header />
+            <Outlet />
+          </>
+        ) : null}
+        {/* <Footer/> */}
+      </div>
     </div>
-    </div>
-  )
+  );
 }
 
-export default App
+export default App;

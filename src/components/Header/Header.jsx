@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Logo } from "../index";
 import { useDispatch } from "react-redux";
@@ -76,11 +76,11 @@ function Header() {
   ];
 
   return (
-    <header className="z-30 text-white sm:w-1/4 sm:border-r py-3 px-3 shadow sm:min-h-screen border-teal-800 fixed sm:static w-full  bottom-0 bg-black ">
+    <header className="z-30 text-white sm:w-1/4 border-r border-teal-800  py-3 px-3 shadow sm:min-h-screen fixed sm:static w-full  bottom-0 bg-black ">
       <nav className="flex sm:flex-col justify-center items-center">
         <div className="sm:items-start mb-10">{isLogo ? "" : <Logo width="70px" />}</div>
         <div className="w-full sm:w-fit">
-        <ul className="flex sm:flex-col w-full sm:items-start justify-around sm:gap-5">
+        <ul className="flex sm:flex-col w-full sm:items-center lg:items-start justify-around sm:gap-5">
           {navItems.map((item) =>
             item.active ? (
               <li key={item?.name}>
@@ -103,9 +103,9 @@ function Header() {
                     )}
                   </button>
                 ) : (
-                  <button
-                    onClick={() => navigate(item.slug)}
-                    className="text-2xl md:text-lg  duration-200   hover:text-red-300 flex"
+                  <NavLink
+                    to={item.slug}
+                    className={({isActive})=>`text-2xl md:text-lg  duration-100 ${isActive ? "text-blue-300" : ""}   hover:text-blue-100 flex`}
                   >
                     {isSmallScreen ? (
                       <li className="flex flex-col items-center" >{item.symbol} <span className="text-xs mt-1"> {item.name}</span></li>
@@ -115,7 +115,7 @@ function Header() {
                       {item?.name}
                       </>
                     )}
-                  </button>
+                  </NavLink>
                 )}
               </li>
             ) : null
