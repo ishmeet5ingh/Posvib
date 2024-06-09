@@ -1,10 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-    users: JSON.parse(localStorage.getItem("users")) || null,
-    currentUser: JSON.parse(localStorage.getItem("currentUser")) || null
-}
+const parseJSON = (key) => {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : null;
+    } catch (error) {
+        console.error(`Error parsing ${key} from localStorage`, error);
+        return null;
+    }
+};
 
+const initialState = {
+    users: parseJSON("users"),
+    currentUser: parseJSON("currentUser")
+};
 
 export const userSlice = createSlice({
     name: "users",

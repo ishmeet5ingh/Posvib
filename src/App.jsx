@@ -12,7 +12,7 @@ import { createSelector } from "reselect";
 
 // import './App.css'
 const selectAuthData = (state, authData) => authData;
-const selectUsers = (state) => state.users.users.users.documents;
+const selectUsers = (state) => state.users.users?.users?.documents;
 
 const selectCurrentUser = createSelector(
   [selectUsers, selectAuthData],
@@ -24,7 +24,7 @@ function App() {
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
   const authData = useSelector((state)=> state.auth.userData)
-  const authUsers = useSelector((state)=> state.users.users.users.documents)
+  const authUsers = useSelector((state)=> state.users.users?.users?.documents)
   // const currentUser = useSelector((state)=> state.users.users.users.documents.filter((user) => user ? user.accountId === authData.$id : null)[0])
   const currentUser = useSelector(state => selectCurrentUser(state, authData));
 

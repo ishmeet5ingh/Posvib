@@ -12,17 +12,15 @@ function LikeFeature({likes, postId, currentUserData}) {
 
     console.log("isliked" ,isLiked)
     const dispatch = useDispatch()
-    
+
     let [likeCount, setLikeCount] = useState(likes.length)
     
     const handleLike = async () => {
+        setIsLiked(prevLiked => !prevLiked);
+        // Update the like count immediately
+        setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1)
         try {
-            setIsLiked(prevLiked => !prevLiked);
-
-            // Update the like count immediately
-            setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1)
-            
-            const updatedDocument = await appwriteService.likePost(postId, currentUserData.$id, dispatch);
+            const updatedDocument = await appwriteService.likePost(postId, currentUserData?.$id, dispatch);
             
             console.log("updatedocument",updatedDocument)
             // console.log("likes", updatedDocument.likes)
@@ -36,11 +34,11 @@ function LikeFeature({likes, postId, currentUserData}) {
     
     console.log("likes" ,likes.length)
     
-    console.table([likes, postId, currentUserData.$id])
+    console.table([likes, postId, currentUserData?.$id])
 
   return (
          <div className="flex justify-between items-center">
-          <div className="flex gap-2 mr-5">
+          <div className="flex gap-1 mr-5">
             <img 
             className="cursor-pointer"
             src={isLiked ? liked : like} 
@@ -49,7 +47,7 @@ function LikeFeature({likes, postId, currentUserData}) {
             height={20}
             onClick={handleLike}
             />
-            <p className="text-sm text-white">{likes.length}</p>
+            <p className="text-sm text-white">{likeCount}</p>
           </div>
         </div>
   )

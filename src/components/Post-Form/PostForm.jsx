@@ -95,7 +95,7 @@ function PostForm({ post }) {
 
   return (
     <div className="w-full  border-y border-teal-800 overflow-y-scroll hide-scrollbar text-white p-5 sm:p-3 lg:p-6 flex">
-      <Avatar avatarUrl={userData.imageUrl} />
+      <Avatar avatarUrl={userData?.imageUrl} />
       <form
         onSubmit={handleSubmit(submit)}
         className="w-full flex px-3 flex-wrap gap-2 justify-center"

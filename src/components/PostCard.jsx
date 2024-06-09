@@ -67,7 +67,7 @@ function PostCard({
   };
 
   return (
-    <div className="relative border-b border-teal-800 flex p-3 sm:p-5 lg:p-6 flex-col">
+    <div className="relative border-b border-teal-800 flex p-5 sm:p-5 lg:p-6 flex-col">
       <div className="flex gap-2">
         <img className="w-9 h-9 rounded-[50%]" src={creator.imageUrl} alt="" />
         <div className="w-full">
@@ -126,7 +126,7 @@ function PostCard({
         <h2 className="text-sm pb-2 text-white">{content}</h2>
         {featuredImage !== null ? (
           <Link to={`/post/${$id}`}>
-            <div className="relative  justify-center mb-4">
+            <div className="relative  justify-center mb-3">
               <img
                 width="h-16"
                 src={appwriteService.getFilePreview(featuredImage)}
