@@ -43,8 +43,8 @@ function LikeFeature({likes, postId, currentUserData}) {
             className="cursor-pointer"
             src={isLiked ? liked : like} 
             alt="like"
-            width={30}
-            height={30}
+            width={25}
+            height={25}
             onClick={handleLike}
             />
             <p className=" text-white">{likeCount}</p>
