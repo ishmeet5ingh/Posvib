@@ -73,7 +73,7 @@ function PostCard({
         <div className="w-full">
           <div className="flex w-full justify-between">
             <div className="flex w-full gap-2 text-sm">
-              <h3 className="text-white">{creator.username}</h3>
+              <h3 className="text-white">{creator?.username}</h3>
               <p className="text-teal-600">{`${calculateHoursElapsed(
                 $createdAt
               )}`}</p>
