@@ -32,7 +32,7 @@ function LikeFeature({likes, postId, currentUserData}) {
         }
     };
     
-    console.log("likes" ,likes.length)
+    console.log("likes" ,likes?.length)
     
     console.table([likes, postId, currentUserData?.$id])
 
