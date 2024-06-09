@@ -13,7 +13,7 @@ function LikeFeature({likes, postId, currentUserData}) {
     console.log("isliked" ,isLiked)
     const dispatch = useDispatch()
 
-    let [likeCount, setLikeCount] = useState(likes.length)
+    let [likeCount, setLikeCount] = useState(likes?.length)
     
     const handleLike = async () => {
         setIsLiked(prevLiked => !prevLiked);
