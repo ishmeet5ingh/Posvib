@@ -128,10 +128,9 @@ function PostCard({
           <Link to={`/post/${$id}`}>
             <div className="relative  justify-center mb-3">
               <img
-                width="h-16"
                 src={appwriteService.getFilePreview(featuredImage)}
                 alt={content}
-                className={`rounded-xl sm:w-full w-4/6 border border-teal-800 `}
+                className={`rounded-xl sm:w-full border border-teal-800 `}
                 onLoad={() => setImageLoading(false)}
               />
             </div>

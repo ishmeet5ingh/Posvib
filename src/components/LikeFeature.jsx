@@ -38,16 +38,16 @@ function LikeFeature({likes, postId, currentUserData}) {
 
   return (
          <div className="flex justify-between items-center">
-          <div className="flex gap-1 mr-5">
+          <div className="flex gap-1 mr-5 items-center">
             <img 
             className="cursor-pointer"
             src={isLiked ? liked : like} 
             alt="like"
-            width={20}
-            height={20}
+            width={30}
+            height={30}
             onClick={handleLike}
             />
-            <p className="text-sm text-white">{likeCount}</p>
+            <p className=" text-white">{likeCount}</p>
           </div>
         </div>
   )
