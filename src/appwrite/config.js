@@ -142,7 +142,7 @@ export class Service{
             );
 
             // Add userId to likes if not already present
-            const updatedLikes = post.likes.find(likedUser => likedUser?.$id === userId)
+            const updatedLikes = post.likes?.find(likedUser => likedUser?.$id === userId)
                 ? post.likes.filter(likedUser => likedUser?.$id !== userId) // Unlike
                 : [...post.likes, userId]; // Like
 

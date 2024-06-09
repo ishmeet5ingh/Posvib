@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 
 function LikeFeature({likes, postId, currentUserData}) {
-    const [isLiked, setIsLiked] = useState(likes.find(likedUser => likedUser?.$id === currentUserData?.$id))
+    const [isLiked, setIsLiked] = useState(likes?.find(likedUser => likedUser?.$id === currentUserData?.$id))
 
     console.log("isliked" ,isLiked)
     const dispatch = useDispatch()
