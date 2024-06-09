@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const parseJSON = (key) => {
     try {
         const item = localStorage.getItem(key);
-        return item ? JSON.parse(item) : null;
+        return item && item !== "undefined" ? JSON.parse(item) : null;
     } catch (error) {
         console.error(`Error parsing ${key} from localStorage`, error);
         return null;
