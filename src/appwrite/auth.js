@@ -1,4 +1,4 @@
-import { Client, Account, ID, Avatars, Databases } from "appwrite";
+import { Client, Account, ID, Avatars, Databases, Permission, Role } from "appwrite";
 import conf from "../conf/conf";
 
 export class AuthService {
@@ -26,17 +26,19 @@ export class AuthService {
       );
       if (!userAccount) throw Error;
 
+      
+      await this.login({ email, password });
+
       const avatarUrl = this.avatars.getInitials(name);
-
-      const newUser = await this.userToDB({
-        name: userAccount.name,
-        accountId: userAccount.$id,
-        username: username,
-        email: userAccount.email,
-        imageUrl: avatarUrl,
-      });
-
-      return this.login({ email, password });
+      
+      return await this.userToDB({
+          name: userAccount.name,
+          accountId: userAccount.$id,
+          username: username,
+          email: userAccount.email,
+          imageUrl: avatarUrl,
+        });
+        
     } catch (error) {
       console.log("appwrite service :: createAccount :: error: ", error);
     }
@@ -44,7 +46,8 @@ export class AuthService {
 
   async userToDB({ name, accountId, username, email, imageUrl}) {
     try {
-      const newUser = await this.databases.createDocument(
+        console.log("namename", name)
+        const newUser = await this.databases.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteUsersCollectionId,
         ID.unique(),
@@ -56,6 +59,7 @@ export class AuthService {
          imageUrl
         }
       );
+      
       return newUser
     } catch (error) {
       console.log("appwrite service :: userToDB :: error: ", error);
@@ -64,11 +68,12 @@ export class AuthService {
 
   async login({ email, password }) {
     try {
-      return await this.account.createEmailPasswordSession(email, password);
+    return await this.account.createEmailPasswordSession(email, password);
     } catch (error) {
       console.log("appwrite service :: login :: error: ", error);
     }
   }
+
 
   async getUserData() {
     try {
@@ -78,6 +83,33 @@ export class AuthService {
     }
     return null;
   }
+
+  async getUserDataFromDB(accountId){
+    try {
+        return await this.databases.getDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteUsersCollectionId,
+            accountId
+        )
+    } catch (error) {
+        console.log("appwrite service :: getPost :: error: ", error)
+        return false
+    }
+}
+  async getUsersDataFromDB(){
+    try {
+        return await this.databases.listDocuments(
+            conf.appwriteDatabaseId,
+            conf.appwriteUsersCollectionId,
+        )
+    } catch (error) {
+        console.log("appwrite service :: getPost :: error: ", error)
+        return false
+    }
+}
+
+
+
 
   async logout() {
     try {

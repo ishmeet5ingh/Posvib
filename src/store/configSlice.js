@@ -1,37 +1,44 @@
-import {createSlice} from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    posts: null
-}
+  posts: JSON.parse(localStorage.getItem("posts")) || null,
+};
 
 const configSlice = createSlice({
-    name: "config",
-    initialState,
-    reducers: {
-        setPosts: (state, action)=>{
-          state.posts = action.payload
-        },
+  name: "config",
+  initialState,
+  reducers: {
+    setPosts: (state, action) => {
+      state.posts = action.payload;
+      localStorage.setItem("posts", JSON.stringify(state.posts));
+    },
 
-        createPost: (state, action)=>{
-        state.posts.push(action.payload)
-        },
-    
-        deletePost: (state, action) => {
-            state.posts.splice(action.payload, 1)
-        },
+    createPost: (state, action) => {
+      state.posts.push(action.payload);
+      localStorage.setItem("posts", JSON.stringify(state.posts));
+    },
 
-        updatePost: (state, action) => {
-        const {idx, dbPost} = action.payload
-        state.posts = state.posts.map((post, index) => index === idx ? dbPost : post)
-        },
+    deletePost: (state, action) => {
+      state.posts.splice(action.payload, 1);
+      localStorage.setItem("posts", JSON.stringify(state.posts));
+    },
 
-        deleteAllPost: (state) => {
-            state.posts = null
-        }
-        
-    }
-})
+    updatePost: (state, action) => {
+      const { id, dbPost } = action.payload;
+      state.posts = state.posts.map((post) =>
+        post.$id === id ? dbPost : post
+      );
+      localStorage.setItem("posts", JSON.stringify(state.posts));
+    },
 
-export const {setPosts, createPost, deletePost, updatePost, deleteAllPost} = configSlice.actions
+    deleteAllPost: (state) => {
+      state.posts = null;
+      localStorage.setItem("posts", JSON.stringify(state.posts));
+    },
+  },
+});
 
-export default configSlice.reducer
+export const { setPosts, createPost, deletePost, updatePost, deleteAllPost } =
+  configSlice.actions;
+
+export default configSlice.reducer;

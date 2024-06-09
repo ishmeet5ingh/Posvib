@@ -3,26 +3,26 @@ import appwriteService from "../appwrite/config";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCircle, FaHeart } from "react-icons/fa";
-import { Button } from "../components";
+import { Button, LikeFeature } from "../components";
 import { deletePost } from "../store/configSlice";
-
 
 function PostCard({
   $id,
   content,
   featuredImage = undefined,
   userId,
-  username,
-  avatar,
   $createdAt,
+  creator,
   idx,
+  likes
 }) {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const userData = useSelector((state) => state.auth.userData);
   const dispatch = useDispatch();
+
+  const [name, setName] = useState("");
+  const currentUserData = useSelector((state) => state.users.currentUser);
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const isAuthor = $id && userData ? userId === userData.$id : false;
+  const isAuthor = $id && currentUserData ? userId === currentUserData.$id : false;
   const dropdownRef = useRef(null);
   const [imageLoading, setImageLoading] = useState(true); // State for image loading
 
@@ -58,8 +58,6 @@ function PostCard({
     };
   }, [dropdownRef]);
 
-
-
   const delpost = async () => {
     dispatch(deletePost(idx));
     await appwriteService.deletePost($id);
@@ -71,11 +69,11 @@ function PostCard({
   return (
     <div className="relative border-b border-teal-800 flex p-3 sm:p-5 lg:p-6 flex-col">
       <div className="flex gap-2">
-        <img className="w-9 h-9 rounded-[50%]" src={avatar} alt="" />
+        <img className="w-9 h-9 rounded-[50%]" src={creator.imageUrl} alt="" />
         <div className="w-full">
           <div className="flex w-full justify-between">
             <div className="flex w-full gap-2 text-sm">
-              <h3 className="text-white">{username}</h3>
+              <h3 className="text-white">{creator.username}</h3>
               <p className="text-teal-600">{`${calculateHoursElapsed(
                 $createdAt
               )}`}</p>
@@ -84,6 +82,7 @@ function PostCard({
               <div
                 className="flex px-1 py-2 duration-200 rounded-full  text-teal-400"
                 onClick={toggleDropdown}
+                
               >
                 <FaCircle size={5} className="mr-1" />
                 <FaCircle size={5} className="mr-1" />
@@ -138,9 +137,8 @@ function PostCard({
             </div>
           </Link>
         ) : null}
-     
+        <LikeFeature likes={likes} postId={$id} currentUserData={currentUserData} />
       </div>
-
     </div>
   );
 }

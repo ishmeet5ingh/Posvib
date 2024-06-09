@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import appwriteService from "../../appwrite/config";
 import {
   Avatar,
@@ -19,7 +19,10 @@ import {
 } from "./hooks";
 
 
-function PostForm({ post, idx }) {
+// import './App.css'
+
+
+function PostForm({ post }) {
   const slugTransform = useSlugTransform();
   const { register, handleSubmit, getValues, reset } = useFormInitialization(
     post,
@@ -34,13 +37,12 @@ function PostForm({ post, idx }) {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.auth.userData);
+  const userData = useSelector(state => state.users.currentUser)
 
   const [loading, setLoading] = useState(1);
   const { progress, setProgress } = useProgress(loading, setLoading, fileSize);
 
-  const avatarUrl = appwriteService.getAvatars(userData?.name);
-
+  // const userD = dispatch(getUser(userData.$id))
   const submit = async (data) => {
     if(data.image[0]){
       setLoading(2);
@@ -63,7 +65,8 @@ function PostForm({ post, idx }) {
       });
 
       if (dbPost) {
-        dispatch(updatePost({ idx, dbPost }));
+        let id = post.$id
+        dispatch(updatePost({ id, dbPost }));
         navigate(`/post/${dbPost.$id}`);
       }
     } else {
@@ -78,8 +81,6 @@ function PostForm({ post, idx }) {
       const dbPost = await appwriteService.createPost({
         ...data,
         userId: userData?.$id,
-        username: userData?.name,
-        avatar: appwriteService.getAvatars(userData?.name),
       });
 
       if (dbPost) {
@@ -94,7 +95,7 @@ function PostForm({ post, idx }) {
 
   return (
     <div className="w-full  border-y border-teal-800 overflow-y-scroll hide-scrollbar text-white p-5 sm:p-3 lg:p-6 flex">
-      <Avatar avatarUrl={avatarUrl} />
+      <Avatar avatarUrl={userData.imageUrl} />
       <form
         onSubmit={handleSubmit(submit)}
         className="w-full flex px-3 flex-wrap gap-2 justify-center"

@@ -17,6 +17,8 @@ import Avatar from "./Post-Form/Avatar";
 import PostTextarea from "./Post-Form/PostTextarea";
 import FileInput from "./Post-Form/FileInput";
 import ProgressBarComponent from "./Post-Form/ProgressBarComponent";
+import LikeFeature from "./LikeFeature.jsx";
+
 
 export  {
     Footer,
@@ -37,5 +39,6 @@ export  {
     Avatar,
     PostTextarea,
     FileInput,
-    ProgressBarComponent
+    ProgressBarComponent,
+    LikeFeature
 }

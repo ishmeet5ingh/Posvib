@@ -1,6 +1,7 @@
 import {Client, Databases, Storage, ID, Avatars} from 'appwrite'
 import conf from '../conf/conf'
 
+import { updatePost } from '../store/configSlice'
 export class Service{
     client = new Client()
     databases
@@ -16,11 +17,8 @@ export class Service{
         this.avatars = new Avatars(this.client)
     }
 
-    getAvatars(username){
-        return this.avatars.getInitials(username)
-    }
 
-    async createPost({content, slug, featuredImage, status, userId, username, avatar}){
+    async createPost({content, slug, featuredImage, status, userId}){
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -31,8 +29,8 @@ export class Service{
                     featuredImage,
                     status,
                     userId,
-                    username,
-                    avatar,
+                    creator: userId,
+                    likes: [], 
                 }
             )
         } catch (error) {
@@ -131,6 +129,39 @@ export class Service{
             conf.appwriteBucketId,
             fileId
         )
+    }
+
+    
+    async likePost(postId, userId, dispatch) {
+        try {
+            // Fetch the post
+            const post = await this.databases.getDocument(
+                conf.appwriteDatabaseId,
+                conf.appwritePostsCollectionId,
+                postId
+            );
+
+            // Add userId to likes if not already present
+            const updatedLikes = post.likes.find(likedUser => likedUser?.$id === userId)
+                ? post.likes.filter(likedUser => likedUser?.$id !== userId) // Unlike
+                : [...post.likes, userId]; // Like
+
+
+            // Update post with new likes array
+            const updatedPost = await this.databases.updateDocument(
+                conf.appwriteDatabaseId,
+                conf.appwritePostsCollectionId,
+                postId,
+                {
+                    likes: updatedLikes 
+                }
+            );
+            
+            dispatch(updatePost({id: postId, dbPost: updatedPost}))
+            return updatedPost
+        } catch (error) {
+            console.log("Appwrite service :: likePost :: error: ", error);
+        }
     }
 }
 

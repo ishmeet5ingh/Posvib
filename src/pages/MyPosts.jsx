@@ -3,7 +3,7 @@ import { PostCard, PostCardSkeletonLoading, PostsContainer } from "../components
 import { useSelector, useDispatch } from "react-redux";
 
 function MyPosts() {
-  const userData = useSelector((state) => state.auth.userData);
+  const userData = useSelector((state) => state.users.currentUser);
   const authStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
 

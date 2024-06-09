@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import "../index.css";
 
 export default function Post() {
-  const avatarsUrl = appwriteService.getAvatars();
   const [post, setPost] = useState(null);
   const { slug } = useParams();
   const navigate = useNavigate();

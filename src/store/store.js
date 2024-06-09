@@ -1,7 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit'
 import authSlice from './authSlice'
 import configSlice from './configSlice'
-import uploadSlice from './uploadSlice'
+import userSlice from './userSlice';
 // import localStorageMiddleware from '../middleware/localStorageMiddleware';
 
 
@@ -9,7 +9,7 @@ const store = configureStore({
     reducer: {
         auth: authSlice,
         config: configSlice,
-        upload: uploadSlice
+        users: userSlice
     },
     // middleware: (getDefaultMiddleware) =>
     //     getDefaultMiddleware().concat(localStorageMiddleware),

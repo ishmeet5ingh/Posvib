@@ -7,12 +7,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAllPost } from "../store/configSlice";
 
+
+
+
 function Home() {
   const authStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
 
   const posts = useSelector((state) => state.config.posts);
-  console.log(posts);
 
   useEffect(() => {
     if (!authStatus) {

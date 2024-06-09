@@ -39,10 +39,20 @@ function Signup() {
     <form className='flex flex-col' onSubmit={handleSubmit(signup)}>
       <Input
         label="Name: "
-        type="name"
+        type="text"
         className=""
         placeholder="Enter name"
         {...register("name", {
+          required: true
+        })}
+        />
+
+      <Input
+        label="Username: "
+        type="text"
+        className=""
+        placeholder="Enter Username"
+        {...register("username", {
           required: true
         })}
         />
