@@ -126,11 +126,11 @@ function PostCard({
       <div className="">
         {featuredImage !== null ? (
           <Link to={`/post/${$id}`}>
-            <div className="relative custom:rounded-lg justify-center mb-3">
+            <div className="relative rounded-md justify-center mb-3">
               <img
                 src={appwriteService.getFilePreview(featuredImage)}
                 alt={content}
-                className={`w-full custom:rounded-lg border border-teal-900 `}
+                className={`w-full rounded-md border border-teal-900 `}
                 onLoad={() => setImageLoading(false)}
                
               />

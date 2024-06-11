@@ -9,10 +9,6 @@ export default {
       colors: {
         'black-rgba': 'rgba(0, 0, 0, 0.54)',
       },
-      screens: {
-        // Define a custom breakpoint
-        'custom': '450px',
-      },
     },
   },
   plugins: [],
