@@ -67,18 +67,18 @@ function PostCard({
   };
 
   return (
-    <div className="relative border-b border-teal-800 flex p-5 sm:p-5 lg:p-6 flex-col">
-      <div className="flex gap-2">
-        <img className="w-9 h-9 rounded-[50%]" src={creator?.imageUrl} alt="" />
-        <div className="w-full">
-          <div className="flex w-full justify-between">
-            <div className="flex w-full gap-2 text-sm">
+    <div className="relative border-b border-teal-800 flex p-4 flex-col">
+      <div >
+      <div className="flex w-full gap-2  pb-2">
+        <img className="  w-9 h-9 rounded-[50%]" src={creator?.imageUrl} alt="" />
+          <div className=" flex w-full justify-between">
+            <div className=" flex w-full gap-2 text-sm">
               <h3 className="text-white">{creator?.username}</h3>
               <p className="text-teal-600">{`${calculateHoursElapsed(
                 $createdAt
               )}`}</p>
             </div>
-            <div className="relative flex items-center" ref={dropdownRef}>
+            <div className=" borderrelative flex items-center" ref={dropdownRef}>
               <div
                 className="flex px-1 py-2 duration-200 rounded-full  text-teal-400"
                 onClick={toggleDropdown}
@@ -118,20 +118,21 @@ function PostCard({
                 </div>
               )}
             </div>
+            </div>
           </div>
-        </div>
+        <h2 className="text-sm pb-2 text-white">{content}</h2>
       </div>
 
-      <div className="pl-12 ">
-        <h2 className="text-sm pb-2 text-white">{content}</h2>
+      <div className="">
         {featuredImage !== null ? (
           <Link to={`/post/${$id}`}>
-            <div className="relative  justify-center mb-3">
+            <div className="relative custom:rounded-lg justify-center mb-3">
               <img
                 src={appwriteService.getFilePreview(featuredImage)}
                 alt={content}
-                className={`rounded-xl sm:w-full border border-teal-800 `}
+                className={`w-full custom:rounded-lg border border-teal-900 `}
                 onLoad={() => setImageLoading(false)}
+               
               />
             </div>
           </Link>

@@ -8,9 +8,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 
 function LikeFeature({likes, postId, currentUserData}) {
-    const [isLiked, setIsLiked] = useState(likes?.find(likedUser => likedUser?.$id === currentUserData?.$id))
+    const [isLiked, setIsLiked] = useState(likes?.some(likedUser => likedUser?.$id === currentUserData?.$id) || false)
 
-    console.log("isliked" ,isLiked)
+    // console.log("isliked" ,isLiked)
     const dispatch = useDispatch()
 
     let [likeCount, setLikeCount] = useState(likes?.length)
@@ -22,7 +22,7 @@ function LikeFeature({likes, postId, currentUserData}) {
         try {
             const updatedDocument = await appwriteService.likePost(postId, currentUserData?.$id, dispatch);
             
-            console.log("updatedocument",updatedDocument)
+            // console.log("updatedocument",updatedDocument)
             // console.log("likes", updatedDocument.likes)
             // setLikeCount(updatedDocument.likes.length)
         } catch (error) {
@@ -32,12 +32,12 @@ function LikeFeature({likes, postId, currentUserData}) {
         }
     };
     
-    console.log("likes" ,likes?.length)
+    // console.log("likes" ,likes?.length)
     
-    console.table([likes, postId, currentUserData?.$id])
+    // console.table([likes, postId, currentUserData?.$id])
 
   return (
-         <div className="flex justify-between items-center">
+         <div className="flex justify-between px-4 sm:px-5 items-center">
           <div className="flex gap-1 mr-5 items-center">
             <img 
             className="cursor-pointer"

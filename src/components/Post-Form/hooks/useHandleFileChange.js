@@ -22,10 +22,23 @@ const useHandleFileChange = (setSelectedFile, setPreview, setFileSize) => {
 
       const reader = new FileReader();
 
+
       reader.onloadend = () => {
         setPreview(reader.result);
       };
 
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          console.log("img.width", img.width)
+          console.log("img.height", img.height)
+          // setDimensions({ width: img.width, height: img.height });
+        };
+        img.src = e.target.result;
+      };
+
+
+      
       reader.readAsDataURL(file);
     }
   };

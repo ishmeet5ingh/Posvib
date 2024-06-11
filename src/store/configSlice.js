@@ -31,14 +31,27 @@ const configSlice = createSlice({
       localStorage.setItem("posts", JSON.stringify(state.posts));
     },
 
+    updateLike: (state, action) => {
+      const { id, likesArray } = action.payload;
+    
+      state.posts = state.posts.map(post =>
+        post.$id === id ? { ...post, likes: likesArray} : post
+      );
+  
+      localStorage.setItem("posts", JSON.stringify(
+        state.posts.map(post =>
+          post.$id === id ? { ...post, likes: likesArray } : post
+        )
+      ));
+    },
+
     deleteAllPost: (state) => {
       state.posts = null;
-      localStorage.setItem("posts", JSON.stringify(state.posts));
     },
   },
 });
 
-export const { setPosts, createPost, deletePost, updatePost, deleteAllPost } =
+export const { setPosts, createPost, updateLike, deletePost, updatePost, deleteAllPost } =
   configSlice.actions;
 
 export default configSlice.reducer;

@@ -6,6 +6,7 @@ import {
 } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAllPost } from "../store/configSlice";
+import authService from "../appwrite/auth";
 
 
 
@@ -24,15 +25,14 @@ function Home() {
 
   return (
     <>
-      {!authStatus && posts === null && (
+      {(!authStatus && posts === null) ? (
         <div className="px-10 pt-14 min-h-screen text-center">
           <h1 className="text-2xl font-bold text-white">Login to read posts</h1>
         </div>
-      )}
-
-      <PostsContainer>
-      {authStatus &&
-        posts === null &&
+      ) : (
+        <PostsContainer>
+      {(authStatus &&
+        posts === null) &&
         [1, 2, 3, 4]?.map((_, index) => (
           <div key={index} className="w-full">
             <PostCardSkeletonLoading />
@@ -46,6 +46,7 @@ function Home() {
             </div>
           ))}
       </PostsContainer>
+      )}
     </>
   );
   // }

@@ -7,17 +7,17 @@ import { Header, PostsContainer } from "./components";
 import { Outlet } from "react-router-dom";
 import "./index.css";
 import { setPosts, deleteAllPost } from "./store/configSlice";
-import {  setCurrentUser, setUsers } from "./store/userSlice";
+import {  setCurrentUser, setUsers, deleteUsers, deleteCurrentUser } from "./store/userSlice";
 import { createSelector } from "reselect";
 
 // import './App.css'
-const selectAuthData = (state, authData) => authData;
-const selectUsers = (state) => state.users.users?.users.documents;
+// const selectAuthData = (state, authData) => authData;
+// const selectUsers = (state) => state.users.users?.users.documents;
 
-const selectCurrentUser = createSelector(
-  [selectUsers, selectAuthData],
-  (users, authData) => users?.filter(user => user.accountId === authData?.$id)[0]
-);
+// const selectCurrentUser = createSelector(
+//   [selectUsers, selectAuthData],
+//   (users, authData) => users?.find(user => user.accountId === authData?.$id)
+// );
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -25,13 +25,13 @@ function App() {
   const authStatus = useSelector((state) => state.auth.status);
   const authData = useSelector((state)=> state.auth.userData)
   const authUsers = useSelector((state)=> state.users.users?.users.documents)
-  // const currentUser = useSelector((state)=> state.users.users.users.documents.filter((user) => user ? user.accountId === authData.$id : null)[0])
-  const currentUser = useSelector(state => selectCurrentUser(state, authData));
+  // const currentUser = useSelector((state)=> state.users?.users?.users.documents?.find(user => user.accountId === authData?.$id))
+  // const currentUser = useSelector(state => selectCurrentUser(state, authData));
 
 
-  const currentUser1 = useSelector((state)=> state.users.currentUser)
+  // const currentUser1 = useSelector((state)=> state.users.currentUser)
 
-  console.log(currentUser1)
+  // console.log(currentUser1)
   
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +40,9 @@ function App() {
         if (userData) {
           dispatch(login({ userData }))
           const users = await authService.getUsersDataFromDB()
+          console.log("usersType", users)
+          const currentUser = users.documents?.find(user => user.accountId === authData?.$id)
+
           console.table({users: users, authUsers: authUsers, authData: authData})
           dispatch(setUsers({users}))
           if (authStatus) {
@@ -52,6 +55,8 @@ function App() {
             dispatch(deleteAllPost());
           }
         } else {
+          dispatch(deleteUsers())
+          dispatch(deleteCurrentUser())
           dispatch(logout());
         }
       } catch (error) {

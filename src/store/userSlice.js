@@ -26,10 +26,18 @@ export const userSlice = createSlice({
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload
             localStorage.setItem("currentUser", JSON.stringify(state.currentUser))
+        },
+        deleteUsers: (state) => {
+            state.users = null
+            localStorage.setItem("users", JSON.stringify(state.users))
+        },
+        deleteCurrentUser: (state) => {
+            state.currentUser = null
+            localStorage.setItem("currentUser", JSON.stringify(state.currentUser))
         }
     }
 })
 
-export const {setUsers, setCurrentUser} = userSlice.actions
+export const {setUsers, setCurrentUser, deleteUsers, deleteCurrentUser} = userSlice.actions
 
 export default userSlice.reducer

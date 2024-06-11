@@ -1,7 +1,7 @@
-import {Client, Databases, Storage, ID, Avatars} from 'appwrite'
+import {Client, Databases, Storage, ID, Avatars, } from 'appwrite'
 import conf from '../conf/conf'
 
-import { updatePost } from '../store/configSlice'
+import { updateLike } from '../store/configSlice'
 export class Service{
     client = new Client()
     databases
@@ -15,6 +15,14 @@ export class Service{
         this.databases = new Databases(this.client)
         this.bucket = new Storage(this.client)
         this.avatars = new Avatars(this.client)
+
+        this.client.subscribe([`databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents`, 'files'], response => {
+            if(response.events.includes("databases.*.collections.*.documents.*.update")){
+                console.log("A Post is updated")
+            }
+                console.log("realtime", response)
+        });
+
     }
 
 
@@ -157,13 +165,16 @@ export class Service{
                 }
             );
             
-            dispatch(updatePost({id: postId, dbPost: updatedPost}))
+            dispatch(updateLike({id: postId, likesArray: updatedPost.likes}))
+
             return updatedPost
         } catch (error) {
             console.log("Appwrite service :: likePost :: error: ", error);
         }
     }
+    
 }
+
 
 const service = new Service()
 

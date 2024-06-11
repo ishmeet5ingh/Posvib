@@ -84,15 +84,17 @@ export class AuthService {
     return null;
   }
 
-  async getUserDataFromDB(accountId){
+  async getUserDataFromDB(id){
     try {
-        return await this.databases.getDocument(
+        const a = await this.databases.getDocument(
             conf.appwriteDatabaseId,
             conf.appwriteUsersCollectionId,
-            accountId
+            id
         )
+        console.log("aaaaaaaaaaaaa", a)
+        return a
     } catch (error) {
-        console.log("appwrite service :: getPost :: error: ", error)
+        console.log("appwrite service :: getUserDataFromDB :: error: ", error)
         return false
     }
 }
@@ -102,6 +104,7 @@ export class AuthService {
             conf.appwriteDatabaseId,
             conf.appwriteUsersCollectionId,
         )
+
     } catch (error) {
         console.log("appwrite service :: getPost :: error: ", error)
         return false
