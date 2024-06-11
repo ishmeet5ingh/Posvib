@@ -68,7 +68,7 @@ function PostCard({
 
   return (
     <div className="relative border-b border-teal-800 flex p-4 flex-col">
-      <div >
+      <div>
       <div className="flex w-full gap-2  pb-2">
         <img className="  w-9 h-9 rounded-[50%]" src={creator?.imageUrl} alt="" />
           <div className=" flex w-full justify-between">
