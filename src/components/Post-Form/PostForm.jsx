@@ -85,9 +85,9 @@ function PostForm({ post }) {
         userId: userData?.$id,
       });
 
-      if (dbPost) {
-        dispatch(createPost(dbPost));
-      }
+      // if (dbPost) {
+      //   dispatch(createPost(dbPost));
+      // }
     }
     setLoading(3);
     reset();

@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  posts:  null,
+  posts: null,
+  likeCount: 0
 };
 
 const configSlice = createSlice({
@@ -36,13 +37,17 @@ const configSlice = createSlice({
   
     },
 
+    likeCounts: (state, action) => {
+      state.likeCount = action.payload
+    },
+
     deleteAllPost: (state) => {
       state.posts = null;
     },
   },
 });
 
-export const { setPosts, createPost, updateLike, deletePost, updatePost, deleteAllPost } =
+export const { setPosts, createPost, updateLike, deletePost, updatePost, deleteAllPost, likeCounts } =
   configSlice.actions;
 
 export default configSlice.reducer;

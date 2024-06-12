@@ -3,7 +3,7 @@ import appwriteService from "../appwrite/config";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCircle, FaHeart } from "react-icons/fa";
-import { Button, LikeFeature } from "../components";
+import { Button, LikeFeature, PostCardSkeletonLoading } from "../components";
 import { deletePost } from "../store/configSlice";
 
 function PostCard({
@@ -78,7 +78,7 @@ function PostCard({
                 $createdAt
               )}`}</p>
             </div>
-            <div className=" borderrelative flex items-center" ref={dropdownRef}>
+            <div className="relative flex items-center" ref={dropdownRef}>
               <div
                 className="flex px-1 py-2 duration-200 rounded-full  text-teal-400"
                 onClick={toggleDropdown}
