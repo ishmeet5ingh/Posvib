@@ -13,7 +13,6 @@ function PostCard({
   userId,
   $createdAt,
   creator,
-  idx,
   likes
 }) {
   const navigate = useNavigate();
@@ -59,7 +58,7 @@ function PostCard({
   }, [dropdownRef]);
 
   const delpost = async () => {
-    dispatch(deletePost(idx));
+    dispatch(deletePost($id))
     await appwriteService.deletePost($id);
     if (featuredImage !== null) {
       await appwriteService.deleteFile(featuredImage);
@@ -132,7 +131,6 @@ function PostCard({
                 alt={content}
                 className={`w-full rounded-md border border-teal-900 `}
                 onLoad={() => setImageLoading(false)}
-               
               />
             </div>
           </Link>

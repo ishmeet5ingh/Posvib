@@ -1,6 +1,6 @@
-import { Client, Databases, Storage, ID, Avatars } from "appwrite";
+import { Client, Databases, Storage, ID, Avatars, Query } from "appwrite";
 import conf from "../conf/conf";
-import { createPost, updateLike, updatePost } from "../store/configSlice";
+import { createPost, updatePost, deletePost, updateLike } from "../store/configSlice";
 import store from "../store/store";
 
 export class Service {
@@ -16,32 +16,6 @@ export class Service {
     this.databases = new Databases(this.client);
     this.bucket = new Storage(this.client);
     this.avatars = new Avatars(this.client);
-
-    this.client.subscribe(
-      [
-        `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents`,
-        "files",
-      ],
-      (response) => {
-        if (
-          response.events.includes(
-            "databases.*.collections.*.documents.*.create"
-          )
-        ) {
-          console.log("A Post is Created");
-          store.dispatch(createPost(response.payload));
-        }
-        if (
-          response.events.includes(
-            "databases.*.collections.*.documents.*.update"
-          )
-        ) {
-          store.dispatch(updatePost({id: response.payload.$id, dbPost: response.payload}));
-          
-        }
-        console.log("realtime", response);
-      }
-    );
   }
 
   async createPost({ content, slug, featuredImage, status, userId }) {
@@ -108,16 +82,21 @@ export class Service {
     }
   }
 
-  async getPosts(queries = [Query.equal("status", "active")]) {
+  async getPosts(page = 1, limit = 6) {
+    const offset = (page - 1) * limit;
     try {
-      return await this.databases.listDocuments(
+      const response = await this.databases.listDocuments(
         conf.appwriteDatabaseId,
         conf.appwritePostsCollectionId,
-        queries
+        [
+          Query.limit(limit),
+          Query.offset(offset)
+        ]
       );
+      return response.documents
     } catch (error) {
       console.log("Appwrite serive :: getPosts :: error", error);
-      return false;
+      return [];
     }
   }
 
@@ -151,7 +130,7 @@ export class Service {
     return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
   }
 
-  async likePost(postId, userId, dispatch) {
+  async likePost(postId, userId) {
     try {
       // Fetch the post
       const post = await this.databases.getDocument(
@@ -177,6 +156,7 @@ export class Service {
         }
       );
       
+      // store.dispatch(updateLike({ id: postId, likesArray: updatePost.likes }));
 
       return updatedPost;
     } catch (error) {

@@ -18,6 +18,7 @@ import PostTextarea from "./Post-Form/PostTextarea";
 import FileInput from "./Post-Form/FileInput";
 import ProgressBarComponent from "./Post-Form/ProgressBarComponent";
 import LikeFeature from "./LikeFeature.jsx";
+import ErrorContainer from "./containers/ErrorContainer";
 
 
 export  {
@@ -40,5 +41,6 @@ export  {
     PostTextarea,
     FileInput,
     ProgressBarComponent,
-    LikeFeature
+    LikeFeature, 
+    ErrorContainer,
 }

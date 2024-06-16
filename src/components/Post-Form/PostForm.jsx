@@ -68,7 +68,7 @@ function PostForm({ post }) {
 
       if (dbPost) {
         let id = post.$id
-        dispatch(updatePost({ id, dbPost }));
+        // dispatch(updatePost({ id, dbPost }));
         navigate(`/post/${dbPost.$id}`);
       }
     } else {
@@ -85,9 +85,9 @@ function PostForm({ post }) {
         userId: userData?.$id,
       });
 
-      // if (dbPost) {
-      //   dispatch(createPost(dbPost));
-      // }
+      if (dbPost) {
+        dispatch(createPost(dbPost));
+      }
     }
     setLoading(3);
     reset();
@@ -132,7 +132,7 @@ function PostForm({ post }) {
           />
         )}
 
-        {post && (
+        {post && post.featuredImage && (
           <div className="w-full mb-4">
             <img
               src={appwriteService.getFilePreview(post.featuredImage)}

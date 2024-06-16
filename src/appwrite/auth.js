@@ -1,5 +1,9 @@
 import { Client, Account, ID, Avatars, Databases, Permission, Role } from "appwrite";
 import conf from "../conf/conf";
+import { setError } from "../store/errorSlice";
+import store from "../store/store";
+
+
 
 export class AuthService {
   client = new Client();
@@ -40,7 +44,8 @@ export class AuthService {
         });
         
     } catch (error) {
-      console.log("appwrite service :: createAccount :: error: ", error);
+      store.dispatch(setError(error.message))
+      console.log(error)
     }
   }
 
@@ -50,7 +55,7 @@ export class AuthService {
         const newUser = await this.databases.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteUsersCollectionId,
-        ID.unique(),
+        username,
         {
          name,
          accountId,

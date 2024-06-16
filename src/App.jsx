@@ -7,7 +7,7 @@ import { Header } from "./components";
 import { Outlet } from "react-router-dom";
 import "./index.css";
 import { setPosts, deleteAllPost } from "./store/configSlice";
-import {  setCurrentUser, setUsers, deleteUsers, deleteCurrentUser } from "./store/userSlice";
+import {  setCurrentUser, setUsers, deleteUsers, deleteCurrentUser} from "./store/userSlice";
 
 
 
@@ -18,6 +18,10 @@ function App() {
   const authData = useSelector((state)=> state.auth.userData)
   const authUsers = useSelector((state)=> state.users.users?.users.documents)
   
+  // const page = useSelector(state => state.config.page);
+
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,9 +32,9 @@ function App() {
           const currentUser = users.documents?.find(user => user.accountId === authData?.$id)
           dispatch(setUsers({users}))
           if (authStatus) {
-            const posts = await appwriteService.getPosts([]);
+            const posts = await appwriteService.getPosts(1);
             if (posts) {
-              dispatch(setPosts(posts.documents));
+              dispatch(setPosts(posts));
             }
             dispatch(setCurrentUser(currentUser))
           } else {
@@ -49,14 +53,13 @@ function App() {
     };
 
     fetchData();
-  }, [dispatch, authStatus, ]);
+  }, [dispatch, authStatus,]);
 
   return !loading ? (
     <div>
       <div className="sm:flex">
         <Header />
         <main>{authStatus ? <Outlet /> : <Outlet />}</main>
-        {/* <Footer/> */}
       </div>
     </div>
   ) : (
@@ -68,7 +71,6 @@ function App() {
             <Outlet />
           </>
         ) : null}
-        {/* <Footer/> */}
       </div>
     </div>
   );

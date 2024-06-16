@@ -15,7 +15,7 @@ function EditPost() {
 
     useEffect(() => {
         if (slug) {
-          posts && posts.map((post, index) =>{
+          posts && posts.map((post) =>{
             if(slug===post?.$id){
               setPost(post)
             }

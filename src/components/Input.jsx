@@ -10,13 +10,13 @@ const Input = React.forwardRef(({
     return (
        <div className='flex flex-col'>
         {label && <label
-        className='mb-1'
+        className='mb-1 text-xs font-medium '
         htmlFor={id}>
             {label}
         </label>}
         <input 
         type={type} 
-        className={`text-black p-2  mb-3 rounded-md ${className}`}
+        className={`text-black p-2  mb-1 border border-blue  rounded-md bg-blue-200 active:bg-blue-200`}
         ref={ref} // ref pass from there and give state's access to that component
         {...props}
         id={id}

@@ -9,7 +9,6 @@ function MyPosts() {
 
   let posts = useSelector((state) => state.config.posts);
 
-  console.log("posts", posts);
   return (
     <>
       <PostsContainer>

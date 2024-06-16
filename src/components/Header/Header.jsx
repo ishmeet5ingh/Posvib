@@ -14,6 +14,7 @@ function Header() {
   const logoutHandler = () => {
     authService.logout().then(() => {
       dispatch(logout());
+      navigate('/')
     });
   };
 
@@ -86,15 +87,13 @@ function Header() {
               <li key={item?.name}>
                 {item.name === "Logout" ? (
                   <button
-                    onClick={() => {
-                      navigate(item.slug);
-                      logoutHandler();
-
-                    }}
+                    onClick={logoutHandler}
                     className="text-2xl  md:text-lg duration-200 flex hover:text-red-300 "
                   >
                     {isSmallScreen ? (
-                      <li className="flex flex-col items-center" >{item.symbol} <span className="text-xs mt-1"> {item.name}</span></li>
+                      <div className="flex flex-col items-center">
+                          {item.symbol} <span className="text-xs mt-1">{item.name}</span>
+                      </div>
                     ) : (
                       <>
                         <span className="text-2xl pr-3 ">{item.symbol}</span>
@@ -108,7 +107,9 @@ function Header() {
                     className={({isActive})=>`text-2xl md:text-lg  duration-100 ${isActive ? "text-blue-300" : ""}   hover:text-blue-100 flex`}
                   >
                     {isSmallScreen ? (
-                      <li className="flex flex-col items-center" >{item.symbol} <span className="text-xs mt-1"> {item.name}</span></li>
+                      <div className="flex flex-col items-center">
+                          {item.symbol} <span className="text-xs mt-1">{item.name}</span>
+                        </div>
                     ) : (
                       <>
                       <span className="text-2xl pr-4">{item.symbol}</span>

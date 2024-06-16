@@ -2,17 +2,16 @@ import {configureStore} from '@reduxjs/toolkit'
 import authSlice from './authSlice'
 import configSlice from './configSlice'
 import userSlice from './userSlice';
-// import localStorageMiddleware from '../middleware/localStorageMiddleware';
+import errorSlice from './errorSlice';
 
 
 const store = configureStore({
     reducer: {
         auth: authSlice,
         config: configSlice,
-        users: userSlice
+        users: userSlice,
+        error: errorSlice
     },
-    // middleware: (getDefaultMiddleware) =>
-    //     getDefaultMiddleware().concat(localStorageMiddleware),
     });
 
 export default store
