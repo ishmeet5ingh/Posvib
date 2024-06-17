@@ -19,6 +19,9 @@ import FileInput from "./Post-Form/FileInput";
 import ProgressBarComponent from "./Post-Form/ProgressBarComponent";
 import LikeFeature from "./LikeFeature.jsx";
 import ErrorContainer from "./containers/ErrorContainer";
+import UserSideBar from "./user/UserSideBar.jsx";
+import SearchUser from "./user/SearchUser.jsx"
+import Profile from "./user/Profile.jsx";
 
 
 export  {
@@ -43,4 +46,7 @@ export  {
     ProgressBarComponent,
     LikeFeature, 
     ErrorContainer,
+    UserSideBar,
+    SearchUser,
+    Profile,
 }

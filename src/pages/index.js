@@ -5,6 +5,10 @@ import MyPosts from './MyPosts'
 import EditPost from './EditPost'
 import AddPost from './AddPost'
 import Post from './Post'
+import Search from './Search'
+import UserProfile from './UserProfile'
+
+
 
 
 export {
@@ -15,4 +19,6 @@ export {
     MyPosts,
     EditPost,
     Post,
+    Search,
+    UserProfile
 }

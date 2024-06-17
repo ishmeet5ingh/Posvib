@@ -5,12 +5,15 @@ import { Logo } from "../index";
 import { useDispatch } from "react-redux";
 import authService from "../../appwrite/auth";
 import { logout } from "../../store/authSlice";
-import { FaHome, FaPlus, FaList, FaSignOutAlt, FaSignInAlt, FaUserPlus} from "react-icons/fa";
+import { FaHome, FaSearch, FaPlus,FaUser, FaSignOutAlt, FaSignInAlt, FaUserPlus} from "react-icons/fa";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.users.currentUser)
+
+
   const logoutHandler = () => {
     authService.logout().then(() => {
       dispatch(logout());
@@ -57,10 +60,16 @@ function Header() {
       active: !authStatus,
     },
     {
-      name: "My Posts",
-      symbol: <FaList />,
-      slug: "/my-posts",
+      name: "Profile",
+      symbol: <FaUser />,
+      slug: `/user/${userData?.username}`,
       active: authStatus,
+    },
+    {
+      name: "Search",
+      symbol: <FaSearch/>,
+      slug: "/search",
+      active: authStatus
     },
     {
       name: "Add Post",
@@ -68,16 +77,18 @@ function Header() {
       slug: "/add-post",
       active: authStatus,
     },
+   
     {
       name: "Logout",
       symbol: <FaSignOutAlt />,
       slug: "/",
       active: authStatus,
     },
+   
   ];
 
   return (
-    <header className="z-30 text-white sm:w-1/4 border-r border-teal-800  py-3 px-3 shadow sm:min-h-screen fixed sm:static w-full  bottom-0 bg-black ">
+    <header className="z-30 text-white w-full sm:w-[128px] md:w-[160px] xmd:w-[300px] border-r border-teal-800  py-3 px-3 shadow sm:min-h-screen fixed sm:static   bottom-0 bg-black ">
       <nav className="flex sm:flex-col justify-center items-center">
         <div className="sm:items-start mb-10">{isLogo ? "" : <Logo width="70px" />}</div>
         <div className="w-full sm:w-fit">
@@ -88,7 +99,7 @@ function Header() {
                 {item.name === "Logout" ? (
                   <button
                     onClick={logoutHandler}
-                    className="text-2xl  md:text-lg duration-200 flex hover:text-red-300 "
+                    className="text-2xl md:text-lg duration-200 flex hover:text-red-300 "
                   >
                     {isSmallScreen ? (
                       <div className="flex flex-col items-center">
@@ -96,7 +107,7 @@ function Header() {
                       </div>
                     ) : (
                       <>
-                        <span className="text-2xl pr-3 ">{item.symbol}</span>
+                        <span className="text-2xl  pr-3 ">{item.symbol}</span>
                         {item?.name}
                       </>
                     )}
@@ -104,7 +115,7 @@ function Header() {
                 ) : (
                   <NavLink
                     to={item.slug}
-                    className={({isActive})=>`text-2xl md:text-lg  duration-100 ${isActive ? "text-blue-300" : ""}   hover:text-blue-100 flex`}
+                    className={({isActive})=>` text-2xl sm:text-lg duration-100 ${isActive ? "text-blue-300" : ""}   hover:text-blue-100 flex`}
                   >
                     {isSmallScreen ? (
                       <div className="flex flex-col items-center">
@@ -124,6 +135,7 @@ function Header() {
         </ul>
         </div>
       </nav>
+
     </header>
   );
 }

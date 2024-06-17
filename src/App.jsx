@@ -16,7 +16,7 @@ function App() {
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
   const authData = useSelector((state)=> state.auth.userData)
-  const authUsers = useSelector((state)=> state.users.users?.users.documents)
+  const authUsers = useSelector((state)=> state.users.users?.documents)
   
   // const page = useSelector(state => state.config.page);
 
@@ -30,7 +30,7 @@ function App() {
           dispatch(login({ userData }))
           const users = await authService.getUsersDataFromDB()
           const currentUser = users.documents?.find(user => user.accountId === authData?.$id)
-          dispatch(setUsers({users}))
+          dispatch(setUsers(users?.documents))
           if (authStatus) {
             const posts = await appwriteService.getPosts(1);
             if (posts) {
@@ -59,7 +59,7 @@ function App() {
     <div>
       <div className="sm:flex">
         <Header />
-        <main>{authStatus ? <Outlet /> : <Outlet />}</main>
+        <main className="w-full">{authStatus ? <Outlet /> : <Outlet />}</main>
       </div>
     </div>
   ) : (

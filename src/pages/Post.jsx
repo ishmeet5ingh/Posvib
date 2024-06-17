@@ -7,20 +7,19 @@ import "../index.css";
 
 export default function Post() {
   const [post, setPost] = useState(null);
-  const { slug } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
-
-  const userData = useSelector((state) => state.auth.userData);
+  
   const posts = useSelector((state) => state.config.posts);
 
   useEffect(() => {
-    if (slug) {
-      posts && posts.map((post) => slug === post?.$id && setPost(post));
+    if (id) {
+      posts && posts.map((post) => id === post?.$id && setPost(post));
     } else navigate("/");
-  }, [slug, navigate]);
+  }, [id, navigate]);
 
   return (
-    <div className=" h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen border-r border-teal-800 w-full sm:w-96 md:w-[500px] ">
+    <div className=" h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen border-r border-teal-800 w-full sm:w-[390px] md:w-[450px] lg:w-[550px]">
       <div className=" mt-16 mb-28 border-y border-teal-800">
       {post ? <PostCard {...post} />
       : <PostCardSkeletonLoading/>

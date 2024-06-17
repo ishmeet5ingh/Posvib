@@ -13,22 +13,21 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost, updatePost } from "../../store/configSlice";
 import {
-  useSlugTransform,
   useHandleFileChange,
   useHandleTextareaInput,
   useFormInitialization,
   useProgress,
 } from "./hooks";
+import { setUserPost, updateUserPost } from "../../store/userSlice";
+
 
 
 // import './App.css'
 
 
 function PostForm({ post }) {
-  const slugTransform = useSlugTransform();
   const { register, handleSubmit, getValues, reset } = useFormInitialization(
     post,
-    slugTransform
   );
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -64,11 +63,13 @@ function PostForm({ post }) {
       const dbPost = await appwriteService.updatePost(post.$id, {
         ...data,
         featuredImage: file ? file.$id : undefined,
+
       });
 
       if (dbPost) {
         let id = post.$id
-        // dispatch(updatePost({ id, dbPost }));
+        dispatch(updatePost({ id, dbPost }));
+        dispatch(updateUserPost(dbPost))
         navigate(`/post/${dbPost.$id}`);
       }
     } else {
@@ -87,6 +88,7 @@ function PostForm({ post }) {
 
       if (dbPost) {
         dispatch(createPost(dbPost));
+        dispatch(setUserPost(dbPost));
       }
     }
     setLoading(3);

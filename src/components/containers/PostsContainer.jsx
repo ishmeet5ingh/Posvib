@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { PostForm } from "..";
+import { PostForm, UserSideBar } from "..";
 import { addPosts, setPage } from "../../store/configSlice";
 import { useDispatch, useSelector } from "react-redux";
 import appwriteService from "../../appwrite/config";
@@ -52,9 +52,10 @@ function PostsContainer({ children }) {
   }, [loadMorePosts]);
 
   return (
+    <div className="overflow-y-scroll hide-scrollbar text-white w-full flex ">
     <div
       id="container"
-      className="sm:border-r outline outline-white border-teal-800 h-screen overflow-y-scroll flex flex-col min-h-screen w-full sm:w-96 md:w-[500px]"
+      className=" sm:border-r border-teal-800 h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen w-full sm:w-[390px] md:w-[450px] lg:w-[550px]"
     >
       <div className="mt-16 mb-28">
         <PostForm />
@@ -69,6 +70,8 @@ function PostsContainer({ children }) {
           {!hasMore && <p>No more posts</p>}
         </div>
       </div>
+    </div>
+      <UserSideBar/>
     </div>
   );
 }
