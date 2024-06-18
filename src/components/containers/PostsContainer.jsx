@@ -55,7 +55,7 @@ function PostsContainer({ children }) {
     <div className="overflow-y-scroll hide-scrollbar text-white w-full flex ">
     <div
       id="container"
-      className=" sm:border-r border-teal-800 h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen w-full sm:w-[390px] md:w-[450px] lg:w-[550px]"
+      className=" xs:border-r border-teal-800 h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen w-full xs:w-[420px] sm:w-[350px] md:w-[450px] lg:w-[500px]"
     >
       <div className="mt-16 mb-28">
         <PostForm />

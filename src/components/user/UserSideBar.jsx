@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
+import UserSideBarSkeleton from './skeleton/UserSideBarSkeleton';
 
 
 function UserSideBar() {
     
-
-    const users = useSelector((state) => state.users.users);
-    const [searchTerm, setSearchTerm] = useState("");
+  const users = useSelector((state) => state.users.users);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Filtered users based on the search term
   const filteredUsers = users?.filter(
@@ -17,9 +17,15 @@ function UserSideBar() {
   );
 
   return (
-    <div className="bg-black p-3 pt-16 md:pl-5 lg:pl-10 text-white hidden sm:block">
+    <div className="bg-black p-3 pt-16 md:pl-5 lg:pl-10 text-white hidden xs:block">
       <ul>
-        {filteredUsers?.length > 0 ? (
+      {!users ? (
+          // Display skeleton loaders when loading
+          Array.from({ length: 3 }).map((_, index) => (
+            <UserSideBarSkeleton key={index} />
+          ))
+        ): (
+          filteredUsers?.length > 0 ? (
           filteredUsers.map((user) => (
             <li key={user.$id} >
             <Link to={`/user/${user?.username}`} className='flex items-center mb-4'>
@@ -37,7 +43,9 @@ function UserSideBar() {
           ))
         ) : (
           <p>No users found.</p>
+        )
         )}
+        
       </ul>
     </div>
   );

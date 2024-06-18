@@ -17,19 +17,21 @@ function UserSideBar() {
       user.username.toLowerCase().includes(searchUser.toLowerCase())
   );
 
+  console.log("filteredUsers", filteredUsers)
+  console.log("searchUser",searchUser)
+
   return (
-    <div className="bg-black p-10 text-white min-h-screen sm:border-r border-teal-800 w-full sm:w-[390px] md:w-[450px] lg:w-[550px]">
-    <div >
-    <h1 className="text-2xl font-bold mb-4">Users</h1>
+    <div className="bg-black pt-10 px-5 text-white flex justify-center min-h-screen sm:border-r border-teal-800 w-full sm:w-[350px] md:w-[450px] lg:w-[500px]">
+    <div className='w-11/12'>
       <input
         type="text"
         placeholder="Search users..."
         value={searchUser}
         onChange={(e) => setSearchUser(e.target.value)}
-        className="w-full max-w-96 mb-5 text-black p-2 border border-gray-300 rounded-md"
+        className="mb-5 w-full text-black p-2 border border-gray-300 rounded-md"
       />
       <ul>
-        {filteredUsers?.length > 0 ? (
+        {(filteredUsers?.length > 0) && searchUser !== ""  ? (
           filteredUsers.map((user) => (
             <li key={user.$id}>
             <Link to={`/user/${user?.username}`} className='flex items-center mb-4'>
@@ -46,6 +48,7 @@ function UserSideBar() {
             </li>
           ))
         ) : (
+          searchUser &&
           <p>No users found.</p>
         )}
       </ul>

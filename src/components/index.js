@@ -22,7 +22,7 @@ import ErrorContainer from "./containers/ErrorContainer";
 import UserSideBar from "./user/UserSideBar.jsx";
 import SearchUser from "./user/SearchUser.jsx"
 import Profile from "./user/Profile.jsx";
-
+import UserSideBarSkeleton from "./user/skeleton/UserSideBarSkeleton.jsx";
 
 export  {
     Footer,
@@ -49,4 +49,5 @@ export  {
     UserSideBar,
     SearchUser,
     Profile,
+    UserSideBarSkeleton
 }

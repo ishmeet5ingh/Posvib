@@ -8,6 +8,7 @@ function Home() {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.config.posts);
 
+  console.log(posts)
   useEffect(() => {
     if (!authStatus) {
       dispatch(deleteAllPost());

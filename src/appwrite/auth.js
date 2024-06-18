@@ -61,7 +61,9 @@ export class AuthService {
          accountId,
          username, 
          email, 
-         imageUrl
+         imageUrl,
+         following: [],
+         followers: [],
         }
       );
       
@@ -115,7 +117,6 @@ export class AuthService {
         return false
     }
 }
-
 
 
 

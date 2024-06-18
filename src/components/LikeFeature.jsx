@@ -5,13 +5,20 @@ import likedIcon from "../../public/liked.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLike } from "../store/configSlice";
 import conf from "../conf/conf";
+import { updateUserPostLike } from "../store/userSlice";
 
 function LikeFeature({ likes, postId, currentUserData }) {
   const [isLiked, setIsLiked] = useState(
-    likes?.some((likedUser) => likedUser === currentUserData?.$id) || false
+    likes?.includes(currentUserData.$id)
   );
   const [likeCount, setLikeCount] = useState(likes?.length);
   const dispatch = useDispatch();
+  
+
+  useEffect(() => {
+    setIsLiked(likes?.includes(currentUserData.$id));
+    setLikeCount(likes?.length || 0);
+  }, [likes, currentUserData.$id]);
 
   // const post = useSelector(state => state.config.posts)
   // const like = post.find(post => post.$id === postId)
@@ -34,29 +41,30 @@ function LikeFeature({ likes, postId, currentUserData }) {
   //       unsubscribe();
   //     };
   // }, []);
+  console.log("isLiked", isLiked)
 
   const handleLike = () => {
-    // Optimistically update UI
-    // const newIsLiked = !isLiked;
-    // const newLikeCount = newIsLiked ? likeCount + 1 : likeCount - 1;
+  
+   const newIsLiked = !isLiked;
+    const newLikeCount = newIsLiked ? likeCount + 1 : likeCount - 1;
 
+    setIsLiked(newIsLiked);
+    setLikeCount(newLikeCount);
 
     appwriteService
       .likePost(postId, currentUserData?.$id)
       .then((updatedDocument) => {
-        // Update global state with the new likes array from server
-        dispatch(
-          updateLike({ id: postId, likesArray: updatedDocument.likes })
-        );
-        setIsLiked((prevLike) => !prevLike);
-        console.log("isLiked", isLiked)
-      // setLikeCount(newLikeCount);
+              dispatch(updateLike({ id: postId, likesArray: updatedDocument.likes }));
+              dispatch(updateUserPostLike({userId: currentUserData?.$id, postId, likesArray: updatedDocument?.likes}))
+
+        // Ensure the UI reflects the latest likes from the server
+        setLikeCount(updatedDocument.likes.length);
+        setIsLiked(updatedDocument.likes.includes(currentUserData.$id));
       })
       .catch((error) => {
-        // Revert optimistic update if API call fails
         console.error("Error updating like status:", error.message);
-        // setIsLiked(!newIsLiked);
-        // setLikeCount(newIsLiked ? likeCount - 1 : likeCount + 1);
+        setIsLiked(!newIsLiked);
+        setLikeCount(likeCount);
       });
   };
 
@@ -71,7 +79,7 @@ function LikeFeature({ likes, postId, currentUserData }) {
           height={25}
           onClick={handleLike}
         />
-        <p className="text-white">{likes?.length}</p>
+        <p className="text-white">{likeCount}</p>
       </div>
     </div>
   );

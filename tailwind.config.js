@@ -11,7 +11,8 @@ export default {
       },
       screens: {
         // Custom breakpoint 'xmd' between 'md' and 'lg'
-        'xmd': '900px', // Custom value, you can change it to whatever you prefer
+        'xmd': '900px',
+        'xs': '500px'
       },
     },
     

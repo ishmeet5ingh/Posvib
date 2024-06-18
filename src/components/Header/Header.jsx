@@ -88,7 +88,7 @@ function Header() {
   ];
 
   return (
-    <header className="z-30 text-white w-full sm:w-[128px] md:w-[160px] xmd:w-[300px] border-r border-teal-800  py-3 px-3 shadow sm:min-h-screen fixed sm:static   bottom-0 bg-black ">
+    <header className="z-30 text-white w-full sm:w-[128px] md:w-[160px] xmd:w-[300px] lg:w-[400px] border-r border-teal-800  py-3 px-3 shadow sm:min-h-screen fixed sm:static   bottom-0 bg-black ">
       <nav className="flex sm:flex-col justify-center items-center">
         <div className="sm:items-start mb-10">{isLogo ? "" : <Logo width="70px" />}</div>
         <div className="w-full sm:w-fit">

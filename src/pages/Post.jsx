@@ -19,12 +19,14 @@ export default function Post() {
   }, [id, navigate]);
 
   return (
-    <div className=" h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen border-r border-teal-800 w-full sm:w-[390px] md:w-[450px] lg:w-[550px]">
+  <div className="w-full flex justify-center">
+    <div className=" h-screen overflow-y-scroll hide-scrollbar flex flex-col  min-h-screen border-r border-teal-800 w-full xs:border-l xs:w-[450px] sm:w-[390px] md:w-[450px] lg:w-[550px]">
       <div className=" mt-16 mb-28 border-y border-teal-800">
       {post ? <PostCard {...post} />
       : <PostCardSkeletonLoading/>
       }
       </div>
     </div>
+  </div>
   )
 }

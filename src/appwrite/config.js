@@ -108,7 +108,7 @@ export class Service {
         // get the id
         conf.appwriteBucketId,
         ID.unique(),
-        file
+        file,
       );
     } catch (error) {
       console.log("Appwrite serive :: uploadFile :: error", error);
@@ -140,10 +140,8 @@ export class Service {
       );
 
       // Add userId to likes if not already present
-      const updatedLikes = post.likes?.find(
-        (likedUser) => likedUser?.$id === userId
-      )
-        ? post.likes.filter((likedUser) => likedUser?.$id !== userId) // Unlike
+      const updatedLikes = post.likes.includes(userId)
+        ? post.likes.filter((likedUser) => likedUser !== userId) // Unlike
         : [...post.likes, userId]; // Like
 
       // Update post with new likes array

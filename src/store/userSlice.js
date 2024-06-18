@@ -33,14 +33,14 @@ export const userSlice = createSlice({
     },
 
     setUserPost: (state, action) => {
-        const post = action.payload;
-        const updatedUsers = state.users?.map((user) =>
-          user.$id === post.userId
-            ? { ...user, posts: [...(user.posts || []), post] }
-            : user
-        );
-      
-        state.users = updatedUsers;
+      const post = action.payload;
+      const updatedUsers = state.users?.map((user) =>
+        user.$id === post.userId
+          ? { ...user, posts: [...(user.posts || []), post] }
+          : user
+      );
+
+      state.users = updatedUsers;
       try {
         localStorage.setItem("users", JSON.stringify(updatedUsers));
       } catch (error) {
@@ -49,9 +49,8 @@ export const userSlice = createSlice({
     },
 
     updateUserPost: (state, action) => {
-      const updatedPost  = action.payload;
+      const updatedPost = action.payload;
 
-      
       const updatedUsers = state.users?.map((user) =>
         user.$id === updatedPost.userId
           ? {
@@ -61,9 +60,9 @@ export const userSlice = createSlice({
               ),
             }
           : user
-      )
+      );
 
-      state.users = updatedUsers
+      state.users = updatedUsers;
       try {
         localStorage.setItem("users", JSON.stringify(updatedUsers));
       } catch (error) {
@@ -71,19 +70,51 @@ export const userSlice = createSlice({
       }
     },
 
-    deleteUserPost: (state, action)=> {
-        const {userId, postId} = action.payload
+    deleteUserPost: (state, action) => {
+      const { userId, postId } = action.payload;
 
-        console.log("userId", userId)
-        console.log("postId", postId)
-        const updatedUsers = state.users?.map( (user) => user.$id === userId ? {...user, posts: user?.posts?.filter( (post) => post.$id !== postId)} : user)
+      console.log("userId", userId);
+      console.log("postId", postId);
+      const updatedUsers = state.users?.map((user) =>
+        user.$id === userId
+          ? {
+              ...user,
+              posts: user?.posts?.filter((post) => post.$id !== postId),
+            }
+          : user
+      );
 
-        state.users = updatedUsers
-        try {
-            localStorage.setItem("users", JSON.stringify(updatedUsers));
-          } catch (error) {
-            console.error("Error updating users in localStorage", error);
-          }
+      state.users = updatedUsers;
+      try {
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      } catch (error) {
+        console.error("Error updating users in localStorage", error);
+      }
+    },
+
+    updateUserPostLike: (state, action) => {
+      const { userId, postId, likesArray } = action.payload;
+      const updatedUsers = state.users?.map((user) =>
+        user.$id === userId
+          ? {
+              ...user,
+              posts: user.posts?.map((post) =>
+                post.$id === postId ? {
+                   ...post, 
+                   likes: likesArray 
+                  } : post
+              ),
+            }
+          : user
+      );
+
+      state.users = updatedUsers
+      console.log("updatedUsers", updatedUsers)
+      try {
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      } catch (error) {
+        console.error("Error updating users in localStorage", error);
+      }
     },
 
     deleteUsers: (state) => {
@@ -113,6 +144,7 @@ export const {
   deleteUserPost,
   deleteUsers,
   deleteCurrentUser,
+  updateUserPostLike,
 } = userSlice.actions;
 
 export default userSlice.reducer;
