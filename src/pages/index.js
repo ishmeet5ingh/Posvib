@@ -7,9 +7,8 @@ import AddPost from './AddPost'
 import Post from './Post'
 import Search from './Search'
 import UserProfile from './UserProfile'
-
-
-
+import Followers from './Followers'
+import Following from './Following'
 
 export {
     Home,
@@ -20,5 +19,7 @@ export {
     EditPost,
     Post,
     Search,
-    UserProfile
+    UserProfile,
+    Followers,
+    Following
 }

@@ -3,20 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import authService from "./appwrite/auth";
 import appwriteService from "./appwrite/config";
 import { login, logout } from "./store/authSlice";
-import { Header } from "./components";
+import { Header, HeaderSkeletonLoader } from "./components";
 import { Outlet } from "react-router-dom";
 import "./index.css";
 import { setPosts, deleteAllPost } from "./store/configSlice";
 import {  setCurrentUser, setUsers, deleteUsers, deleteCurrentUser} from "./store/userSlice";
+import { setLoading } from "./store/loadingSlice";
 
 
 
 function App() {
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
   const authData = useSelector((state)=> state.auth.userData)
-  const authUsers = useSelector((state)=> state.users.users?.documents)
+  const Loading = useSelector((state) => state.loading.isLoading);
   
   // const page = useSelector(state => state.config.page);
 
@@ -48,29 +49,31 @@ function App() {
       } catch (error) {
         console.error("Error fetching data", error);
       } finally {
-        setLoading(false);
+        dispatch(setLoading(false));
       }
     };
 
     fetchData();
   }, [dispatch, authStatus,]);
 
-  return !loading ? (
+  return !Loading ? (
     <div>
-      <div className="sm:flex">
+      <div
+       className="sm:flex">
         <Header />
-        <main className="w-full">{authStatus ? <Outlet /> : <Outlet />}</main>
+        <main
+        className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">{authStatus ? <Outlet /> : <Outlet />}</main>
       </div>
     </div>
   ) : (
     <div>
       <div className="sm:flex">
-        {authStatus ? (
           <>
-            <Header />
+          <Header/>
+            <main className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">
             <Outlet />
+            </main>
           </>
-        ) : null}
       </div>
     </div>
   );

@@ -8,20 +8,18 @@ function UserProfile() {
     const [user, setUser] = useState(null)
     const {username} = useParams()
     const navigate = useNavigate()
-
     const users = useSelector(state => state.users.users)
 
     useEffect(() => {
-    if (username) {
-        users && users.map((user) => username.toLowerCase() === user?.$id.toLowerCase() && setUser(user));
-
-    } else navigate("/");
+        if (username) {
+            users && users.map((user) => username.toLowerCase() === user?.$id.toLowerCase() && setUser(user));
+    
+        } else navigate("/");
     }, [username, navigate])
 
-    console.log("user,feife", user)
   return (
     <div>
-        <Profile user={user}/>
+    <Profile user={user}/>
     </div>
   )
 }

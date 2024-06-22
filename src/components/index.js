@@ -23,6 +23,9 @@ import UserSideBar from "./user/UserSideBar.jsx";
 import SearchUser from "./user/SearchUser.jsx"
 import Profile from "./user/Profile.jsx";
 import UserSideBarSkeleton from "./user/skeleton/UserSideBarSkeleton.jsx";
+import ProfileUserInformationSkeleton from "./user/skeleton/ProfileUserInformationSkeleton.jsx";
+import HeaderSkeletonLoader from "./SkeletonLoading/HeaderSkeletonLoader.jsx";
+
 
 export  {
     Footer,
@@ -49,5 +52,7 @@ export  {
     UserSideBar,
     SearchUser,
     Profile,
-    UserSideBarSkeleton
+    UserSideBarSkeleton,
+    ProfileUserInformationSkeleton,
+    HeaderSkeletonLoader
 }

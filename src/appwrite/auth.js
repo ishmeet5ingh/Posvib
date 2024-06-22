@@ -1,9 +1,15 @@
-import { Client, Account, ID, Avatars, Databases, Permission, Role } from "appwrite";
+import {
+  Client,
+  Account,
+  ID,
+  Avatars,
+  Databases,
+  Permission,
+  Role,
+} from "appwrite";
 import conf from "../conf/conf";
 import { setError } from "../store/errorSlice";
 import store from "../store/store";
-
-
 
 export class AuthService {
   client = new Client();
@@ -30,44 +36,42 @@ export class AuthService {
       );
       if (!userAccount) throw Error;
 
-      
       await this.login({ email, password });
 
       const avatarUrl = this.avatars.getInitials(name);
-      
+
       return await this.userToDB({
-          name: userAccount.name,
-          accountId: userAccount.$id,
-          username: username,
-          email: userAccount.email,
-          imageUrl: avatarUrl,
-        });
-        
+        name: userAccount.name,
+        accountId: userAccount.$id,
+        username: username,
+        email: userAccount.email,
+        imageUrl: avatarUrl,
+      });
     } catch (error) {
-      store.dispatch(setError(error.message))
-      console.log(error)
+      store.dispatch(setError(error.message));
+      console.log(error);
     }
   }
 
-  async userToDB({ name, accountId, username, email, imageUrl}) {
+  async userToDB({ name, accountId, username, email, imageUrl }) {
     try {
-        console.log("namename", name)
-        const newUser = await this.databases.createDocument(
+      console.log("namename", name);
+      const newUser = await this.databases.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteUsersCollectionId,
         username,
         {
-         name,
-         accountId,
-         username, 
-         email, 
-         imageUrl,
-         following: [],
-         followers: [],
+          name,
+          accountId,
+          username,
+          email,
+          imageUrl,
+          following: [],
+          followers: [],
         }
       );
-      
-      return newUser
+
+      return newUser;
     } catch (error) {
       console.log("appwrite service :: userToDB :: error: ", error);
     }
@@ -75,12 +79,52 @@ export class AuthService {
 
   async login({ email, password }) {
     try {
-    return await this.account.createEmailPasswordSession(email, password);
+      return await this.account.createEmailPasswordSession(email, password);
     } catch (error) {
       console.log("appwrite service :: login :: error: ", error);
     }
   }
 
+  async updateFollowingFollowers( currentUserId, targetUserId ) {
+    try {
+    const [currentUser, targetUser] = await Promise.all([
+      this.databases.getDocument(conf.appwriteDatabaseId, conf.appwriteUsersCollectionId, currentUserId),
+      this.databases.getDocument(conf.appwriteDatabaseId, conf.appwriteUsersCollectionId, targetUserId)
+    ]);
+      const updatedFollowing = currentUser?.following.includes(targetUserId)
+        ? currentUser?.following?.filter(targetId => targetId !== targetUserId)
+        : [...currentUser?.following, targetUserId];
+  
+      const updatedFollowers = targetUser?.followers.includes(currentUserId)
+        ? targetUser?.followers?.filter(
+            (currentId) => currentId !== currentUserId
+          )
+        : [...targetUser?.followers, currentUserId];
+  
+        const [updatedCurrentUserDoc, updatedTargetUserDoc] = await Promise.all([
+          this.databases.updateDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteUsersCollectionId,
+            currentUserId,
+            { following: updatedFollowing }
+          ),
+          this.databases.updateDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteUsersCollectionId,
+            targetUserId,
+            { followers: updatedFollowers }
+          )
+        ]);
+    
+        console.log("Updated following and followers successfully.");
+        
+        return updatedTargetUserDoc;
+      
+    } catch (error) {
+      console.log("appwrite service :: updateFollowingFollowers :: error: ", error);
+      
+    }
+  }
 
   async getUserData() {
     try {
@@ -91,34 +135,30 @@ export class AuthService {
     return null;
   }
 
-  async getUserDataFromDB(id){
+  async getUserDataFromDB(id) {
     try {
-        const a = await this.databases.getDocument(
-            conf.appwriteDatabaseId,
-            conf.appwriteUsersCollectionId,
-            id
-        )
-        console.log("aaaaaaaaaaaaa", a)
-        return a
+      const userData = await this.databases.getDocument(
+        conf.appwriteDatabaseId,
+        conf.appwriteUsersCollectionId,
+        id
+      );
+      return userData;
     } catch (error) {
-        console.log("appwrite service :: getUserDataFromDB :: error: ", error)
-        return false
+      console.log("appwrite service :: getUserDataFromDB :: error: ", error);
+      return false;
     }
-}
-  async getUsersDataFromDB(){
+  }
+  async getUsersDataFromDB() {
     try {
-        return await this.databases.listDocuments(
-            conf.appwriteDatabaseId,
-            conf.appwriteUsersCollectionId,
-        )
-
+      return await this.databases.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwriteUsersCollectionId
+      );
     } catch (error) {
-        console.log("appwrite service :: getPost :: error: ", error)
-        return false
+      console.log("appwrite service :: getPost :: error: ", error);
+      return false;
     }
-}
-
-
+  }
 
   async logout() {
     try {
@@ -127,7 +167,6 @@ export class AuthService {
       console.log("appwrite service :: logout :: error: ", error);
     }
   }
-
 }
 
 const authService = new AuthService();

@@ -1,24 +1,22 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import Input from '../Input';
-import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
-function UserSideBar() {
+function SearchUser({follow}) {
     
-
     const users = useSelector((state) => state.users.users);
     const [searchUser, setSearchUser] = useState("");
 
   // Filtered users based on the search term
-  const filteredUsers = users?.filter(
+
+  const listToFilter = follow ? follow : users;
+  const filteredUsers = listToFilter?.filter(
     (user) =>
       user.name.toLowerCase().includes(searchUser.toLowerCase()) ||
       user.username.toLowerCase().includes(searchUser.toLowerCase())
   );
 
-  console.log("filteredUsers", filteredUsers)
-  console.log("searchUser",searchUser)
+  const isSearchUser = !follow ? searchUser !== "" : users
 
   return (
     <div className="bg-black pt-10 px-5 text-white flex justify-center min-h-screen sm:border-r border-teal-800 w-full sm:w-[350px] md:w-[450px] lg:w-[500px]">
@@ -31,9 +29,9 @@ function UserSideBar() {
         className="mb-5 w-full text-black p-2 border border-gray-300 rounded-md"
       />
       <ul>
-        {(filteredUsers?.length > 0) && searchUser !== ""  ? (
+        {(filteredUsers?.length > 0) && isSearchUser  ? (
           filteredUsers.map((user) => (
-            <li key={user.$id}>
+            <li key={user?.$id}>
             <Link to={`/user/${user?.username}`} className='flex items-center mb-4'>
               <img
                 src={user.imageUrl}
@@ -45,6 +43,7 @@ function UserSideBar() {
               <p className="text-gray-400 text-xs md:text-sm">@{user?.username}</p>
               </div>
             </Link>
+
             </li>
           ))
         ) : (
@@ -58,4 +57,4 @@ function UserSideBar() {
 };
 
 
-export default UserSideBar
+export default SearchUser

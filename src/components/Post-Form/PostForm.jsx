@@ -19,6 +19,7 @@ import {
   useProgress,
 } from "./hooks";
 import { setUserPost, updateUserPost } from "../../store/userSlice";
+import PostFormSkeletonLoader from "../SkeletonLoading/PostFormSkeletonLoader";
 
 
 
@@ -39,7 +40,7 @@ function PostForm({ post }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector(state => state.users.currentUser)
-
+  const posts = useSelector(state => state.config.posts)
   const [loading, setLoading] = useState(1);
   const { progress, setProgress } = useProgress(loading, setLoading, fileSize);
 
@@ -60,17 +61,17 @@ function PostForm({ post }) {
       if (file) {
         appwriteService.deleteFile(post.featuredImage);
       }
-      const dbPost = await appwriteService.updatePost(post.$id, {
+      const dbPost = await appwriteService.updatePost(post?.$id, {
         ...data,
-        featuredImage: file ? file.$id : undefined,
+        featuredImage: file ? file?.$id : undefined,
 
       });
 
       if (dbPost) {
-        let id = post.$id
+        let id = post?.$id
         dispatch(updatePost({ id, dbPost }));
         dispatch(updateUserPost(dbPost))
-        navigate(`/post/${dbPost.$id}`);
+        navigate(`/post/${dbPost?.$id}`);
       }
     } else {
       let file;
@@ -78,7 +79,7 @@ function PostForm({ post }) {
         file = await appwriteService.uploadFile(data.image[0]);
       }
       if (file !== undefined) {
-        const fileId = file.$id;
+        const fileId = file?.$id;
         data.featuredImage = fileId;
       }
       const dbPost = await appwriteService.createPost({
@@ -100,6 +101,10 @@ function PostForm({ post }) {
   return (
     <div className="w-full  border-y border-teal-800 overflow-y-scroll hide-scrollbar text-white p-5 sm:p-3 lg:p-6 flex">
     
+    {!posts ? 
+    <PostFormSkeletonLoader/>
+    : (
+      <>
       <Avatar avatarUrl={!userData?.imageUrl ? avatarPlaceholder : userData?.imageUrl } />
       <form
         onSubmit={handleSubmit(submit)}
@@ -145,6 +150,10 @@ function PostForm({ post }) {
           </div>
         )}
       </form>
+      </>
+    )
+     }
+      
     </div>
   );
 }

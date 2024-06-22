@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   posts: null,
-  page: 2
+  page: 2,
 };
 
 const configSlice = createSlice({
@@ -15,9 +15,9 @@ const configSlice = createSlice({
 
     addPosts: (state, action) => {
       if (state.posts === null) {
-        state.posts = [];  // Initialize as empty array if null
+        state.posts = []; // Initialize as empty array if null
       }
-      state.posts = [...state.posts, ...action.payload];  // Use spread to merge arrays
+      state.posts = [...state.posts, ...action.payload]; // Use spread to merge arrays
     },
 
     createPost: (state, action) => {
@@ -26,7 +26,7 @@ const configSlice = createSlice({
 
     deletePost: (state, action) => {
       const postId = action.payload;
-      const index = state.posts.findIndex(post => post.$id === postId);
+      const index = state.posts.findIndex((post) => post?.$id === postId);
       if (index !== -1) {
         state.posts.splice(index, 1);
       }
@@ -35,17 +35,23 @@ const configSlice = createSlice({
     updatePost: (state, action) => {
       const { id, dbPost } = action.payload;
       state.posts = state.posts.map((post) =>
-        post.$id === id ? dbPost : post
+        post?.$id === id ? dbPost : post
       );
     },
 
     updateLike: (state, action) => {
-      const { id, likesArray } = action.payload;
-      
-      state.posts = state.posts.map(post =>
-        post.$id === id ? { ...post, likes: likesArray} : post
+      const { userId, postId } = action.payload;
+      console.log("userId", userId, "postId", postId)
+      state.posts = state.posts.map((post) =>
+        post?.$id === postId
+          ? {
+              ...post,
+              likes: post?.likes?.includes(userId)
+                ? post?.likes?.filter((id) => id !== userId)
+                : [...post?.likes, userId],
+            }
+          : post
       );
-  
     },
 
     deleteAllPost: (state) => {
@@ -53,12 +59,20 @@ const configSlice = createSlice({
     },
 
     setPage: (state, action) => {
-      state.page = action.payload
-    }
+      state.page = action.payload;
+    },
   },
 });
 
-export const { setPosts, createPost, updateLike, deletePost, updatePost, deleteAllPost, setPage, addPosts} =
-  configSlice.actions;
+export const {
+  setPosts,
+  createPost,
+  updateLike,
+  deletePost,
+  updatePost,
+  deleteAllPost,
+  setPage,
+  addPosts,
+} = configSlice.actions;
 
 export default configSlice.reducer;

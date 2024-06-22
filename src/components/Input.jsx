@@ -10,7 +10,7 @@ const Input = React.forwardRef(({
     return (
        <div className='flex flex-col'>
         {label && <label
-        className='mb-1 text-xs font-medium '
+        className=' text-xs font-medium '
         htmlFor={id}>
             {label}
         </label>}

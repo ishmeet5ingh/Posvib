@@ -6,7 +6,7 @@ import { FaCircle, FaHeart } from "react-icons/fa";
 import { Button, LikeFeature, PostCardSkeletonLoading } from "../components";
 import { deletePost } from "../store/configSlice";
 import { deleteUserPost } from "../store/userSlice";
-import placeholderImage from "../../public/avatarPlaceholder.jpeg"
+import placeholderImage from "../../public/avatarPlaceholder.jpeg";
 
 function PostCard({
   $id,
@@ -19,13 +19,12 @@ function PostCard({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log("creator.name", creator.name);
 
   const [name, setName] = useState("");
   const currentUserData = useSelector((state) => state.users.currentUser);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const isAuthor =
-    $id && currentUserData ? userId === currentUserData.$id : false;
+    $id && currentUserData ? userId === currentUserData?.$id : false;
   const dropdownRef = useRef(null);
   const [imageLoading, setImageLoading] = useState(true); // State for image loading
 
@@ -35,12 +34,28 @@ function PostCard({
     const timeDifference = currentDate - startDate;
     const [loader, setLoader] = useState(false);
 
-    if (timeDifference >= 3600000) {
-      return `${Math.floor(timeDifference / (1000 * 60 * 60))} h`;
-    } else if (timeDifference < 3600000 && timeDifference >= 60000) {
-      return `${Math.floor(timeDifference / (1000 * 60))} m `;
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(timeDifference / (1000 * 60));
+    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7));
+    const months = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 30.44));
+    const years = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 365.25));
+
+    if (years > 0) {
+      return `${years} y`;
+    } else if (months > 0) {
+      return `${months} mo`;
+    } else if (weeks > 0) {
+      return `${weeks} w`;
+    } else if (days > 0) {
+      return `${days} d`;
+    } else if (hours > 0) {
+      return `${hours} h`;
+    } else if (minutes > 0) {
+      return `${minutes} m`;
     } else {
-      return `${Math.floor(Math.abs(timeDifference / 1000))} s`;
+      return `${seconds} s`;
     }
   }
 
@@ -140,30 +155,32 @@ function PostCard({
       </div>
 
       <div className="">
-        {imageLoading && featuredImage &&
+        {imageLoading && featuredImage && (
           <div className="relative w-full h-[200px] flex items-center justify-center">
             <img
               src={placeholderImage}
               alt="Loading..."
               className="w-full h-full fit rounded-md"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            </div>
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"></div>
           </div>
-        } {/* progress bar */}
+        )}{" "}
+        {/* progress bar */}
         <div className={`${imageLoading ? "hidden" : "block"}`}>
-        {featuredImage !== null ? (
-          <Link to={`/post/${$id}`}>
-            <div className="relative rounded-md justify-center mb-3">
-              <img
-                src={appwriteService.getFilePreview(featuredImage)}
-                alt={content}
-                className={`w-full rounded-md border border-teal-900 `}
-                onLoad={() => setImageLoading(false)}
-              />
-            </div>
-          </Link>
-        ) : null}
+          {featuredImage !== null ? (
+            <Link to={`/post/${$id}`}>
+              <div className="relative rounded-md justify-center mb-3">
+                <img
+                  src={appwriteService.getFilePreview(featuredImage)}
+                  alt={content}
+                  className={`w-full rounded-md border border-teal-900 transition-opacity duration-500 ${
+                    imageLoading ? "opacity-0" : "opacity-100"
+                  }`}
+                  onLoad={() => setImageLoading(false)}
+                />
+              </div>
+            </Link>
+          ) : null}
         </div>
         <LikeFeature
           likes={likes}
@@ -176,4 +193,3 @@ function PostCard({
 }
 
 export default PostCard;
-

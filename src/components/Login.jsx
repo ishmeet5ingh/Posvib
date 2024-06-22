@@ -59,7 +59,7 @@ function Login() {
             required: true
           })}
         />
-          <p className="my-2 text-center text-base ">
+          <p className="text-white text-sm my-2 text-center">
             Don&apos;t have any account?&nbsp;
             <Link
             to="/signup"

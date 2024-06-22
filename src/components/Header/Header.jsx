@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Logo } from "../index";
+import { HeaderSkeletonLoader, Logo } from "../index";
 import { useDispatch } from "react-redux";
 import authService from "../../appwrite/auth";
 import { logout } from "../../store/authSlice";
@@ -88,7 +88,10 @@ function Header() {
   ];
 
   return (
-    <header className="z-30 text-white w-full sm:w-[128px] md:w-[160px] xmd:w-[300px] lg:w-[400px] border-r border-teal-800  py-3 px-3 shadow sm:min-h-screen fixed sm:static   bottom-0 bg-black ">
+    <>
+    {!userData && authStatus ? <HeaderSkeletonLoader/> : 
+    (
+      <header className="z-50 text-white h-[68px] w-full sm:w-[120px]  md:w-[130px] xmd:w-[220px] lg:w-[270px] xl:w-[300px] border-r border-teal-800  py-3  shadow sm:min-h-screen fixed  bottom-0 bg-black ">
       <nav className="flex sm:flex-col justify-center items-center">
         <div className="sm:items-start mb-10">{isLogo ? "" : <Logo width="70px" />}</div>
         <div className="w-full sm:w-fit">
@@ -99,7 +102,7 @@ function Header() {
                 {item.name === "Logout" ? (
                   <button
                     onClick={logoutHandler}
-                    className="text-2xl md:text-lg duration-200 flex hover:text-red-300 "
+                    className="text-2xl sm:text-lg duration-200 flex hover:text-red-300 "
                   >
                     {isSmallScreen ? (
                       <div className="flex flex-col items-center">
@@ -137,6 +140,10 @@ function Header() {
       </nav>
 
     </header>
+    )
+    }
+    
+    </>
   );
 }
 

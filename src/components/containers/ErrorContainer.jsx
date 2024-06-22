@@ -1,10 +1,19 @@
 import React from "react";
+import {FaExclamationTriangle} from "react-icons/fa";
+
 
 function ErrorContainer({ children }) {
   return (
-    <p className="text-red-800 font text-[13px] textStroke w-60 rounded-md text-start  px-2 mb-2">
-      * {children}
-    </p>
+    <div className="text-teal-300  text-xs w-64 rounded-md text-start px-2">
+    <div className="flex gap-1">
+    <div className="flex pt-[1px]">
+    <FaExclamationTriangle/> 
+    </div>
+    <div className="flex">
+     {children}
+    </div>
+    </div>
+    </div>
   );
 }
 

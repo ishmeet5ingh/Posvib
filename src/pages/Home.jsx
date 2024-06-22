@@ -8,7 +8,6 @@ function Home() {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.config.posts);
 
-  console.log(posts)
   useEffect(() => {
     if (!authStatus) {
       dispatch(deleteAllPost());
@@ -18,7 +17,7 @@ function Home() {
   return (
     <>
       {!authStatus && posts === null ? (
-        <div className="px-10 pt-14 min-h-screen text-center">
+        <div className="sm:pl-28 min-h-screen flex justify-center sm:justify-start pt-28 sm:text-start">
           <h1 className="text-2xl font-bold text-white">Login to read posts</h1>
         </div>
       ) : (

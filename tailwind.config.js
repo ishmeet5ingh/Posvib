@@ -11,8 +11,12 @@ export default {
       },
       screens: {
         // Custom breakpoint 'xmd' between 'md' and 'lg'
+        'p': '1100px',
         'xmd': '900px',
-        'xs': '500px'
+        'xs': '500px',
+      },
+      height: {
+        'screen-minus-68': 'calc(100vh - 68px)',
       },
     },
     

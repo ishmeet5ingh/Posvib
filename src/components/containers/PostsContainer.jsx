@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { PostForm, UserSideBar } from "..";
+import { HeaderSkeletonLoader, Logo, PostForm, UserSideBar } from "..";
 import { addPosts, setPage } from "../../store/configSlice";
 import { useDispatch, useSelector } from "react-redux";
 import appwriteService from "../../appwrite/config";
+
 
 function PostsContainer({ children }) {
   const [loading, setLoading] = useState(false);
@@ -52,18 +53,23 @@ function PostsContainer({ children }) {
   }, [loadMorePosts]);
 
   return (
-    <div className="overflow-y-scroll hide-scrollbar text-white w-full flex ">
+
+    
+    <div className="overflow-y-scroll h-full mb-auto hide-scrollbar  text-white w-full flex ">
     <div
       id="container"
-      className=" xs:border-r border-teal-800 h-screen overflow-y-scroll hide-scrollbar flex flex-col min-h-screen w-full xs:w-[420px] sm:w-[350px] md:w-[450px] lg:w-[500px]"
+      className=" xs:border-r  border-teal-800 h-screen overflow-y-scroll custom-scrollbar scroll-smooth flex flex-col min-h-screen w-full xs:w-[420px] sm:w-[350px] md:w-[450px] lg:w-[500px]"
     >
-      <div className="mt-16 mb-28">
+      <div className="mt-4 sm:mt-14 mb-28">
+      <div className="pl-5 block sm:hidden" >
+      <Logo/>
+      </div>
         <PostForm />
-        {children === undefined ? null : (
-          <div className="text-white text-center sticky top-0 z-50 border-b border-teal-800 bg-black-rgba backdrop-blur-[3px] py-4">
+        {/* {children === undefined ? null : (
+          <div className="text-white text-center sticky top-0 z-30 border-b border-teal-800 bg-black-rgba backdrop-blur-[3px] py-4">
             <h3>Posts</h3>
           </div>
-        )}
+        )} */}
         {children}
         <div className="text-white flex justify-center py-5">
           {loading && <div className="spinner"></div>}
@@ -73,6 +79,7 @@ function PostsContainer({ children }) {
     </div>
       <UserSideBar/>
     </div>
+  
   );
 }
 

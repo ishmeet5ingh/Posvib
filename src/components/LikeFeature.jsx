@@ -9,62 +9,53 @@ import { updateUserPostLike } from "../store/userSlice";
 
 function LikeFeature({ likes, postId, currentUserData }) {
   const [isLiked, setIsLiked] = useState(
-    likes?.includes(currentUserData.$id)
+    likes?.includes(currentUserData?.$id)
   );
-  const [likeCount, setLikeCount] = useState(likes?.length);
+
+  const [likeCount, setLikeCount] = useState(likes?.length)
   const dispatch = useDispatch();
+
   
+  const posts = useSelector(state => state.config.posts)
 
+  
   useEffect(() => {
-    setIsLiked(likes?.includes(currentUserData.$id));
-    setLikeCount(likes?.length || 0);
-  }, [likes, currentUserData.$id]);
+      const unsubscribe = appwriteService.client.subscribe(
+          `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents.${postId}`,
+          response => {
+            console.log(response)
+              if (response.events.includes("databases.*.collections.*.documents.*.update")) {
+                  const updatedLikes = response.payload.likes;
+                  setLikeCount(updatedLikes?.length);
+                  setIsLiked(updatedLikes.includes(currentUserData?.$id));
+                  console.log("updatedLikes", updatedLikes)
+                  dispatch(updateLike({ userId: response.payload.userId, postId: response.payload.$id }));
+                  dispatch(updateUserPostLike({ userId: response.payload.userId, postId: response.payload.$id}))
+              }
+          }
+      );
 
-  // const post = useSelector(state => state.config.posts)
-  // const like = post.find(post => post.$id === postId)
-  // useEffect(() => {
-  //     const unsubscribe = appwriteService.client.subscribe(
-  //         `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents`,
-  //         response => {
-  //           console.log(response)
-  //             if (response.events.includes("databases.*.collections.*.documents.*.update")) {
-  //                 const updatedLikes = response.payload.likes;
-  //                 setLikeCount(updatedLikes.length);
-  //                 setIsLiked(updatedLikes.includes(currentUserData?.$id));
-  //                 console.log("updatedLikes", updatedLikes)
-  //                 dispatch(updateLike({ id: postId, likesArray: updatedLikes }));
-  //             }
-  //         }
-  //     );
-
-  //     return () => {
-  //       unsubscribe();
-  //     };
-  // }, []);
-  console.log("isLiked", isLiked)
+      return () => {
+        unsubscribe();
+      };
+  }, []);
 
   const handleLike = () => {
   
-   const newIsLiked = !isLiked;
-    const newLikeCount = newIsLiked ? likeCount + 1 : likeCount - 1;
-
-    setIsLiked(newIsLiked);
-    setLikeCount(newLikeCount);
-
+      setIsLiked((prevLike)=> !prevLike)
+      setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1)
     appwriteService
       .likePost(postId, currentUserData?.$id)
       .then((updatedDocument) => {
-              dispatch(updateLike({ id: postId, likesArray: updatedDocument.likes }));
-              dispatch(updateUserPostLike({userId: currentUserData?.$id, postId, likesArray: updatedDocument?.likes}))
+              dispatch(updateLike({ userId: currentUserData?.$id, postId: postId,}));
+              dispatch(updateUserPostLike({userId: currentUserData?.$id, postId: postId}))
 
-        // Ensure the UI reflects the latest likes from the server
-        setLikeCount(updatedDocument.likes.length);
-        setIsLiked(updatedDocument.likes.includes(currentUserData.$id));
       })
       .catch((error) => {
         console.error("Error updating like status:", error.message);
-        setIsLiked(!newIsLiked);
-        setLikeCount(likeCount);
+        setIsLiked((prevLike)=> !prevLike)
+      setLikeCount(prevCount => isLiked ? prevCount + 1 : prevCount - 1)
+
       });
   };
 

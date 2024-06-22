@@ -36,7 +36,7 @@ function Signup() {
 
   return (
     <AuthContainer inup={"up"}>
-      <form className="flex  flex-col" onSubmit={handleSubmit(signup)}>
+      <form className="flex flex-col" onSubmit={handleSubmit(signup)}>
         <Input
           label="Name: "
           type="text"
@@ -76,7 +76,7 @@ function Signup() {
         {errors.password && <ErrorContainer>{errors.password.message}</ErrorContainer>}
         </div>
 
-        <p className="my-2 text-center text-[14px] text-base">
+        <p className="my-2 text-sm text-white text-center ">
           Already have an account?&nbsp;
           <Link to="/login" className="font-medium text-primary transition-all duration-200 hover:underline">
             Sign In

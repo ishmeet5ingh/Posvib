@@ -5,29 +5,31 @@ import UserSideBarSkeleton from './skeleton/UserSideBarSkeleton';
 
 
 function UserSideBar() {
-    
+  const currentUser = useSelector(state => state.users.currentUser)
+  const loading = useSelector(state => state.loading.isLoading)
   const users = useSelector((state) => state.users.users);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchUser, setsearchUser] = useState("");
 
-  // Filtered users based on the search term
+  // Filtered users based on the search user
   const filteredUsers = users?.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.username.toLowerCase().includes(searchTerm.toLowerCase())
+      user.name.toLowerCase().includes(searchUser.toLowerCase()) ||
+      user.username.toLowerCase().includes(searchUser.toLowerCase())
   );
 
   return (
     <div className="bg-black p-3 pt-16 md:pl-5 lg:pl-10 text-white hidden xs:block">
       <ul>
-      {!users ? (
-          // Display skeleton loaders when loading
+      {loading ? (
+          // skeleton loaders when loading
           Array.from({ length: 3 }).map((_, index) => (
             <UserSideBarSkeleton key={index} />
           ))
         ): (
           filteredUsers?.length > 0 ? (
           filteredUsers.map((user) => (
-            <li key={user.$id} >
+            (user !== currentUser)  && (
+              <li key={user?.$id} >
             <Link to={`/user/${user?.username}`} className='flex items-center mb-4'>
               <img
                 src={user.imageUrl}
@@ -40,6 +42,8 @@ function UserSideBar() {
               </div>
             </Link>
             </li>
+            )
+           
           ))
         ) : (
           <p>No users found.</p>
