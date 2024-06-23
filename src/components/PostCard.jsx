@@ -45,6 +45,9 @@ function PostCard({
         dispatch(deleteUserPost({ userId: response.payload?.userId, postId: response.payload?.$id }));
       }
     })
+    return () => {
+      unsubscribe()
+    }
   }, [])
 
 
