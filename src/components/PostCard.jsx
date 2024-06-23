@@ -48,7 +48,7 @@ function PostCard({
     return () => {
       unsubscribe()
     }
-  }, [])
+  }, [$id, dispatch])
 
 
   // calculating Elapsed Time

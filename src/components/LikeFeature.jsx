@@ -39,24 +39,22 @@ function LikeFeature({ likes, postId, currentUserData }) {
         unsubscribe();
       };
   }, []);
+  const handleLike = async () => {
+    try {
+      setIsLiked(prevLike => !prevLike);
+      setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1);
 
-  const handleLike = () => {
-  
-      setIsLiked((prevLike)=> !prevLike)
-      setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1)
-    appwriteService
-      .likePost(postId, currentUserData?.$id)
-      .then((updatedDocument) => {
-              dispatch(updateLike({ userId: currentUserData?.$id, postId: postId,}));
-              dispatch(updateUserPostLike({userId: currentUserData?.$id, postId: postId}))
-
-      })
-      .catch((error) => {
-        console.error("Error updating like status:", error.message);
-        setIsLiked((prevLike)=> !prevLike)
-      setLikeCount(prevCount => isLiked ? prevCount + 1 : prevCount - 1)
-
-      });
+      await appwriteService.likePost(postId, currentUserData?.$id);
+      
+      // dispatch(updateLike({ userId: currentUserData?.$id, postId }));
+      // dispatch(updateUserPostLike({ userId: currentUserData?.$id, postId }));
+    } catch (error) {
+      console.error("Error updating like status:", error.message);
+      
+      // Rollback optimistic update on error
+      setIsLiked(prevLike => !prevLike);
+      setLikeCount(prevCount => isLiked ? prevCount + 1 : prevCount - 1);
+    }
   };
 
   return (
