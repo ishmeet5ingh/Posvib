@@ -17,7 +17,7 @@ function PostFormSkeletonLoader() {
             {/* image upload */}
             <div className="shimmer-bg rounded h-7 w-9"></div>
           </div>
-          {/* submit button */}
+          {/* submit buttopn */}
           <div className="shimmer-bg rounded-full h-8 w-14"></div>
         </div>
       </form>

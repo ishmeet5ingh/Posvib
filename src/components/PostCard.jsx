@@ -37,11 +37,11 @@ function PostCard({
   useEffect(()=> {
     const unsubscribe = appwriteService.client.subscribe(  
       [
-      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteUsersCollectionId}.documents`,
+      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents.${$id}`,
       "files",
     ], response => {
       if (response.events.includes("databases.*.collections.*.documents.*.delete")) {
-        dispatch(deletePost($id));
+        dispatch(deletePost(response.payload.$id));
         dispatch(deleteUserPost({ userId: response.payload?.userId, postId: response.payload?.$id }));
       }
     })

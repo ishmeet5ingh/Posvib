@@ -23,7 +23,7 @@ import PostFormSkeletonLoader from "../SkeletonLoading/PostFormSkeletonLoader";
 import conf from "../../conf/conf";
 
 function PostForm({ post }) {
-  const { register, handleSubmit, getValues, reset } =
+  const { register, handleSubmit, getValues, reset, setContent} =
     useFormInitialization(post);
 
   // State variables 
@@ -71,6 +71,7 @@ function PostForm({ post }) {
         // Update user's post in Redux store
         dispatch(updateUserPost(response.payload));
         // Navigate to updated post page
+        setContent(response.payload?.content)
         if(response.payload?.featuredImage)
         setPostFeaturedImage(response.payload?.featuredImage)
         }
@@ -105,10 +106,10 @@ function PostForm({ post }) {
         featuredImage: file ? file?.$id : undefined,
       });
 
-      // if(dbPost){
-      //   navigate(`/post/${dbPost?.$id}`);
+      if(dbPost){
+          navigate(`/post/${dbPost?.$id}`);
 
-      // }
+      }
 
     } else {
       // Create new post

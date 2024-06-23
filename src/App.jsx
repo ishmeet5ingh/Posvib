@@ -58,7 +58,7 @@ function App() {
        className="sm:flex">
         <Header />
         <main
-        className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]"c>{authStatus ? <Outlet /> : <Outlet />}</main>
+        className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">{authStatus ? <Outlet /> : <Outlet />}</main>
       </div>
     </div>
   ) : (

@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 // Custom hook for form initialization with react-hook-form
 const useFormInitialization = (post) => {
+  const [content, setContent] = useState(post?.content)
   const {
     register,
     handleSubmit,
@@ -9,14 +11,14 @@ const useFormInitialization = (post) => {
     reset,
   } = useForm({
     defaultValues: {
-      content: post?.content || "",  
+      content: content || "",  
       status: post?.status || "active",
       username: post?.username || "", 
       avatar: post?.avatar || "",    
     },
   });
 
-  return { register, handleSubmit, getValues, reset };
+  return { register, handleSubmit, getValues, reset, setContent};
 };
 
 export default useFormInitialization;
