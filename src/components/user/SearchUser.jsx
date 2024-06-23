@@ -1,26 +1,33 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import BackButton from '../BackButton';
+import User from './User';
 
 function SearchUser({follow}) {
     
-    const users = useSelector((state) => state.users.users);
-    const [searchUser, setSearchUser] = useState("");
+    
+  const users = useSelector((state) => state.users.users);
+  const [searchUser, setSearchUser] = useState("");
 
-  // Filtered users based on the search term
 
+  // based on the follow prop which list to filter
   const listToFilter = follow ? follow : users;
+
+  // Filtered users based on the search user
   const filteredUsers = listToFilter?.filter(
     (user) =>
       user.name.toLowerCase().includes(searchUser.toLowerCase()) ||
       user.username.toLowerCase().includes(searchUser.toLowerCase())
   );
 
+  
   const isSearchUser = !follow ? searchUser !== "" : users
 
   return (
-    <div className="bg-black pt-10 px-5 text-white flex justify-center min-h-screen sm:border-r border-teal-800 w-full sm:w-[350px] md:w-[450px] lg:w-[500px]">
+    <div className="bg-black px-5 text-white flex justify-center min-h-screen sm:border-r border-teal-800 w-full sm:w-[350px] md:w-[450px] lg:w-[500px]">
     <div className='w-11/12'>
+    {/* Back Button */}
+    <BackButton/>
       <input
         type="text"
         placeholder="Search users..."
@@ -28,22 +35,12 @@ function SearchUser({follow}) {
         onChange={(e) => setSearchUser(e.target.value)}
         className="mb-5 w-full text-black p-2 border border-gray-300 rounded-md"
       />
+      {/* Users list */}
       <ul>
         {(filteredUsers?.length > 0) && isSearchUser  ? (
           filteredUsers.map((user) => (
             <li key={user?.$id}>
-            <Link to={`/user/${user?.username}`} className='flex items-center mb-4'>
-              <img
-                src={user.imageUrl}
-                alt={`${user.name}'s profile`}
-                className="w-9 h-9 md:w-10 md:h-10 rounded-full mr-2"
-              />
-              <div>
-              <p className="font-medium text-sm md:text-base">{user?.name}</p>
-              <p className="text-gray-400 text-xs md:text-sm">@{user?.username}</p>
-              </div>
-            </Link>
-
+              <User user={user} imageClasses={`w-11 h-11 mr-3`}/>
             </li>
           ))
         ) : (

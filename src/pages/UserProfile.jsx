@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux'
 
 
 function UserProfile() {
+
+    // Redux state
     const [user, setUser] = useState(null)
     const {username} = useParams()
     const navigate = useNavigate()

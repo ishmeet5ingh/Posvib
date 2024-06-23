@@ -4,6 +4,7 @@ function ProfileUserInformationSkeleton() {
   return (
     <div>
       <div className=" w-full pt-5 md:pt-6 border-b border-teal-700">
+          
         <div className=' rounded-lg mx-5 md:mx-8 h-6 shimmer-bg w-28'></div>
       </div>
       {/* User Information */}

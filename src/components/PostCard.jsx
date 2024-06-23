@@ -7,6 +7,8 @@ import { Button, LikeFeature, PostCardSkeletonLoading } from "../components";
 import { deletePost } from "../store/configSlice";
 import { deleteUserPost } from "../store/userSlice";
 import placeholderImage from "../../public/avatarPlaceholder.jpeg";
+import { useElapsedTime } from "./hooks";
+import conf from "../conf/conf";
 
 function PostCard({
   $id,
@@ -17,51 +19,43 @@ function PostCard({
   creator,
   likes,
 }) {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
+  
+  // state Variables
   const [name, setName] = useState("");
   const currentUserData = useSelector((state) => state.users.currentUser);
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const isAuthor =
-    $id && currentUserData ? userId === currentUserData?.$id : false;
   const dropdownRef = useRef(null);
   const [imageLoading, setImageLoading] = useState(true); // State for image loading
+  const [loading, setLoading] = useState(false);
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  function calculateHoursElapsed($createdAt) {
-    const startDate = new Date($createdAt);
-    const currentDate = new Date();
-    const timeDifference = currentDate - startDate;
-    const [loader, setLoader] = useState(false);
+  const isAuthor = $id && currentUserData ? userId === currentUserData?.$id : false;
+  
 
-    const seconds = Math.floor(timeDifference / 1000);
-    const minutes = Math.floor(timeDifference / (1000 * 60));
-    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const weeks = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7));
-    const months = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 30.44));
-    const years = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 365.25));
+  useEffect(()=> {
+    const unsubscribe = appwriteService.client.subscribe(  
+      [
+      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteUsersCollectionId}.documents`,
+      "files",
+    ], response => {
+      if (response.events.includes("databases.*.collections.*.documents.*.delete")) {
+        dispatch(deletePost($id));
+        dispatch(deleteUserPost({ userId: response.payload?.userId, postId: response.payload?.$id }));
+      }
+    })
+  }, [])
 
-    if (years > 0) {
-      return `${years} y`;
-    } else if (months > 0) {
-      return `${months} mo`;
-    } else if (weeks > 0) {
-      return `${weeks} w`;
-    } else if (days > 0) {
-      return `${days} d`;
-    } else if (hours > 0) {
-      return `${hours} h`;
-    } else if (minutes > 0) {
-      return `${minutes} m`;
-    } else {
-      return `${seconds} s`;
-    }
-  }
+
+  // calculating Elapsed Time
+  const  elapsedTime  = useElapsedTime($createdAt)
+
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -77,8 +71,7 @@ function PostCard({
   }, [dropdownRef]);
 
   const delpost = async () => {
-    dispatch(deletePost($id));
-    dispatch(deleteUserPost({ userId: currentUserData?.$id, postId: $id }));
+    
     await appwriteService.deletePost($id);
     if (featuredImage !== null) {
       await appwriteService.deleteFile(featuredImage);
@@ -102,9 +95,8 @@ function PostCard({
                 <p className="font-medium text-sm md:text-base text-white">
                   {creator?.name}
                 </p>
-                <p className="text-teal-600 text-xs">{`${calculateHoursElapsed(
-                  $createdAt
-                )}`}</p>
+                <p className="text-teal-600 text-xs">{`${elapsedTime
+                }`}</p>
               </div>
               <p className="text-gray-400 text-sm md:text-sm">
                 @{creator?.username}

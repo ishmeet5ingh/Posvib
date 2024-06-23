@@ -7,7 +7,7 @@ import "../index.css";
 
 export default function Post() {
   const [post, setPost] = useState(null);
-  const { id } = useParams();
+  const { id } = useParams(); 
   const navigate = useNavigate();
   
   const posts = useSelector((state) => state.config.posts);

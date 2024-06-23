@@ -15,13 +15,14 @@ function LikeFeature({ likes, postId, currentUserData }) {
   const [likeCount, setLikeCount] = useState(likes?.length)
   const dispatch = useDispatch();
 
+  const users = useSelector(state => state.users.users)
   
   const posts = useSelector(state => state.config.posts)
 
-  
+  // update likes realtime
   useEffect(() => {
       const unsubscribe = appwriteService.client.subscribe(
-          `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents.${postId}`,
+          `a`,
           response => {
             console.log(response)
               if (response.events.includes("databases.*.collections.*.documents.*.update")) {
@@ -47,8 +48,8 @@ function LikeFeature({ likes, postId, currentUserData }) {
     appwriteService
       .likePost(postId, currentUserData?.$id)
       .then((updatedDocument) => {
-              dispatch(updateLike({ userId: currentUserData?.$id, postId: postId,}));
-              dispatch(updateUserPostLike({userId: currentUserData?.$id, postId: postId}))
+              // dispatch(updateLike({ userId: currentUserData?.$id, postId: postId,}));
+              // dispatch(updateUserPostLike({userId: currentUserData?.$id, postId: postId}))
 
       })
       .catch((error) => {

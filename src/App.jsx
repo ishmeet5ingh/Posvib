@@ -13,15 +13,11 @@ import { setLoading } from "./store/loadingSlice";
 
 
 function App() {
-  // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
   const authData = useSelector((state)=> state.auth.userData)
   const Loading = useSelector((state) => state.loading.isLoading);
-  
-  // const page = useSelector(state => state.config.page);
 
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,18 +25,18 @@ function App() {
         const userData = await authService.getUserData();
         if (userData) {
           dispatch(login({ userData }))
-          const users = await authService.getUsersDataFromDB()
+          const [users, posts] = await Promise.all([
+            authService.getUsersDataFromDB(),
+            authStatus ? appwriteService.getPosts(1) : null,
+          ]);
           const currentUser = users.documents?.find(user => user.accountId === authData?.$id)
           dispatch(setUsers(users?.documents))
-          if (authStatus) {
-            const posts = await appwriteService.getPosts(1);
-            if (posts) {
-              dispatch(setPosts(posts));
-            }
-            dispatch(setCurrentUser(currentUser))
+          if (authStatus && posts) {
+            dispatch(setPosts(posts));
           } else {
             dispatch(deleteAllPost());
           }
+          dispatch(setCurrentUser(currentUser))
         } else {
           dispatch(deleteUsers())
           dispatch(deleteCurrentUser())
@@ -62,7 +58,7 @@ function App() {
        className="sm:flex">
         <Header />
         <main
-        className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">{authStatus ? <Outlet /> : <Outlet />}</main>
+        className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]"c>{authStatus ? <Outlet /> : <Outlet />}</main>
       </div>
     </div>
   ) : (
