@@ -47,7 +47,7 @@ export const userSlice = createSlice({
       const post = action.payload;
       const updatedUsers = state.users?.map((user) =>
         user.$id === post.userId
-          ? { ...user, posts: [...(user.posts || []), post] }
+          ? { ...user, posts: [...user.posts, post] }
           : user
       );
       state.users = updatedUsers;

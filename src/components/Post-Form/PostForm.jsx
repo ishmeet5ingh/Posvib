@@ -48,41 +48,41 @@ function PostForm({ post }) {
   const [postFeaturedImage, setPostFeaturedImage] = useState(post?.featuredImage)
 
 
-  useEffect(() => {
-    const unsubscribe = appwriteService.client.subscribe(
-      [
-        `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents`,
-        "files"
-      ],
-      (response) => {
-        if (response.events.includes("databases.*.collections.*.documents.*.create")) {
-        // Dispatch action to create new post in Redux store
-        dispatch(createPost(response.payload));
+  // useEffect(() => {
+  //   const unsubscribe = appwriteService.client.subscribe(
+  //     [
+  //       `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents`,
+  //       "files"
+  //     ],
+  //     (response) => {
+  //       if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+  //       // Dispatch action to create new post in Redux store
+  //       dispatch(createPost(response.payload));
 
-        // Set user's new post in Redux store
-        dispatch(setUserPost(response.payload));
-        }
+  //       // Set user's new post in Redux store
+  //       dispatch(setUserPost(response.payload));
+  //       }
 
-        if(response.events.includes("databases.*.collections.*.documents.*.update")){
-          console.log(response)
-          // Dispatch action to update post in Redux store
-        dispatch(updatePost({ id: response.payload.$id, dbPost: response.payload }));
+  //       if(response.events.includes("databases.*.collections.*.documents.*.update")){
+  //         console.log(response)
+  //         // Dispatch action to update post in Redux store
+  //       dispatch(updatePost({ id: response.payload.$id, dbPost: response.payload }));
 
-        // Update user's post in Redux store
-        dispatch(updateUserPost(response.payload));
-        // Navigate to updated post page
-        setContent(response.payload?.content)
-        if(response.payload?.featuredImage)
-        setPostFeaturedImage(response.payload?.featuredImage)
-        }
+  //       // Update user's post in Redux store
+  //       dispatch(updateUserPost(response.payload));
+  //       // Navigate to updated post page
+  //       setContent(response.payload?.content)
+  //       if(response.payload?.featuredImage)
+  //       setPostFeaturedImage(response.payload?.featuredImage)
+  //       }
 
-      }
-    );
+  //     }
+  //   );
 
-    return () => {
-      unsubscribe()
-    }
-  }, [dispatch, post, setContent]);
+  //   return () => {
+  //     unsubscribe()
+  //   }
+  // });
 
 
   const submit = async (data) => {
@@ -127,6 +127,12 @@ function PostForm({ post }) {
         ...data,
         userId: userData?.$id,
       });
+
+      if(dbPost){
+         dispatch(createPost(dbPost));
+
+         dispatch(setUserPost(dbPost));
+      }
     }
     setLoading(3); // submission completed
     reset(); // Reset form values
