@@ -17,7 +17,7 @@ import {
   useHandleTextareaInput,
   useFormInitialization,
   useProgress,
-} from "../hooks";
+} from "../../hooks";
 import { setUserPost, updateUserPost } from "../../store/userSlice";
 import PostFormSkeletonLoader from "../SkeletonLoading/PostFormSkeletonLoader";
 import conf from "../../conf/conf";
@@ -65,7 +65,7 @@ function PostForm({ post }) {
 
         if(response.events.includes("databases.*.collections.*.documents.*.update")){
           console.log(response)
-           // Dispatch action to update post in Redux store
+          // Dispatch action to update post in Redux store
         dispatch(updatePost({ id: response.payload.$id, dbPost: response.payload }));
 
         // Update user's post in Redux store
@@ -82,7 +82,7 @@ function PostForm({ post }) {
     return () => {
       unsubscribe()
     }
-  }, []);
+  }, [dispatch, post, setContent]);
 
 
   const submit = async (data) => {

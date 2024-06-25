@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import appwriteAuthService from "../../../appwrite/auth";
-import { updateFollowingFollowers } from "../../../store/userSlice";
-import conf from "../../../conf/conf";
+import appwriteAuthService from "../../appwrite/auth";
+import { updateFollowingFollowers } from "../../store/userSlice";
+import conf from "../../conf/conf";
 
 
 const useFollow = (user) => {
@@ -39,7 +39,8 @@ const useFollow = (user) => {
   //     `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteUsersCollectionId}.documents`,
   //    response => {
   //     if(response.payload?.$id === user?.$id){
-  //       console.log("followers following realtime", response.payload?.$id);
+  //       const payload = response.payload
+  //       console.log("followers following realtime", payload);
   //     }
   //   })
 

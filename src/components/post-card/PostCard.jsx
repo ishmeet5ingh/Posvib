@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import appwriteService from "../appwrite/config";
+import appwriteService from "../../appwrite/config";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCircle, FaHeart } from "react-icons/fa";
-import { Button, LikeFeature, PostCardSkeletonLoading } from "../components";
-import { deletePost } from "../store/configSlice";
-import { deleteUserPost } from "../store/userSlice";
-import placeholderImage from "../../public/avatarPlaceholder.jpeg";
-import { useElapsedTime } from "./hooks";
-import conf from "../conf/conf";
+import { Button, LikeFeature, CommentFeature, PostCardFooter } from "..";
+import { deletePost } from "../../store/configSlice";
+import { deleteUserPost } from "../../store/userSlice";
+import placeholderImage from "../../../public/avatarPlaceholder.jpeg";
+import { useElapsedTime } from "../../hooks";
+import conf from "../../conf/conf";
 
 function PostCard({
   $id,
@@ -18,47 +18,55 @@ function PostCard({
   $createdAt,
   creator,
   likes,
+  comments,
 }) {
-  
   // state Variables
   const [name, setName] = useState("");
-  const currentUserData = useSelector((state) => state.users.currentUser);
+  const currentUser = useSelector((state) => state.users.currentUser);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
   const [imageLoading, setImageLoading] = useState(true); // State for image loading
   const [loading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const isAuthor = $id && currentUserData ? userId === currentUserData?.$id : false;
-  
-
-  useEffect(()=> {
-    const unsubscribe = appwriteService.client.subscribe(  
+  const isAuthor =
+    $id && currentUser ? userId === currentUser?.$id : false;
+      
+  useEffect(() => {
+    const unsubscribe = appwriteService.client.subscribe(
       [
-      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents.${$id}`,
-      "files",
-    ], response => {
-      if (response.events.includes("databases.*.collections.*.documents.*.delete")) {
-        dispatch(deletePost(response.payload.$id));
-        dispatch(deleteUserPost({ userId: response.payload?.userId, postId: response.payload?.$id }));
+        `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents.${$id}`,
+        "files",
+      ],
+      (response) => {
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.delete"
+          )
+        ) {
+          dispatch(deletePost(response.payload.$id));
+          dispatch(
+            deleteUserPost({
+              userId: response.payload?.userId,
+              postId: response.payload?.$id,
+            })
+          );
+        }
       }
-    })
+    );
     return () => {
-      unsubscribe()
-    }
-  }, [$id, dispatch])
-
+      unsubscribe();
+    };
+  });
 
   // calculating Elapsed Time
-  const  elapsedTime  = useElapsedTime($createdAt)
-
+  const elapsedTime = useElapsedTime($createdAt);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -74,7 +82,6 @@ function PostCard({
   }, [dropdownRef]);
 
   const delpost = async () => {
-    
     await appwriteService.deletePost($id);
     if (featuredImage !== null) {
       await appwriteService.deleteFile(featuredImage);
@@ -98,8 +105,7 @@ function PostCard({
                 <p className="font-medium text-sm md:text-base text-white">
                   {creator?.name}
                 </p>
-                <p className="text-teal-600 text-xs">{`${elapsedTime
-                }`}</p>
+                <p className="text-teal-600 text-xs">{`${elapsedTime}`}</p>
               </div>
               <p className="text-gray-400 text-sm md:text-sm">
                 @{creator?.username}
@@ -164,7 +170,7 @@ function PostCard({
         <div className={`${imageLoading ? "hidden" : "block"}`}>
           {featuredImage !== null ? (
             <Link to={`/post/${$id}`}>
-              <div className="relative rounded-md justify-center mb-3">
+              <div className="relative rounded-md justify-center">
                 <img
                   src={appwriteService.getFilePreview(featuredImage)}
                   alt={content}
@@ -177,10 +183,11 @@ function PostCard({
             </Link>
           ) : null}
         </div>
-        <LikeFeature
+        <PostCardFooter
           likes={likes}
+          comments={comments}
           postId={$id}
-          currentUserData={currentUserData}
+          currentUser={currentUser}
         />
       </div>
     </div>

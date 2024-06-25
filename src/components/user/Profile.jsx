@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import appwriteService from "../../appwrite/config";
-import LikeFeature from "../LikeFeature";
+import LikeFeature from "../post-card/LikeFeature";
 import ProfileUserInformationSkeleton from "./skeleton/ProfileUserInformationSkeleton";
-import {useFollow} from "../hooks";
+import {useFollow} from "../../hooks";
 
 const Profile = ({ user }) => {
   const {

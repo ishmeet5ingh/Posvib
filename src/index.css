@@ -5,6 +5,11 @@
 
 @tailwind utilities;
 
+/* text stroke */
+.text-stroke{
+  -webkit-text-stroke: 2px yellow;
+}
+
 /* Custom styles for hiding scrollbars */
 .hide-scrollbar {
   -ms-overflow-style: none; /* Internet Explorer and Edge */
@@ -213,4 +218,26 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #464545;
+}
+
+
+/* PostCardFooter.css */
+
+.comment-section-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.comment-section-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.comment-section-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.comment-section-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
 }

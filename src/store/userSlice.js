@@ -22,7 +22,6 @@ export const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    
     // Set users in state and localStorage
     setUsers: (state, action) => {
       state.users = action.payload;
@@ -32,7 +31,7 @@ export const userSlice = createSlice({
         console.error("Error updating users in localStorage", error);
       }
     },
-    
+
     // Set current user in state and localStorage
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
@@ -42,7 +41,7 @@ export const userSlice = createSlice({
         console.error("Error updating currentUser in localStorage", error);
       }
     },
-    
+
     // Add a post to the user's posts
     setUserPost: (state, action) => {
       const post = action.payload;
@@ -111,7 +110,7 @@ export const userSlice = createSlice({
                   ? {
                       ...post,
                       likes: post?.likes?.includes(userId)
-                        ? post?.likes?.filter(id => id !== userId)
+                        ? post?.likes?.filter((id) => id !== userId)
                         : [...post?.likes, userId],
                     }
                   : post
@@ -136,7 +135,9 @@ export const userSlice = createSlice({
             ? {
                 ...user,
                 following: user.following?.includes(targetUserId)
-                  ? user.following?.filter(targetId => targetId !== targetUserId)
+                  ? user.following?.filter(
+                      (targetId) => targetId !== targetUserId
+                    )
                   : [...user.following, targetUserId],
               }
             : user
@@ -146,17 +147,21 @@ export const userSlice = createSlice({
             ? {
                 ...user,
                 followers: user.followers?.includes(currentUserId)
-                  ? user.followers?.filter(currentId => currentId !== currentUserId)
+                  ? user.followers?.filter(
+                      (currentId) => currentId !== currentUserId
+                    )
                   : [...user.followers, currentUserId],
               }
             : user
         );
-      
+
       // Update current user following list
       state.currentUser = {
         ...state.currentUser,
         following: state.currentUser.following.includes(targetUserId)
-          ? state.currentUser.following?.filter(targetId => targetId !== targetUserId)
+          ? state.currentUser.following?.filter(
+              (targetId) => targetId !== targetUserId
+            )
           : [...state.currentUser.following, targetUserId],
       };
 
@@ -164,6 +169,31 @@ export const userSlice = createSlice({
       try {
         localStorage.setItem("users", JSON.stringify(updatedUsers));
         localStorage.setItem("currentUser", JSON.stringify(state.currentUser));
+      } catch (error) {
+        console.error("Error updating users in localStorage", error);
+      }
+    },
+
+    // update comments in user's post
+    updateUserPostComment: (state, action) => {
+      const { comment, postId, userId } = action.payload;
+
+      const updatedUsers = state.users?.map((user) =>
+        user?.$id === userId
+          ? {
+              ...user,
+              posts: user.posts?.map((post) =>
+                post?.$id === postId
+                  ? { ...post, comments: { ...post.comments, comment } }
+                  : post
+              ),
+            }
+          : user
+      );
+      state.users = updatedUsers;
+
+      try {
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
       } catch (error) {
         console.error("Error updating users in localStorage", error);
       }
@@ -202,6 +232,7 @@ export const {
   deleteCurrentUser,
   updateUserPostLike,
   updateFollowingFollowers,
+  updateUserPostComment,
 } = userSlice.actions;
 
 export default userSlice.reducer;

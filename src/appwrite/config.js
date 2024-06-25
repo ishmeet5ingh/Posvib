@@ -31,6 +31,7 @@ export class Service {
           userId,
           creator: userId,
           likes: [],
+          comments: []
         }
       );
     } catch (error) {
@@ -159,6 +160,32 @@ export class Service {
       console.log("Appwrite service :: likePost :: error: ", error);
     }
   }
+
+  async updateComments (postId, commentId) {
+    try {
+      const post = await this.databases.getDocument(
+        conf.appwriteDatabaseId,
+        conf.appwritePostsCollectionId,
+        postId
+      );
+  
+      const updatedComments = [...post?.comments, commentId]
+      
+      const updatedPost = await this.databases.updateDocument(
+        conf.appwriteDatabaseId,
+        conf.appwritePostsCollectionId,
+        postId,
+        {
+          comments: updatedComments
+        }
+      )
+      return updatePost
+    } catch (error) {
+      console.log("Appwrite service :: updateComments :: error: ", error);
+    } 
+  }
+
+
 }
 
 const service = new Service();

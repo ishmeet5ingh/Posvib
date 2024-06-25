@@ -68,6 +68,7 @@ export class AuthService {
           imageUrl,
           following: [],
           followers: [],
+
         }
       );
 
@@ -155,7 +156,7 @@ export class AuthService {
         conf.appwriteUsersCollectionId
       );
     } catch (error) {
-      console.log("appwrite service :: getPost :: error: ", error);
+      console.log("appwrite service :: getUsersDataFromDB :: error: ", error);
       return false;
     }
   }

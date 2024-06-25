@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   posts: null,
   page: 2,
+  comments: null,
 };
 
 const configSlice = createSlice({
@@ -41,7 +42,7 @@ const configSlice = createSlice({
 
     updateLike: (state, action) => {
       const { userId, postId } = action.payload;
-      console.log("userId", userId, "postId", postId)
+      console.log("userId", userId, "postId", postId);
       state.posts = state.posts.map((post) =>
         post?.$id === postId
           ? {
@@ -61,6 +62,16 @@ const configSlice = createSlice({
     setPage: (state, action) => {
       state.page = action.payload;
     },
+
+    createComment: (state, action) => {
+      const { comment, postId } = action.payload;
+
+      state.posts?.map((post) =>
+        post?.$id === postId
+          ? { ...post, comments: [...post.comments, comment] }
+          : post
+      );
+    },
   },
 });
 
@@ -73,6 +84,7 @@ export const {
   deleteAllPost,
   setPage,
   addPosts,
+  createComment
 } = configSlice.actions;
 
 export default configSlice.reducer;

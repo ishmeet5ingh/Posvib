@@ -1,4 +1,4 @@
-import appwriteService from "../../../appwrite/config";
+import appwriteService from "../../appwrite/config";
 
 const useFileUpload = () => {
   const uploadFile = async (file) => {

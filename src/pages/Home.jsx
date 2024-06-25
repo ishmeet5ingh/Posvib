@@ -9,6 +9,7 @@ function Home() {
   // Redux state selectors
   const authStatus = useSelector((state) => state.auth.status);
   const posts = useSelector((state) => state.config.posts);
+  console.log("posts", posts)
 
   // Delete all post when user is logged out.
   useEffect(() => {

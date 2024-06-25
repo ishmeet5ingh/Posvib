@@ -13,11 +13,13 @@ import { setLoading } from "./store/loadingSlice";
 
 
 function App() {
+  // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
   const authData = useSelector((state)=> state.auth.userData)
   const Loading = useSelector((state) => state.loading.isLoading);
 
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,18 +27,18 @@ function App() {
         const userData = await authService.getUserData();
         if (userData) {
           dispatch(login({ userData }))
-          const [users, posts] = await Promise.all([
-            authService.getUsersDataFromDB(),
-            authStatus ? appwriteService.getPosts(1) : null,
-          ]);
+          const users = await authService.getUsersDataFromDB()
           const currentUser = users.documents?.find(user => user.accountId === authData?.$id)
           dispatch(setUsers(users?.documents))
-          if (authStatus && posts) {
-            dispatch(setPosts(posts));
+          if (authStatus) {
+            const posts = await appwriteService.getPosts(1);
+            if (posts) {
+              dispatch(setPosts(posts));
+            }
+            dispatch(setCurrentUser(currentUser))
           } else {
             dispatch(deleteAllPost());
           }
-          dispatch(setCurrentUser(currentUser))
         } else {
           dispatch(deleteUsers())
           dispatch(deleteCurrentUser())

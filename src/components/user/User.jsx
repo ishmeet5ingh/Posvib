@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import useFollow from '../hooks/users/useFollow'
+import {useFollow}from '../../hooks'
 
 function User({user, classname, flexCol, text, imageClasses}) {
 
