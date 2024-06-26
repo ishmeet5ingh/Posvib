@@ -9,7 +9,7 @@ function useElapsedTime(createdAt) {
       const currentDate = new Date();
       const timeDifference = currentDate - startDate;
 
-      const seconds = Math.floor(timeDifference / 1000) + 1;
+      const seconds = Math.abs(Math.floor(timeDifference / 1000) + 1);
       const minutes = Math.floor(timeDifference / (1000 * 60));
       const hours = Math.floor(timeDifference / (1000 * 60 * 60));
       const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
