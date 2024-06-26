@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import commentsClose from '../../../public/commentsClose.png'
 import commentsOpen from '../../../public/commentsOpen.png'
 
 function CommentFeature({comments, postId, currentUser, setIsComments, isComments}) {
-    const [commentCount, setCommentCount] = useState(comments?.length)
+    const [commentCount, setCommentCount] = useState(comments?.length)  
+
+    useEffect(()=> {
+        setCommentCount(comments?.length)
+    }, [comments?.length])
+
 
     const handleComments = () => {
         setIsComments((prevState)=> !prevState)
+        setCommentCount(comments?.length)
     }
   return (
     <div className="flex justify-between items-center">

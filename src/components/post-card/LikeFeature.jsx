@@ -50,8 +50,8 @@ function LikeFeature({ likes, postId, currentUser }) {
 
       await appwriteService.likePost(postId, currentUser?.$id);
       
-      dispatch(updateLike({ userId: currentUser?.$id, postId }));
-      dispatch(updateUserPostLike({ userId: currentUser?.$id, postId }));
+      // dispatch(updateLike({ userId: currentUser?.$id, postId }));
+      // dispatch(updateUserPostLike({ userId: currentUser?.$id, postId }));
     } catch (error) {
       console.error("Error updating like status:", error.message);
       

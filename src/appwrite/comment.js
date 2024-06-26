@@ -96,6 +96,7 @@ class CommentService {
               replies: updatedReplies
             }
           )
+          console.log("updatedComment", updatedComment)
           return updatedComment
         } catch (error) {
           console.log("Appwrite service :: updateReplies :: error: ", error);

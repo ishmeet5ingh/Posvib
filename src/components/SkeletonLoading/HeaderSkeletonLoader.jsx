@@ -37,7 +37,7 @@ function HeaderSkeletonLoader() {
         <div className="w-full sm:w-fit">
         <ul className="flex sm:flex-col w-full sm:items-center lg:items-start justify-around sm:gap-6">
           {navItems.map((logo, index) =>
-              <li key={logo}>
+              <li key={index}>
                   <div
                     className={`text-2xl sm:text-lg duration-100`}
                   >

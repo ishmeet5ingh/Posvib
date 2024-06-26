@@ -1,19 +1,26 @@
-import React, { useEffect } from 'react'
-import {Comment} from '..'
+import React, { useEffect } from "react";
+import { CommentOrReply, Replies } from "..";
 
+function Comments({ comments, currentUser, postId }) {
+  console.log("comment", comments);
 
-function Comments({comments}) {
-    console.log("comment", comments)
-    
   return (
-    <div className='overflow-y-scroll max-h-60 custom-scrollbar scroll-smooth'>
-        {comments?.map((comment)=>(
-            <div key={comment?.$id} >
-            <Comment comment={comment}/>
-            </div>
-        ))}
+    <div className="overflow-y-scroll max-h-60 custom-scrollbar scroll-smooth">
+      {comments?.map((comment) => (
+        <div key={comment?.$id}>
+          <CommentOrReply comment={comment}>
+            <Replies
+              currentUser={currentUser}
+              replies={comment?.replies}
+              commentCreator={comment?.creator?.username}
+              commentId={comment?.$id}
+              postId={postId}
+            />
+          </CommentOrReply>
+        </div>
+      ))}
     </div>
-  )
+  );
 }
 
-export default Comments
+export default Comments;

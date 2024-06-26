@@ -82,8 +82,8 @@ function PostsContainer({ children }) {
           {children}
           {/* Loading spinner or end message */}
           <div className="text-white flex justify-center py-5">
-            {loading && <div className="spinner"></div>}
-            {!hasMore && <p>No more posts</p>}
+            {loading && <div className="spinner w-10 h-10"></div>}
+            {!hasMore && !loading && <p>No more posts</p>}
           </div>
         </div>
       </div>

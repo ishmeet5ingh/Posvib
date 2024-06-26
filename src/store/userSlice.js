@@ -47,7 +47,7 @@ export const userSlice = createSlice({
       const post = action.payload;
       const updatedUsers = state.users?.map((user) =>
         user.$id === post.userId
-          ? { ...user, posts: [...user.posts, post] }
+          ? { ...user, posts: [post, ...user.posts] }
           : user
       );
       state.users = updatedUsers;
@@ -184,7 +184,7 @@ export const userSlice = createSlice({
               ...user,
               posts: user.posts?.map((post) =>
                 post?.$id === postId
-                  ? { ...post, comments: { ...post.comments, comment } }
+                  ? { ...post, comments: [comment, ...post.comments] }
                   : post
               ),
             }
@@ -198,6 +198,43 @@ export const userSlice = createSlice({
         console.error("Error updating users in localStorage", error);
       }
     },
+
+    updateUserCommentsReplies: (state, action) => {
+      const { reply, commentId, postId, userId } = action.payload;
+    
+      const updatedUsers = state.users?.map((user) => {
+        if (user?.$id === userId) {
+          return {
+            ...user,
+            posts: user.posts?.map((post) => {
+              if (post?.$id === postId) {
+                return {
+                  ...post,
+                  comments: post.comments?.map((comment) => {
+                    if (comment?.$id === commentId) {
+                      return {
+                        ...comment,
+                        replies: [...(comment.replies || []), reply],
+                      };
+                    }
+                    return comment; 
+                  }),
+                };
+              }
+              return post;
+            }),
+          };
+        }
+        return user;
+      });
+      state.users = updatedUsers;
+      try {
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      } catch (error) {
+        console.error("Error updating users in localStorage", error);
+      }
+    },
+    
 
     // Delete all users
     deleteUsers: (state) => {
@@ -233,6 +270,7 @@ export const {
   updateUserPostLike,
   updateFollowingFollowers,
   updateUserPostComment,
+  updateUserCommentsReplies,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -4,8 +4,7 @@ import {
   ID,
   Avatars,
   Databases,
-  Permission,
-  Role,
+
 } from "appwrite";
 import conf from "../conf/conf";
 import { setError } from "../store/errorSlice";

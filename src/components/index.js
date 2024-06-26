@@ -6,7 +6,7 @@ import Button from './Button';
 import CommentForm from "./post-card/CommentForm.jsx";
 import CommentFeature from "./post-card/CommentFeature.jsx";
 import Comments from "./post-card/Comments.jsx";
-import Comment from "./post-card/Comment.jsx"
+import CommentOrReply from "./post-card/CommentOrReply.jsx"
 import ErrorContainer from "./containers/ErrorContainer";
 import FileInput from "./Post-Form/FileInput";
 import Header from "./Header/Header.jsx";
@@ -26,12 +26,14 @@ import ProgressBarComponent from "./Post-Form/ProgressBarComponent";
 import Profile from "./user/Profile.jsx";
 import ProfileUserInformationSkeleton from "./user/skeleton/ProfileUserInformationSkeleton.jsx";
 import PostCardFooter from "./post-card/PostCardFooter.jsx";
+import Replies from "./post-card/Replies.jsx";
 import Select from './Select';
 import Signup from './Signup';
 import SearchUser from "./user/SearchUser.jsx";
 import User from "./user/User.jsx";
 import UserSideBar from "./user/UserSideBar.jsx";
 import UserSideBarSkeleton from "./user/skeleton/UserSideBarSkeleton.jsx";
+import ReplyForm from "./post-card/ReplyForm.jsx";
 
 export {
     Avatar,
@@ -40,7 +42,7 @@ export {
     CommentFeature,
     CommentForm,
     Comments,
-    Comment,
+    CommentOrReply,
     ErrorContainer,
     FileInput,
     Header,
@@ -60,6 +62,8 @@ export {
     Profile,
     ProfileUserInformationSkeleton,
     PostCardFooter,
+    Replies,
+    ReplyForm,
     Select,
     Signup,
     SearchUser,

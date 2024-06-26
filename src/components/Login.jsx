@@ -3,9 +3,13 @@ import  authService  from '../appwrite/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import {login as authLogin} from '../store/authSlice'
-import {Logo, Input, Button, AuthContainer} from './index'
+import { Input, Button, AuthContainer, ErrorContainer } from "./index";
 import {Link, useNavigate} from 'react-router-dom'
 import { useState } from 'react'
+import {
+  emailValidation,
+  passwordValidation,
+} from "./validation/validationRules";
 // import { }
 
 function Login() {
@@ -13,7 +17,7 @@ function Login() {
   const [error, setError] = useState("")
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const {register, handleSubmit} = useForm()
+  const {register, handleSubmit, formState: { errors }} = useForm()
   const authUser = useSelector(state => state.auth.userData)
   
   
@@ -37,29 +41,25 @@ function Login() {
   return (
     <AuthContainer inup={"in"}>
       <form className='flex flex-col' onSubmit={handleSubmit(login)}>
-        <Input
-          label="email: "
+      <Input
+          label="Email: "
           type="email"
           className=""
           placeholder="Enter Email"
-          {...register("email", {
-                    required: true,
-                    validate: {
-                        matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                        "Email address must be a valid address",
-                    }
-                })}
+          {...register("email", emailValidation)}
         />
+        {errors.email && <ErrorContainer>{errors.email.message}</ErrorContainer>}
+        
         <Input
-          label="password: "
+          label="Password: "
           type="password"
-          className=""
           placeholder="Enter password"
-          {...register("password", {
-            required: true
-          })}
+          {...register("password", passwordValidation)}
         />
+        
+        {errors.password && <ErrorContainer>{errors.password.message}</ErrorContainer>}
           <p className="text-white text-sm my-2 text-center">
+
             Don&apos;t have any account?&nbsp;
             <Link
             to="/signup"

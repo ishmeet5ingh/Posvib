@@ -14,7 +14,7 @@ class ReplyService {
     }
 
     // create Reply 
-    async createReply ({reply, userId, commentId, }) {
+    async createReply ({reply, userId, commentId, creatorUrl, creatorUsername }) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -25,7 +25,8 @@ class ReplyService {
                     likes: [],
                     userId,
                     commentId,
-                    creator: userId,
+                    creatorUrl,
+                    creatorUsername
                 }
             )
         } catch (error) {

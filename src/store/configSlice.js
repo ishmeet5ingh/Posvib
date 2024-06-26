@@ -22,7 +22,8 @@ const configSlice = createSlice({
     },
 
     createPost: (state, action) => {
-      state.posts.push(action.payload);
+
+      state.posts = [action.payload, ...state.posts]
     },
 
     deletePost: (state, action) => {
@@ -66,9 +67,26 @@ const configSlice = createSlice({
     createComment: (state, action) => {
       const { comment, postId } = action.payload;
 
-      state.posts?.map((post) =>
+      state.posts = state.posts?.map((post) =>
         post?.$id === postId
-          ? { ...post, comments: [...post.comments, comment] }
+          ? { ...post, comments: [comment, ...post.comments] }
+          : post
+      );
+    },
+
+    createReply: (state, action) => {
+      const { reply, replyCreatorImageUrl, commentId, postId } = action.payload;
+
+      state.posts = state.posts?.map((post) =>
+        post?.$id === postId
+          ? {
+              ...post,
+              comments: post.comments?.map((comment) =>
+                comment?.$id === commentId
+                  ? { ...comment, replies: [...comment.replies, reply] }
+                  : comment
+              ),
+            }
           : post
       );
     },
@@ -84,7 +102,8 @@ export const {
   deleteAllPost,
   setPage,
   addPosts,
-  createComment
+  createComment,
+  createReply,
 } = configSlice.actions;
 
 export default configSlice.reducer;

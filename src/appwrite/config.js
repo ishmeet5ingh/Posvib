@@ -91,7 +91,8 @@ export class Service {
         conf.appwritePostsCollectionId,
         [
           Query.limit(limit),
-          Query.offset(offset)
+          Query.offset(offset),
+          Query.orderDesc('$createdAt')
         ]
       );
       return response.documents

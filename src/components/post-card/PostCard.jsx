@@ -31,9 +31,8 @@ function PostCard({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const isAuthor =
-    $id && currentUser ? userId === currentUser?.$id : false;
-      
+  const isAuthor = $id && currentUser ? userId === currentUser?.$id : false;
+
   useEffect(() => {
     const unsubscribe = appwriteService.client.subscribe(
       [
@@ -53,13 +52,14 @@ function PostCard({
               postId: response.payload?.$id,
             })
           );
+          setLoading(false);
         }
       }
     );
     return () => {
       unsubscribe();
     };
-  });
+  }, [dispatch]);
 
   // calculating Elapsed Time
   const elapsedTime = useElapsedTime($createdAt);
@@ -82,6 +82,7 @@ function PostCard({
   }, [dropdownRef]);
 
   const delpost = async () => {
+    setLoading(true);
     await appwriteService.deletePost($id);
     if (featuredImage !== null) {
       await appwriteService.deleteFile(featuredImage);
@@ -105,7 +106,7 @@ function PostCard({
                 <p className="font-medium text-sm md:text-base text-white">
                   {creator?.name}
                 </p>
-                <p className="text-teal-600 text-xs">{`${elapsedTime}`}</p>
+                <p className="text-teal-600  text-xs">{`${elapsedTime}`}</p>
               </div>
               <p className="text-gray-400 text-sm md:text-sm">
                 @{creator?.username}
@@ -120,6 +121,7 @@ function PostCard({
               <FaCircle size={5} className="mr-1" />
               <FaCircle size={5} className="mr-1" />
               <FaCircle size={5} />
+              <div></div>
             </div>
 
             {dropdownVisible && (
@@ -136,13 +138,22 @@ function PostCard({
                         />
                       </Link>
                     </li>
-                    <li>
+                    <li className="flex justify-center items-center py-2 px-2">
+                      
+                      {loading ? (
+                      <div className="loading-dots items-end">
+                        <h3 className="text-sm ">Deleting</h3>
+                        <div className="dot"></div>
+                        <div className="dot"></div>
+                        <div className="dot"></div>
+                      </div>
+                      ) : 
                       <Button
                         children="Delete"
                         bgColor=""
                         onClick={delpost}
-                        className="text-sm px-4 py-2"
-                      />
+                        className={`text-sm `}
+                      />}
                     </li>
                   </ul>
                 ) : (

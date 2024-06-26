@@ -24,35 +24,42 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userData = await authService.getUserData();
+        dispatch(setLoading(true)); // Ensure loading state is set before fetching
+
+        const [userData, users, posts] = await Promise.all([
+          authService.getUserData(),
+          authService.getUsersDataFromDB(),
+          authStatus ? appwriteService.getPosts(1) : Promise.resolve(null),
+        ]);
+
         if (userData) {
-          dispatch(login({ userData }))
-          const users = await authService.getUsersDataFromDB()
-          const currentUser = users.documents?.find(user => user.accountId === authData?.$id)
-          dispatch(setUsers(users?.documents))
-          if (authStatus) {
-            const posts = await appwriteService.getPosts(1);
-            if (posts) {
-              dispatch(setPosts(posts));
-            }
-            dispatch(setCurrentUser(currentUser))
+          dispatch(login({ userData }));
+
+          if (users?.documents) {
+            dispatch(setUsers(users.documents));
+            const currentUser = users.documents.find(user => user.accountId === authData?.$id);
+            dispatch(setCurrentUser(currentUser));
+          }
+
+          if (authStatus && posts) {
+            dispatch(setPosts(posts));
           } else {
             dispatch(deleteAllPost());
           }
         } else {
-          dispatch(deleteUsers())
-          dispatch(deleteCurrentUser())
+          dispatch(deleteUsers());
+          dispatch(deleteCurrentUser());
           dispatch(logout());
         }
       } catch (error) {
         console.error("Error fetching data", error);
       } finally {
-        dispatch(setLoading(false));
+        dispatch(setLoading(false)); // Ensure loading state is reset after fetching
       }
     };
 
     fetchData();
-  }, [dispatch, authStatus,]);
+  }, [dispatch, authData?.$id, authStatus]);
 
   return !Loading ? (
     <div>
