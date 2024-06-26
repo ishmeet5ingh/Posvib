@@ -184,7 +184,7 @@ export const userSlice = createSlice({
               ...user,
               posts: user.posts?.map((post) =>
                 post?.$id === postId
-                  ? { ...post, comments: [comment, ...post.comments] }
+                  ? { ...post, comments: [...post.comments, comment] }
                   : post
               ),
             }

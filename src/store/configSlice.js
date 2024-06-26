@@ -69,7 +69,7 @@ const configSlice = createSlice({
 
       state.posts = state.posts?.map((post) =>
         post?.$id === postId
-          ? { ...post, comments: [comment, ...post.comments] }
+          ? { ...post, comments: [...post.comments, comment] }
           : post
       );
     },
