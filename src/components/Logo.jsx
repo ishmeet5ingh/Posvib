@@ -1,11 +1,15 @@
 import React from 'react'
+import posvibLogo from '../../public/Posvib.png'
 
 function Logo() {
   return (
     
-    <div className='width-[100px] font-bold tracking-wider text-lg'>
+    <div>
     {/* Logo */}
-    <span className='text-3xl'>P</span>osvib
+    <img 
+      src={posvibLogo}
+      className='w-16 xs:w-20  lg:w-24'
+      alt="" />
     </div> 
 
   )
