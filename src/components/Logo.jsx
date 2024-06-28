@@ -1,5 +1,5 @@
 import React from 'react'
-import posvibLogo from '../../public/Posvib.png'
+import posvibLogo from '../../public/PosvibText.png'
 
 function Logo() {
   return (
@@ -8,7 +8,7 @@ function Logo() {
     {/* Logo */}
     <img 
       src={posvibLogo}
-      className='w-16 xs:w-20  lg:w-24'
+      className='w-16 xs:w-20 md:w-20 lg:w-24'
       alt="" />
     </div> 
 

@@ -11,14 +11,14 @@ import {
 } from "..";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, updatePost } from "../../store/configSlice";
+import { createReduxPost, updateReduxPost } from "../../store/configSlice";
 import {
   useHandleFileChange,
   useHandleTextareaInput,
   useFormInitialization,
   useProgress,
 } from "../../hooks";
-import { setUserPost, updateUserPost } from "../../store/userSlice";
+import { setReduxUserPost, updateReduxUserPost } from "../../store/userSlice";
 import PostFormSkeletonLoader from "../SkeletonLoading/PostFormSkeletonLoader";
 import conf from "../../conf/conf";
 
@@ -57,19 +57,19 @@ function PostForm({ post }) {
       (response) => {
         if (response.events.includes("databases.*.collections.*.documents.*.create")) {
         // Dispatch action to create new post in Redux store
-        dispatch(createPost(response.payload));
+        dispatch(createReduxPost(response.payload));
 
         // Set user's new post in Redux store
-        dispatch(setUserPost(response.payload));
+        dispatch(setReduxUserPost(response.payload));
         }
 
         if(response.events.includes("databases.*.collections.*.documents.*.update")){
           console.log(response)
           // Dispatch action to update post in Redux store
-        dispatch(updatePost({ id: response.payload.$id, dbPost: response.payload }));
+        dispatch(updateReduxPost({ id: response.payload.$id, dbPost: response.payload }));
 
         // Update user's post in Redux store
-        dispatch(updateUserPost(response.payload));
+        dispatch(updateReduxUserPost(response.payload));
         // Navigate to updated post page
         setContent(response.payload?.content)
         if(response.payload?.featuredImage)
@@ -94,14 +94,14 @@ function PostForm({ post }) {
 
     if (post) {
       const file = data.image[0]
-        ? await appwriteService.uploadFile(data.image[0]) : null; // Upload new file if provided
+        ? await appwriteService.uploadAppwriteFile(data.image[0]) : null; // Upload new file if provided
 
       if (file) {
-        appwriteService.deleteFile(post.featuredImage); // Delete previous file if new file uploaded
+        appwriteService.deleteAppwriteFile(post.featuredImage); // Delete previous file if new file uploaded
       }
 
       // Update post with new data and new file ID if uploaded
-      const dbPost = await appwriteService.updatePost(post?.$id, {
+      const dbPost = await appwriteService.updateAppwritePost(post?.$id, {
         ...data,
         featuredImage: file ? file?.$id : undefined,
       });
@@ -115,7 +115,7 @@ function PostForm({ post }) {
       // Create new post
       let file;
       if (data.image[0]) {
-        file = await appwriteService.uploadFile(data.image[0]); // Upload new file if provided 
+        file = await appwriteService.uploadAppwriteFile(data.image[0]); // Upload new file if provided 
       }
       if (file !== undefined) {
         const fileId = file?.$id;
@@ -123,15 +123,15 @@ function PostForm({ post }) {
       }
 
       // create post
-      const dbPost = await appwriteService.createPost({
+      const dbPost = await appwriteService.createAppwritePost({
         ...data,
         userId: userData?.$id,
       });
 
       // if(dbPost){
-      //    dispatch(createPost(dbPost));
+      //    dispatch(createReduxPost(dbPost));
 
-      //    dispatch(setUserPost(dbPost));
+      //    dispatch(setReduxUserPost(dbPost));
       // }
     }
     setLoading(3); // submission completed
@@ -166,6 +166,7 @@ function PostForm({ post }) {
                 handleFileChange={handleFileChange}
                 selectedFile={selectedFile}
                 preview={preview}
+                setSelectedFile={setSelectedFile}
               />
 
               <Button
@@ -188,7 +189,7 @@ function PostForm({ post }) {
             {post && post.featuredImage && (
               <div className="w-full mb-4">
                 <img
-                  src={appwriteService.getFilePreview(postFeaturedImage)}
+                  src={appwriteService.getAppwriteFilePreview(postFeaturedImage)}
                   alt={post.title}
                   className="rounded-lg"
                 />

@@ -75,7 +75,7 @@ const Profile = ({ user }) => {
             key={post.$id}
             style={{
               backgroundImage: post.featuredImage
-                ? `url(${appwriteService.getFilePreview(post?.featuredImage)})`
+                ? `url(${appwriteService.getAppwriteFilePreview(post?.featuredImage)})`
                 : "none",
               backgroundSize: "cover",
               backgroundPosition: "center",
@@ -86,7 +86,7 @@ const Profile = ({ user }) => {
             {post.featuredImage ? (
               <div>
                 <img
-                  src={appwriteService.getFilePreview(post?.featuredImage)}
+                  src={appwriteService.getAppwriteFilePreview(post?.featuredImage)}
                   alt="Post featured"
                   className="w-full h-full opacity-0"
                 />

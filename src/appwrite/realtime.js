@@ -1,5 +1,5 @@
 import { Client } from "appwrite";
-import { createPost, updatePost, deletePost, updateLike } from "../store/configSlice";
+import { createReduxPost, updateReduxPost, deleteReduxPost, updateReduxLike } from "../store/configSlice";
 import store from "../store/store";
 import conf from "../conf/conf";
 
@@ -19,20 +19,20 @@ const unsubscribe = client.subscribe(
       response.events.includes("databases.*.collections.*.documents.*.create")
     ) {
       console.log("A Post is Created");
-      store.dispatch(createPost(response.payload));
+      store.dispatch(createReduxPost(response.payload));
     }
     if (
       response.events.includes("databases.*.collections.*.documents.*.update")
     ) {
       store.dispatch(
-        updatePost({ id: response.payload.$id, dbPost: response.payload })
+        createReduxPost({ id: response.payload.$id, dbPost: response.payload })
       );
-      // store.dispatch(updateLike({id: postId, likesArray: response.payload.likes }));
+      // store.dispatch(updateReduxLike({id: postId, likesArray: response.payload.likes }));
     }
     if (
       response.events.includes("databases.*.collections.*.documents.*.delete")
     ) {
-      store.dispatch(deletePost(response.payload.$id));
+      store.dispatch(deleteReduxPost(response.payload.$id));
     }
   }
 );

@@ -3,9 +3,9 @@ import appwriteService from "../../appwrite/config";
 import likeIcon from "../../../public/like.png";
 import likedIcon from "../../../public/liked.png";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLike } from "../../store/configSlice";
+import { updateReduxLike } from "../../store/configSlice";
 import conf from "../../conf/conf";
-import { updateUserPostLike } from "../../store/userSlice";
+import { updateReduxUserPostLike } from "../../store/userSlice";
 import {FaComment, FaHeart} from 'react-icons/fa'
 
 
@@ -31,8 +31,8 @@ function LikeFeature({ likes, postId, currentUser }) {
                   setLikeCount(updatedLikes?.length);
                   setIsLiked(updatedLikes.includes(currentUser?.$id));
                   console.log("updatedLikes", updatedLikes)
-                  dispatch(updateLike({ userId: response.payload.userId, postId: response.payload.$id }));
-                  dispatch(updateUserPostLike({ userId: response.payload.userId, postId: response.payload.$id}))
+                  dispatch(updateReduxLike({ userId: response.payload.userId, postId: response.payload.$id }));
+                  dispatch(updateReduxUserPostLike({ userId: response.payload.userId, postId: response.payload.$id}))
               }
           }
       );
@@ -48,10 +48,10 @@ function LikeFeature({ likes, postId, currentUser }) {
       setIsLiked(prevLike => !prevLike);
       setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1);
 
-      await appwriteService.likePost(postId, currentUser?.$id);
+      await appwriteService.toggleAppwritePostLike(postId, currentUser?.$id);
       
-      // dispatch(updateLike({ userId: currentUser?.$id, postId }));
-      // dispatch(updateUserPostLike({ userId: currentUser?.$id, postId }));
+      // dispatch(updateReduxLike({ userId: currentUser?.$id, postId }));
+      // dispatch(updateReduxUserPostLike({ userId: currentUser?.$id, postId }));
     } catch (error) {
       console.error("Error updating like status:", error.message);
       

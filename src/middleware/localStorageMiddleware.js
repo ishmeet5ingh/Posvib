@@ -5,11 +5,11 @@ const localStorageMiddleware = (store) => (next) => (action) => {
     
     // List of action types that should trigger localStorage update
     const actionTypes = [
-      'config/setPosts',
-      'config/createPost',
-      'config/deletePost',
-      'config/updatePost',
-      'config/deleteAllPost'
+      'config/setReduxPosts',
+      'config/createReduxPost',
+      'config/deleteReduxPost',
+      'config/updateReduxPost',
+      'config/deleteAllReduxPost'
     ];
     
     if (actionTypes.includes(action.type)) {

@@ -3,9 +3,9 @@ import appwriteReplyService from '../../appwrite/reply'
 import appwriteCommentService from '../../appwrite/comment'
 import { useForm } from 'react-hook-form'
 import {FaPaperPlane} from 'react-icons/fa'
-import { createReply } from '../../store/configSlice'
+import { createReduxReply } from '../../store/configSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateUserCommentsReplies } from '../../store/userSlice'
+import { addReduxUserCommentReply } from '../../store/userSlice'
 
 
 function ReplyForm({currentUser, replies, commentCreator, commentId, postId}) {
@@ -24,7 +24,7 @@ function ReplyForm({currentUser, replies, commentCreator, commentId, postId}) {
           console.log("data", data);
       
           // Create the comment
-          const createdReply = await appwriteReplyService.createReply({
+          const createdReply = await appwriteReplyService.createAppwriteReply({
             ...data,
             userId: currentUser?.$id,
             commentId: commentId,
@@ -36,11 +36,11 @@ function ReplyForm({currentUser, replies, commentCreator, commentId, postId}) {
 
             console.log("createdReply", createdReply)
             // Dispatch actions to update Redux store
-            dispatch(createReply({ reply: createdReply, commentId, postId}));
-            dispatch(updateUserCommentsReplies({ reply: createdReply, commentId, postId, userId: currentUser?.$id }));
+            dispatch(createReduxReply({ reply: createdReply, commentId, postId}));
+            dispatch(addReduxUserCommentReply({ reply: createdReply, commentId, postId, userId: currentUser?.$id }));
       
             // Update comments in Appwrite
-            const updatedReply = await appwriteCommentService.updateReplies(commentId, createdReply?.$id);
+            const updatedReply = await appwriteCommentService.createAppwriteReplyInsideComments(commentId, createdReply?.$id);
             console.log("updatedreply", updatedReply);
           }
       

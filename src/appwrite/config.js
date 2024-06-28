@@ -1,6 +1,11 @@
 import { Client, Databases, Storage, ID, Avatars, Query } from "appwrite";
 import conf from "../conf/conf";
-import { createPost, updatePost, deletePost, updateLike } from "../store/configSlice";
+import {
+  createReduxPost,
+  updateReduxPost,
+  deleteReduxPost,
+  updateReduxLike,
+} from "../store/configSlice";
 import store from "../store/store";
 
 export class Service {
@@ -18,7 +23,8 @@ export class Service {
     this.avatars = new Avatars(this.client);
   }
 
-  async createPost({ content, featuredImage, status, userId }) {
+  //To create post in appwrite
+  async createAppwritePost({ content, featuredImage, status, userId }) {
     try {
       return await this.databases.createDocument(
         conf.appwriteDatabaseId,
@@ -31,15 +37,16 @@ export class Service {
           userId,
           creator: userId,
           likes: [],
-          comments: []
+          comments: [],
         }
       );
     } catch (error) {
-      console.log("appwrite service :: createPost :: error: ", error);
+      console.log("appwrite service :: createAppwritePost :: error: ", error);
     }
   }
 
-  async updatePost(id, { content, featuredImage, status }) {
+  // To update post in Appwrite
+  async updateAppwritePost(id, { content, featuredImage, status }) {
     try {
       return await this.databases.updateDocument(
         conf.appwriteDatabaseId,
@@ -52,11 +59,12 @@ export class Service {
         }
       );
     } catch (error) {
-      console.log("appwrite service :: updatePost :: error: ", error);
+      console.log("appwrite service :: updateAppwritePost :: error: ", error);
     }
   }
 
-  async deletePost(id) {
+  // To delete post in appwrite
+  async deleteAppwritePost(id) {
     try {
       await this.databases.deleteDocument(
         conf.appwriteDatabaseId,
@@ -65,12 +73,13 @@ export class Service {
       );
       return true;
     } catch (error) {
-      console.log("appwrite service :: deleltePost :: error: ", error);
+      console.log("appwrite service :: deleteAppwritePost :: error: ", error);
       return false;
     }
   }
 
-  async getPost(id) {
+  // To get a Single post from appwrite
+  async getAppwritePost(id) {
     try {
       return await this.databases.getDocument(
         conf.appwriteDatabaseId,
@@ -78,12 +87,13 @@ export class Service {
         id
       );
     } catch (error) {
-      console.log("appwrite service :: getPost :: error: ", error);
+      console.log("appwrite service :: getAppwritePost :: error: ", error);
       return false;
     }
   }
 
-  async getPosts(page = 1, limit = 6) {
+  // To get all posts from appwrite
+  async getAppwritePosts(page = 1, limit = 6) {
     const offset = (page - 1) * limit;
     try {
       const response = await this.databases.listDocuments(
@@ -92,47 +102,52 @@ export class Service {
         [
           Query.limit(limit),
           Query.offset(offset),
-          Query.orderDesc('$createdAt')
+          Query.orderDesc("$createdAt"),
         ]
       );
-      return response.documents
+      return response.documents;
     } catch (error) {
-      console.log("Appwrite serive :: getPosts :: error", error);
+      console.log("Appwrite serive :: getAppwritePosts :: error", error);
       return [];
     }
   }
 
-  // file upload service
-
-  async uploadFile(file) {
+  // To upload file to Appwrite
+  async uploadAppwriteFile(file) {
     try {
       return await this.bucket.createFile(
         // get the id
         conf.appwriteBucketId,
         ID.unique(),
-        file,
+        file
       );
     } catch (error) {
-      console.log("Appwrite serive :: uploadFile :: error", error);
+      console.log("Appwrite serive :: uploadAppwriteFile :: error", error);
       return false;
     }
   }
 
-  async deleteFile(fileId) {
+  // To delete file from appwrite
+  async deleteAppwriteFile(fileId) {
     try {
-      return await this.bucket.deleteFile(conf.appwriteBucketId, fileId);
+      return await this.bucket.deleteAppwriteFile(
+        conf.appwriteBucketId,
+        fileId
+      );
       return true;
     } catch (error) {
-      console.log("Appwrite serive :: deleteFile :: error", error);
+      console.log("Appwrite serive :: deleteAppwriteFile :: error", error);
       return false;
     }
   }
 
-  getFilePreview(fileId) {
+  // To get file preview from appwrite
+  getAppwriteFilePreview(fileId) {
     return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
   }
 
-  async likePost(postId, userId) {
+  // To toggle likes of the post of appwrite
+  async toggleAppwritePostLike(postId, userId) {
     try {
       // Fetch the post
       const post = await this.databases.getDocument(
@@ -141,12 +156,10 @@ export class Service {
         postId
       );
 
-      // Add userId to likes if not already present
-      const updatedLikes = post.likes.includes(userId)
-        ? post.likes.filter((likedUser) => likedUser !== userId) // Unlike
-        : [...post.likes, userId]; // Like
+    const updatedLikes = post.likes.includes(userId)
+        ? post.likes.filter((likedUser) => likedUser !== userId)
+        : [...post.likes, userId];
 
-      // Update post with new likes array
       const updatedPost = await this.databases.updateDocument(
         conf.appwriteDatabaseId,
         conf.appwritePostsCollectionId,
@@ -155,38 +168,101 @@ export class Service {
           likes: updatedLikes,
         }
       );
-      
+
       return updatedPost;
     } catch (error) {
-      console.log("Appwrite service :: likePost :: error: ", error);
+      console.log(
+        "Appwrite service :: toggleAppwritePostLike :: error: ",
+        error
+      );
     }
   }
 
-  async updateComments (postId, commentId) {
+  // To create comments insite the post in appwrite
+  async createAppwriteCommentInsidePost(postId, commentId) {
     try {
       const post = await this.databases.getDocument(
         conf.appwriteDatabaseId,
         conf.appwritePostsCollectionId,
         postId
       );
-  
-      const updatedComments = [...post?.comments, commentId]
-      
+
+      const updatedComments = [...post?.comments, commentId];
+
       const updatedPost = await this.databases.updateDocument(
         conf.appwriteDatabaseId,
         conf.appwritePostsCollectionId,
         postId,
         {
-          comments: updatedComments
+          comments: updatedComments,
         }
-      )
-      return updatePost
+      );
+      return updatedPost;
     } catch (error) {
-      console.log("Appwrite service :: updateComments :: error: ", error);
-    } 
+      console.log(
+        "Appwrite service :: createAppwriteCommentInsidePost :: error: ",
+        error
+      );
+    }
   }
 
+  // To delete the comment inside the post in appwrite
+  async deleteAppwriteCommentInsidePost(postId, commentId) {
+    try {
+      const post = await this.databases.getDocument(
+        conf.appwriteDatabaseId,
+        conf.appwritePostsCollectionId,
+        postId
+      );
 
+      const updatedComments = post.comments?.filter(
+        (comment) => comment?.$id !== commentId
+      );
+
+      await this.databases.updateDocument(
+        conf.appwriteDatabaseId,
+        conf.appwritePostsCollectionId,
+        postId,
+        {
+          comments: updatedComments,
+        }
+      );
+    } catch (error) {
+      console.log(
+        "Appwrite service :: deleteAppwriteCommentInsidePost :: error: ",
+        error
+      );
+    }
+  }
+
+  // To update the comment inside post in appwrite
+  async updateAppwriteCommentInsidePost(postId, comment, commentId) {
+    try {
+      const post = await this.databases.getDocument(
+        conf.appwriteDatabaseId,
+        conf.appwritePostsCollectionId,
+        postId
+      );
+
+      const updatedComments = post.comments?.map((com) =>
+        com?.$id === commentId ? { ...com, comment: comment } : com
+      );
+
+      return await this.databases.updateDocument(
+        conf.appwriteDatabaseId,
+        conf.appwritePostsCollectionId,
+        postId,
+        {
+          comments: updatedComments,
+        }
+      );
+    } catch (error) {
+      console.log(
+        "Appwrite service :: updateAppwriteCommentInsidePost :: error: ",
+        error
+      );
+    }
+  }
 }
 
 const service = new Service();

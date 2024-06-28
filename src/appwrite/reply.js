@@ -14,7 +14,7 @@ class ReplyService {
     }
 
     // create Reply 
-    async createReply ({reply, userId, commentId, creatorUrl, creatorUsername }) {
+    async createAppwriteReply ({reply, userId, commentId, creatorUrl, creatorUsername }) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -30,12 +30,12 @@ class ReplyService {
                 }
             )
         } catch (error) {
-            console.log("appwrite reply service :: createReply :: error: ", error);
+            console.log("appwrite reply service :: createAppwriteReply :: error: ", error);
         }
     }
 
     // update reply 
-    async updateReply(id, {reply}){
+    async updateAppwriteReply(id, {reply}){
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
@@ -46,13 +46,13 @@ class ReplyService {
                 }
             )
         } catch (error) {
-            console.log("appwrite reply service :: updateReply :: error: ", error);
+            console.log("appwrite reply service :: updateAppwriteReply :: error: ", error);
             
         }
     } 
 
     // delete reply
-    async deleteReply(id){
+    async deleteAppwriteReply(id){
         try {
             await this.databases.deleteDocument(
                 conf.appwriteDatabaseId,
@@ -60,20 +60,20 @@ class ReplyService {
                 id
             )
         } catch (error) {
-            console.log("appwrite reply service :: deleteReply :: error: ", error);
+            console.log("appwrite reply service :: deleteAppwriteReply :: error: ", error);
         }
     }
 
     // get all replies
 
-    async getComments(){
+    async getAppwriteReplies(){
         try {
             await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteRepliesCollectionId
             )
         } catch (error) {
-            console.log("appwrite reply service :: getReplies :: error: ", error);
+            console.log("appwrite reply service :: getAppwriteReplies :: error: ", error);
             
         }
     }

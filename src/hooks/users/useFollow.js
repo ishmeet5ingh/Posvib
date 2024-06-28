@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import appwriteAuthService from "../../appwrite/auth";
-import { updateFollowingFollowers } from "../../store/userSlice";
+import { updateReduxFollowingFollowers } from "../../store/userSlice";
 import conf from "../../conf/conf";
 
 
@@ -59,14 +59,14 @@ const useFollow = (user) => {
       );
 
       //update following/followers to server
-      await appwriteAuthService.updateFollowingFollowers(
+      await appwriteAuthService.updateAppwriteFollowingFollowers(
         currentUserData?.$id,
         user?.$id
       );
 
       // update Redux state
       dispatch(
-        updateFollowingFollowers({
+        updateReduxFollowingFollowers({
           currentUserId: currentUserData?.$id,
           targetUserId: user?.$id,
         })

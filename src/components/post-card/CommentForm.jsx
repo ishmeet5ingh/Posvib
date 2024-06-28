@@ -3,9 +3,9 @@ import appwriteCommentService from '../../appwrite/comment'
 import appwriteService from '../../appwrite/config'
 import { useForm } from 'react-hook-form'
 import {FaPaperPlane} from 'react-icons/fa'
-import { createComment } from '../../store/configSlice'
+import { createReduxComment } from '../../store/configSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateUserPostComment } from '../../store/userSlice'
+import { addReduxUserPostComment } from '../../store/userSlice'
 
 
 function CommentForm({currentUser, comments, postId}) {
@@ -29,19 +29,21 @@ function CommentForm({currentUser, comments, postId}) {
           console.log("data", data);
       
           // Create the comment
-          const createdComment = await appwriteCommentService.createComment({
+          const createdComment = await appwriteCommentService.createAppwriteComment({
             ...data,
             userId: currentUser?.$id,
             postId: postId,
+            creatorAvatarUrl: currentUser?.imageUrl,
+            creatorUsername: currentUser?.username
           });
       
           if (createdComment) {
             // Dispatch actions to update Redux store
-            dispatch(createComment({ comment: createdComment, postId }));
-            dispatch(updateUserPostComment({ comment: createdComment, postId, userId: currentUser?.$id }));
+            dispatch(createReduxComment({ comment: createdComment, postId }));
+            dispatch(addReduxUserPostComment({ comment: createdComment, postId, userId: currentUser?.$id }));
       
             // Update comments in Appwrite
-            const updatedComment = await appwriteService.updateComments(postId, createdComment?.$id);
+            const updatedComment = await appwriteService.createAppwriteCommentInsidePost(postId, createdComment?.$id);
             console.log("updatedComment", updatedComment);
           }
       

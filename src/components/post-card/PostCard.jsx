@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCircle, FaHeart } from "react-icons/fa";
 import { Button, LikeFeature, CommentFeature, PostCardFooter } from "..";
-import { deletePost } from "../../store/configSlice";
-import { deleteUserPost } from "../../store/userSlice";
+import { deleteReduxPost } from "../../store/configSlice";
+import { deleteReduxUserPost } from "../../store/userSlice";
 import placeholderImage from "../../../public/avatarPlaceholder.jpeg";
 import { useElapsedTime } from "../../hooks";
 import conf from "../../conf/conf";
@@ -45,9 +45,9 @@ function PostCard({
             "databases.*.collections.*.documents.*.delete"
           )
         ) {
-          dispatch(deletePost(response.payload.$id));
+          dispatch(deleteReduxPost(response.payload.$id));
           dispatch(
-            deleteUserPost({
+            deleteReduxUserPost({
               userId: response.payload?.userId,
               postId: response.payload?.$id,
             })
@@ -83,9 +83,9 @@ function PostCard({
 
   const delpost = async () => {
     setLoading(true);
-    await appwriteService.deletePost($id);
+    await appwriteService.deleteAppwritePost($id);
     if (featuredImage !== null) {
-      await appwriteService.deleteFile(featuredImage);
+      await appwriteService.deleteAppwriteFile(featuredImage);
     }
   };
 
@@ -183,7 +183,7 @@ function PostCard({
             <Link to={`/post/${$id}`}>
               <div className="relative rounded-md justify-center">
                 <img
-                  src={appwriteService.getFilePreview(featuredImage)}
+                  src={appwriteService.getAppwriteFilePreview(featuredImage)}
                   alt={content}
                   className={`w-full rounded-md border border-teal-900 transition-opacity duration-500 ${
                     imageLoading ? "opacity-0" : "opacity-100"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Logo, PostForm, UserSideBar } from "..";
-import { addPosts, setPage } from "../../store/configSlice";
+import { addReduxPosts, setReduxPage } from "../../store/configSlice";
 import { useDispatch, useSelector } from "react-redux";
 import appwriteService from "../../appwrite/config";
 
@@ -21,11 +21,11 @@ function PostsContainer({ children }) {
     setLoading(true);
     loadingRef.current = true;
 
-    appwriteService.getPosts(page)
+    appwriteService.getAppwritePosts(page)
       .then((newPosts) => {
         if (newPosts.length > 0) {
-          dispatch(addPosts(newPosts));
-          dispatch(setPage(page + 1)); // Increment page only if new posts are returned
+          dispatch(addReduxPosts(newPosts));
+          dispatch(setReduxPage(page + 1)); // Increment page only if new posts are returned
         } else {
           setHasMore(false); // No more posts to load
         }

@@ -23,7 +23,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     // Set users in state and localStorage
-    setUsers: (state, action) => {
+    setReduxUsers: (state, action) => {
       state.users = action.payload;
       try {
         localStorage.setItem("users", JSON.stringify(state.users));
@@ -33,7 +33,7 @@ export const userSlice = createSlice({
     },
 
     // Set current user in state and localStorage
-    setCurrentUser: (state, action) => {
+    setReduxCurrentUser: (state, action) => {
       state.currentUser = action.payload;
       try {
         localStorage.setItem("currentUser", JSON.stringify(state.currentUser));
@@ -43,7 +43,7 @@ export const userSlice = createSlice({
     },
 
     // Add a post to the user's posts
-    setUserPost: (state, action) => {
+    setReduxUserPost: (state, action) => {
       const post = action.payload;
       const updatedUsers = state.users?.map((user) =>
         user.$id === post.userId
@@ -59,7 +59,7 @@ export const userSlice = createSlice({
     },
 
     // Update a specific user's post
-    updateUserPost: (state, action) => {
+    updateReduxUserPost: (state, action) => {
       const updatedPost = action.payload;
       const updatedUsers = state.users?.map((user) =>
         user.$id === updatedPost.userId
@@ -80,7 +80,7 @@ export const userSlice = createSlice({
     },
 
     // Delete a specific user's post
-    deleteUserPost: (state, action) => {
+    deleteReduxUserPost: (state, action) => {
       const { userId, postId } = action.payload;
       const updatedUsers = state.users?.map((user) =>
         user.$id === userId
@@ -99,7 +99,7 @@ export const userSlice = createSlice({
     },
 
     // Update likes on a user's post
-    updateUserPostLike: (state, action) => {
+    updateReduxUserPostLike: (state, action) => {
       const { userId, postId } = action.payload;
       const updatedUsers = state.users?.map((user) =>
         user.$id === userId
@@ -127,7 +127,7 @@ export const userSlice = createSlice({
     },
 
     // Update following and followers lists
-    updateFollowingFollowers: (state, action) => {
+    updateReduxFollowingFollowers: (state, action) => {
       const { currentUserId, targetUserId } = action.payload;
       const updatedUsers = state.users
         ?.map((user) =>
@@ -175,7 +175,7 @@ export const userSlice = createSlice({
     },
 
     // update comments in user's post
-    updateUserPostComment: (state, action) => {
+    addReduxUserPostComment: (state, action) => {
       const { comment, postId, userId } = action.payload;
 
       const updatedUsers = state.users?.map((user) =>
@@ -199,7 +199,7 @@ export const userSlice = createSlice({
       }
     },
 
-    updateUserCommentsReplies: (state, action) => {
+    addReduxUserCommentReply: (state, action) => {
       const { reply, commentId, postId, userId } = action.payload;
     
       const updatedUsers = state.users?.map((user) => {
@@ -237,7 +237,7 @@ export const userSlice = createSlice({
     
 
     // Delete all users
-    deleteUsers: (state) => {
+    deleteReduxUsers: (state) => {
       state.users = null;
       try {
         localStorage.setItem("users", JSON.stringify(state.users));
@@ -247,7 +247,7 @@ export const userSlice = createSlice({
     },
 
     // Delete the current user
-    deleteCurrentUser: (state) => {
+    deleteReduxCurrentUser: (state) => {
       state.currentUser = null;
       try {
         localStorage.setItem("currentUser", JSON.stringify(state.currentUser));
@@ -260,17 +260,17 @@ export const userSlice = createSlice({
 
 // Export actions and reducer
 export const {
-  setUsers,
-  setCurrentUser,
-  setUserPost,
-  updateUserPost,
-  deleteUserPost,
-  deleteUsers,
-  deleteCurrentUser,
-  updateUserPostLike,
-  updateFollowingFollowers,
-  updateUserPostComment,
-  updateUserCommentsReplies,
+  setReduxUsers,
+  setReduxCurrentUser,
+  setReduxUserPost,
+  updateReduxUserPost,
+  deleteReduxUserPost,
+  deleteReduxUsers,
+  deleteReduxCurrentUser,
+  updateReduxUserPostLike,
+  updateReduxFollowingFollowers,
+  addReduxUserPostComment,
+  addReduxUserCommentReply,
 } = userSlice.actions;
 
 export default userSlice.reducer;

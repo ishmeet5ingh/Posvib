@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import {PostCard, PostCardSkeletonLoading, PostsContainer} from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAllPost } from "../store/configSlice";
+import { deleteAllReduxPost } from "../store/configSlice";
 
 function Home() {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ function Home() {
   // Delete all post when user is logged out.
   useEffect(() => {
     if (!authStatus) {
-      dispatch(deleteAllPost());
+      dispatch(deleteAllReduxPost());
     }
   }, [authStatus]);
 

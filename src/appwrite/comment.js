@@ -14,7 +14,7 @@ class CommentService {
     }
 
     // create Comment 
-    async createComment ({comment, userId, postId, }) {
+    async createAppwriteComment ({comment, userId, postId, creatorAvatarUrl, creatorUsername}) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -25,17 +25,18 @@ class CommentService {
                     likes: [],
                     userId,
                     postId,
-                    creator: userId,
-                    replies: []
+                    replies: [],
+                    creatorAvatarUrl,
+                    creatorUsername,
                 }
             )
         } catch (error) {
-            console.log("appwrite comment service :: createComment :: error: ", error);
+            console.log("appwrite comment service :: createAppwriteComment :: error: ", error);
         }
     }
 
     // update comment 
-    async updateComment(id, {comment}){
+    async updateAppwriteComment(id, {comment}){
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
@@ -46,13 +47,13 @@ class CommentService {
                 }
             )
         } catch (error) {
-            console.log("appwrite comment service :: updateComment :: error: ", error);
+            console.log("appwrite comment service :: updateAppwriteComment :: error: ", error);
             
         }
     } 
 
     // delete comment
-    async deleteComment(id){
+    async deleteAppwriteComment(id){
         try {
             await this.databases.deleteDocument(
                 conf.appwriteDatabaseId,
@@ -60,25 +61,25 @@ class CommentService {
                 id
             )
         } catch (error) {
-            console.log("appwrite comment service :: deleteComment :: error: ", error);
+            console.log("appwrite comment service :: deleteAppwriteComment :: error: ", error);
         }
     }
 
     // get all comments
 
-    async getComments(){
+    async updateAppwriteComment(){
         try {
             await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCommentsCollectionId
             )
         } catch (error) {
-            console.log("appwrite comment service :: getComments :: error: ", error);
+            console.log("appwrite comment service :: updateAppwriteComment :: error: ", error);
             
         }
     }
 
-    async updateReplies (commentId, replyId) {
+    async createAppwriteReplyInsideComments (commentId, replyId) {
         try {
           const comment = await this.databases.getDocument(
             conf.appwriteDatabaseId,
@@ -99,7 +100,7 @@ class CommentService {
           console.log("updatedComment", updatedComment)
           return updatedComment
         } catch (error) {
-          console.log("Appwrite service :: updateReplies :: error: ", error);
+          console.log("Appwrite service :: createAppwriteReplyInsideComments :: error: ", error);
         } 
       }
 

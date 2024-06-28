@@ -6,8 +6,8 @@ import { login, logout } from "./store/authSlice";
 import { Header, HeaderSkeletonLoader } from "./components";
 import { Outlet } from "react-router-dom";
 import "./index.css";
-import { setPosts, deleteAllPost } from "./store/configSlice";
-import {  setCurrentUser, setUsers, deleteUsers, deleteCurrentUser} from "./store/userSlice";
+import { setReduxPosts, deleteAllReduxPost } from "./store/configSlice";
+import {  setReduxCurrentUser, setReduxUsers, deleteReduxUsers, deleteReduxCurrentUser} from "./store/userSlice";
 import { setLoading } from "./store/loadingSlice";
 
 
@@ -29,26 +29,26 @@ function App() {
         const [userData, users, posts] = await Promise.all([
           authService.getUserData(),
           authService.getUsersDataFromDB(),
-          authStatus ? appwriteService.getPosts(1) : Promise.resolve(null),
+          authStatus ? appwriteService.getAppwritePosts(1) : Promise.resolve(null),
         ]);
 
         if (userData) {
           dispatch(login({ userData }));
 
           if (users?.documents) {
-            dispatch(setUsers(users.documents));
+            dispatch(setReduxUsers(users.documents));
             const currentUser = users.documents.find(user => user.accountId === authData?.$id);
-            dispatch(setCurrentUser(currentUser));
+            dispatch(setReduxCurrentUser(currentUser));
           }
 
           if (authStatus && posts) {
-            dispatch(setPosts(posts));
+            dispatch(setReduxPosts(posts));
           } else {
-            dispatch(deleteAllPost());
+            dispatch(deleteAllReduxPost());
           }
         } else {
-          dispatch(deleteUsers());
-          dispatch(deleteCurrentUser());
+          dispatch(deleteReduxUsers());
+          dispatch(deleteReduxCurrentUser());
           dispatch(logout());
         }
       } catch (error) {

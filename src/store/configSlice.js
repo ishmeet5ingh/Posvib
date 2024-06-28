@@ -10,23 +10,23 @@ const configSlice = createSlice({
   name: "config",
   initialState,
   reducers: {
-    setPosts: (state, action) => {
+    setReduxPosts: (state, action) => {
       state.posts = action.payload;
     },
 
-    addPosts: (state, action) => {
+    addReduxPosts: (state, action) => {
       if (state.posts === null) {
         state.posts = []; // Initialize as empty array if null
       }
       state.posts = [...state.posts, ...action.payload]; // Use spread to merge arrays
     },
 
-    createPost: (state, action) => {
+    createReduxPost: (state, action) => {
 
-      state.posts = [action.payload, ...state.posts]
+      state.posts = [...state.posts, action.payload]
     },
 
-    deletePost: (state, action) => {
+    deleteReduxPost: (state, action) => {
       const postId = action.payload;
       const index = state.posts.findIndex((post) => post?.$id === postId);
       if (index !== -1) {
@@ -34,14 +34,14 @@ const configSlice = createSlice({
       }
     },
 
-    updatePost: (state, action) => {
+    updateReduxPost: (state, action) => {
       const { id, dbPost } = action.payload;
       state.posts = state.posts.map((post) =>
         post?.$id === id ? dbPost : post
       );
     },
 
-    updateLike: (state, action) => {
+    updateReduxLike: (state, action) => {
       const { userId, postId } = action.payload;
       console.log("userId", userId, "postId", postId);
       state.posts = state.posts.map((post) =>
@@ -56,15 +56,15 @@ const configSlice = createSlice({
       );
     },
 
-    deleteAllPost: (state) => {
+    deleteAllReduxPost: (state) => {
       state.posts = null;
     },
 
-    setPage: (state, action) => {
+    setReduxPage: (state, action) => {
       state.page = action.payload;
     },
 
-    createComment: (state, action) => {
+    createReduxComment: (state, action) => {
       const { comment, postId } = action.payload;
 
       state.posts = state.posts?.map((post) =>
@@ -74,7 +74,11 @@ const configSlice = createSlice({
       );
     },
 
-    createReply: (state, action) => {
+    deleteReduxComment: (state, action) => {
+
+    },
+
+    createReduxReply: (state, action) => {
       const { reply, replyCreatorImageUrl, commentId, postId } = action.payload;
 
       state.posts = state.posts?.map((post) =>
@@ -94,16 +98,16 @@ const configSlice = createSlice({
 });
 
 export const {
-  setPosts,
-  createPost,
-  updateLike,
-  deletePost,
-  updatePost,
-  deleteAllPost,
-  setPage,
-  addPosts,
-  createComment,
-  createReply,
+  setReduxPosts,
+  createReduxPost,
+  updateReduxLike,
+  deleteReduxPost,
+  updateReduxPost,
+  deleteAllReduxPost,
+  setReduxPage,
+  addReduxPosts,
+  createReduxComment,
+  createReduxReply,
 } = configSlice.actions;
 
 export default configSlice.reducer;
