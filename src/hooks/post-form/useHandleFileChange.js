@@ -18,7 +18,6 @@ const useHandleFileChange = (setSelectedFile, setPreview, setFileSize) => {
       const fileSizeInBytes = file.size;
       const fileSizeInKB = Math.floor((fileSizeInBytes / 1024).toFixed(2))
       setFileSize(`${fileSizeInKB}`);
-      console.log(fileSizeInKB)
 
       const reader = new FileReader();
 
@@ -30,8 +29,6 @@ const useHandleFileChange = (setSelectedFile, setPreview, setFileSize) => {
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          console.log("img.width", img.width)
-          console.log("img.height", img.height)
           // setDimensions({ width: img.width, height: img.height });
         };
         img.src = e.target.result;

@@ -22,8 +22,7 @@ const configSlice = createSlice({
     },
 
     createReduxPost: (state, action) => {
-
-      state.posts = [...state.posts, action.payload]
+      state.posts = [action.payload, ...state.posts]
     },
 
     deleteReduxPost: (state, action) => {
@@ -43,7 +42,6 @@ const configSlice = createSlice({
 
     updateReduxLike: (state, action) => {
       const { userId, postId } = action.payload;
-      console.log("userId", userId, "postId", postId);
       state.posts = state.posts.map((post) =>
         post?.$id === postId
           ? {
@@ -72,10 +70,6 @@ const configSlice = createSlice({
           ? { ...post, comments: [...post.comments, comment] }
           : post
       );
-    },
-
-    deleteReduxComment: (state, action) => {
-
     },
 
     createReduxReply: (state, action) => {

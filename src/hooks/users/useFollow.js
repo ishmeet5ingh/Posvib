@@ -40,7 +40,6 @@ const useFollow = (user) => {
   //    response => {
   //     if(response.payload?.$id === user?.$id){
   //       const payload = response.payload
-  //       console.log("followers following realtime", payload);
   //     }
   //   })
 

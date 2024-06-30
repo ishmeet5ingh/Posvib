@@ -49,7 +49,6 @@ export class AuthService {
   // To create user in appwrite.
   async userToDB({ name, accountId, username, email, imageUrl }) {
     try {
-      console.log("namename", name);
       const newUser = await this.databases.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteUsersCollectionId,

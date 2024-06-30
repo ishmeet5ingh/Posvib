@@ -10,7 +10,6 @@ function Followers() {
     const { username } = useParams()
     const users = useSelector(state => state.users.users)
     const userData = useSelector(state => state.users.users?.find((user)=> user?.username?.toLowerCase() === username?.toLowerCase()));
-    console.log("userData", userData)
 
     const followers = users?.filter(user => userData?.followers?.includes(user?.$id))
 

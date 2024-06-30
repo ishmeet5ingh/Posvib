@@ -7,8 +7,6 @@ function Replies({replies, currentUser, commentCreator, commentId, postId}) {
     const posts = useSelector(state => state.config.posts)
     const users = useSelector(state => state.users.users)
 
-    console.log("posts", posts)
-    console.log("users", users)
 
     const [isReplies, setIsReplies] = useState(false)
 

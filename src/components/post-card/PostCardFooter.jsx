@@ -10,7 +10,6 @@ function PostCardFooter({ likes, comments, postId, currentUser }) {
     function handleClickOutside(event) {
       if (commentSectionRef.current && !commentSectionRef.current.contains(event.target)) {
         setIsComments(false);
-        console.log("event.target", event.target)
       }
     }
 

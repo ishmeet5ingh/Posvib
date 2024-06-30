@@ -21,7 +21,6 @@ function ReplyForm({currentUser, replies, commentCreator, commentId, postId}) {
 
     const submitReply = async (data) => {
         try {
-          console.log("data", data);
       
           // Create the comment
           const createdReply = await appwriteReplyService.createAppwriteReply({

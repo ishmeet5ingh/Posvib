@@ -12,9 +12,6 @@ function CommentForm({currentUser, comments, postId}) {
 
     const posts = useSelector(state => state.config.posts)
     const users = useSelector(state => state.users.users)
-
-    console.log("posts", posts)
-    console.log("users", users)
     
     const {handleSubmit, register, reset} = useForm({
         defaultValues: {
@@ -26,7 +23,6 @@ function CommentForm({currentUser, comments, postId}) {
 
     const submitComment = async (data) => {
         try {
-          console.log("data", data);
       
           // Create the comment
           const createdComment = await appwriteCommentService.createAppwriteComment({
@@ -44,7 +40,6 @@ function CommentForm({currentUser, comments, postId}) {
       
             // Update comments in Appwrite
             const updatedComment = await appwriteService.createAppwriteCommentInsidePost(postId, createdComment?.$id);
-            console.log("updatedComment", updatedComment);
           }
       
           // Reset the form

@@ -18,7 +18,6 @@ const unsubscribe = client.subscribe(
     if (
       response.events.includes("databases.*.collections.*.documents.*.create")
     ) {
-      console.log("A Post is Created");
       store.dispatch(createReduxPost(response.payload));
     }
     if (

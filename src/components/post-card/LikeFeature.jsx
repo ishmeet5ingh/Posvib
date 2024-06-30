@@ -30,7 +30,6 @@ function LikeFeature({ likes, postId, currentUser }) {
                   const updatedLikes = response.payload.likes;
                   setLikeCount(updatedLikes?.length);
                   setIsLiked(updatedLikes.includes(currentUser?.$id));
-                  console.log("updatedLikes", updatedLikes)
                   dispatch(updateReduxLike({ userId: response.payload.userId, postId: response.payload.$id }));
                   dispatch(updateReduxUserPostLike({ userId: response.payload.userId, postId: response.payload.$id}))
               }
@@ -40,8 +39,9 @@ function LikeFeature({ likes, postId, currentUser }) {
       return () => {
         unsubscribe();
       };
-  },[postId, currentUser?.$id, dispatch]);
+  },[dispatch]);
 
+  
 
   const handleLike = async () => {
     try {

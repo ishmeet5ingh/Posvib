@@ -36,7 +36,6 @@ function Login() {
     }
   };
 
-  console.log("error--",error);
 
   return (
     <AuthContainer inup={"in"}>

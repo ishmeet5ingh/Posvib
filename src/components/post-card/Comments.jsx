@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { CommentOrReply, Replies } from "..";
 
 function Comments({ comments, currentUser, postId }) {
-  console.log("comment", comments);
 
   return (
     <div className="overflow-y-scroll max-h-60 custom-scrollbar scroll-smooth">

@@ -27,7 +27,7 @@ function PostCard({
   const dropdownRef = useRef(null);
   const [imageLoading, setImageLoading] = useState(true); // State for image loading
   const [loading, setLoading] = useState(false);
-
+  const [preview, setPreview] = useState(appwriteService?.getFilePreview(featuredImage))
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -52,7 +52,6 @@ function PostCard({
               postId: response.payload?.$id,
             })
           );
-          setLoading(false);
         }
       }
     );
@@ -85,7 +84,7 @@ function PostCard({
     setLoading(true);
     await appwriteService.deleteAppwritePost($id);
     if (featuredImage !== null) {
-      await appwriteService.deleteAppwriteFile(featuredImage);
+      await appwriteService?.deleteAppwriteFile(featuredImage);
     }
   };
 
@@ -93,7 +92,7 @@ function PostCard({
     <div className="relative border-b border-teal-800 flex p-4 flex-col">
       <div className=" w-full">
         <div className="w-full mb-2 flex justify-between">
-          <Link className="flex gap-2 pb-1" to={`/user/${creator.username}`}>
+          <Link className="flex gap-2 pb-1" to={`/user/${creator?.username}`}>
             <div className="pt-1">
               <img
                 className="w-9 h-9 md:w-10 md:h-10 rounded-full"
@@ -183,7 +182,7 @@ function PostCard({
             <Link to={`/post/${$id}`}>
               <div className="relative rounded-md justify-center">
                 <img
-                  src={appwriteService.getAppwriteFilePreview(featuredImage)}
+                  src={preview}
                   alt={content}
                   className={`w-full rounded-md border border-teal-900 transition-opacity duration-500 ${
                     imageLoading ? "opacity-0" : "opacity-100"

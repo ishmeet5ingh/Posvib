@@ -1,12 +1,6 @@
 import { Client, Databases, Storage, ID, Avatars, Query } from "appwrite";
 import conf from "../conf/conf";
-import {
-  createReduxPost,
-  updateReduxPost,
-  deleteReduxPost,
-  updateReduxLike,
-} from "../store/configSlice";
-import store from "../store/store";
+
 
 export class Service {
   client = new Client();
@@ -142,8 +136,12 @@ export class Service {
   }
 
   // To get file preview from appwrite
-  getAppwriteFilePreview(fileId) {
-    return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
+  getFilePreview(fileId) {
+    try {
+      return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
+    } catch (error) {
+      console.log("error:: getFilePreview", error)
+    }
   }
 
   // To toggle likes of the post of appwrite

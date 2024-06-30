@@ -8,7 +8,6 @@ function Following() {
     const { username } = useParams()
     const users = useSelector(state => state.users.users)
     const userData = useSelector(state => state.users.users?.find((user)=> user?.username?.toLowerCase() === username?.toLowerCase()));
-    console.log("userData", userData)
 
     const following = users?.filter(user => userData?.following?.includes(user?.$id))
 

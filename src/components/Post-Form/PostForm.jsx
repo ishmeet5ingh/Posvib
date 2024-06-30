@@ -56,21 +56,18 @@ function PostForm({ post }) {
       ],
       (response) => {
         if (response.events.includes("databases.*.collections.*.documents.*.create")) {
-        // Dispatch action to create new post in Redux store
-        dispatch(createReduxPost(response.payload));
-
-        // Set user's new post in Redux store
-        dispatch(setReduxUserPost(response.payload));
+        dispatch(createReduxPost(response.payload));// Dispatch action to create new post in Redux store
+        dispatch(setReduxUserPost(response.payload));// Set user's new post in Redux store
         }
 
         if(response.events.includes("databases.*.collections.*.documents.*.update")){
           console.log(response)
-          // Dispatch action to update post in Redux store
-        dispatch(updateReduxPost({ id: response.payload.$id, dbPost: response.payload }));
+         
+        dispatch(updateReduxPost({ id: response.payload.$id, dbPost: response.payload })); // Dispatch action to update post in Redux store
 
-        // Update user's post in Redux store
-        dispatch(updateReduxUserPost(response.payload));
-        // Navigate to updated post page
+
+        dispatch(updateReduxUserPost(response.payload));// Update user's post in Redux store
+       
         setContent(response.payload?.content)
         if(response.payload?.featuredImage)
         setPostFeaturedImage(response.payload?.featuredImage)
@@ -82,7 +79,7 @@ function PostForm({ post }) {
     return () => {
       unsubscribe()
     }
-  }, [dispatch]);
+  }, []);
 
 
   const submit = async (data) => {
@@ -94,14 +91,14 @@ function PostForm({ post }) {
 
     if (post) {
       const file = data.image[0]
-        ? await appwriteService.uploadAppwriteFile(data.image[0]) : null; // Upload new file if provided
+        ? await appwriteService.uploadFile(data.image[0]) : null; // Upload new file if provided
 
       if (file) {
-        appwriteService.deleteAppwriteFile(post.featuredImage); // Delete previous file if new file uploaded
+        appwriteService.deleteFile(post.featuredImage); // Delete previous file if new file uploaded
       }
 
       // Update post with new data and new file ID if uploaded
-      const dbPost = await appwriteService.updateAppwritePost(post?.$id, {
+      const dbPost = await appwriteService.updatePost(post?.$id, {
         ...data,
         featuredImage: file ? file?.$id : undefined,
       });
@@ -189,7 +186,7 @@ function PostForm({ post }) {
             {post && post.featuredImage && (
               <div className="w-full mb-4">
                 <img
-                  src={appwriteService.getAppwriteFilePreview(postFeaturedImage)}
+                  src={appwriteService.getFilePreview(postFeaturedImage)}
                   alt={post.title}
                   className="rounded-lg"
                 />
