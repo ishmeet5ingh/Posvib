@@ -111,8 +111,8 @@ function PostForm({ post }) {
         // Update Redux store immediately
         dispatch(createReduxPost(dbPost));
         dispatch(setReduxUserPost(dbPost));
-        setCreatedPost(dbPost?.$id);
       }
+      setCreatedPost(dbPost?.$id);
     }
 
     isCreating.current = false; // Reset flag after post creation
