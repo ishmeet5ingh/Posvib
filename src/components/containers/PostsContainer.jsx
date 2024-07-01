@@ -58,7 +58,8 @@ function PostsContainer({ children }) {
 
   // JSX structure of the component
   return (
-    <div className="overflow-y-scroll h-full mb-auto hide-scrollbar text-white w-full flex">
+    
+    <div className=" text-white w-full flex">
       {/* Main container for posts and sidebar */}
       <div
         id="container"

@@ -27,11 +27,15 @@ function PostCard({
   const dropdownRef = useRef(null);
   const [imageLoading, setImageLoading] = useState(true); // State for image loading
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState(appwriteService?.getFilePreview(featuredImage))
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const posts = useSelector(state => state.config.posts)
+  const [deletedPostId, setDeletedPostId] = useState("")
+
 
   const isAuthor = $id && currentUser ? userId === currentUser?.$id : false;
+
+
 
   useEffect(() => {
     const unsubscribe = appwriteService.client.subscribe(
@@ -58,7 +62,7 @@ function PostCard({
     return () => {
       unsubscribe();
     };
-  }, [dispatch]);
+  }, [deletedPostId, dispatch]);
 
   // calculating Elapsed Time
   const elapsedTime = useElapsedTime($createdAt);
@@ -82,14 +86,23 @@ function PostCard({
 
   const delpost = async () => {
     setLoading(true);
-    await appwriteService.deleteAppwritePost($id);
+     await appwriteService.deleteAppwritePost($id);
+    
     if (featuredImage !== null) {
-      await appwriteService?.deleteAppwriteFile(featuredImage);
+      const delPostId = appwriteService?.deleteAppwriteFile(featuredImage);
+      console.log(delPostId)
+      setDeletedPostId(delPostId.$id)
     }
+    setLoading(false)
+    
   };
 
   return (
-    <div className="relative border-b border-teal-800 flex p-4 flex-col">
+    <div className={`relative border-b border-teal-800 p-4 `}>
+    {loading && (
+    <div className={`absolute top-10 left-[45%] spinner w-10 h-10`}></div>
+    )}
+    <div className={`${loading && "blur"}`}>
       <div className=" w-full">
         <div className="w-full mb-2 flex justify-between">
           <Link className="flex gap-2 pb-1" to={`/user/${creator?.username}`}>
@@ -124,39 +137,31 @@ function PostCard({
             </div>
 
             {dropdownVisible && (
-              <div className=" absolute top-6 right-0 z-10 bg-[#0f0f0f] border text-white border-zinc-800 rounded shadow">
+              <div className=" absolute top-8 right-0 z-10 bg-[#0f0f0f] border text-white border-zinc-800 rounded shadow">
                 {/* Dropdown content goes here */}
                 {isAuthor ? (
-                  <ul className="w-full">
+                  <ul className="w-full ">
                     <li>
                       <Link to={`/edit-post/${$id}`} className="">
                         <Button
                           children="Edit"
                           bgColor=""
-                          className="text-sm px-4 py-2 border-b w-full border-zinc-800"
+                          className="text-sm p-2 border-b w-full border-zinc-800"
                         />
                       </Link>
                     </li>
-                    <li className="flex justify-center items-center py-2 px-2">
-                      
-                      {loading ? (
-                      <div className="loading-dots items-end">
-                        <h3 className="text-sm ">Deleting</h3>
-                        <div className="dot"></div>
-                        <div className="dot"></div>
-                        <div className="dot"></div>
-                      </div>
-                      ) : 
+                    <li className="flex justify-center items-center py-2 px-3">
+
                       <Button
                         children="Delete"
                         bgColor=""
                         onClick={delpost}
                         className={`text-sm `}
-                      />}
+                      />
                     </li>
                   </ul>
                 ) : (
-                  <p className="px-4 py-2">Not Your Post</p>
+                  <p className="px-4 py-2 text-sm">Not Your Post</p>
                 )}
               </div>
             )}
@@ -167,13 +172,7 @@ function PostCard({
 
       <div className="">
         {imageLoading && featuredImage && (
-          <div className="relative w-full h-[200px] flex items-center justify-center">
-            <img
-              src={placeholderImage}
-              alt="Loading..."
-              className="w-full h-full fit rounded-md"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"></div>
+          <div className="relative w-full h-[250px] rounded-md  shimmer-bg flex items-center justify-center">
           </div>
         )}{" "}
         {/* progress bar */}
@@ -182,7 +181,7 @@ function PostCard({
             <Link to={`/post/${$id}`}>
               <div className="relative rounded-md justify-center">
                 <img
-                  src={preview}
+                  src={appwriteService.getFilePreview(featuredImage)}
                   alt={content}
                   className={`w-full rounded-md border border-teal-900 transition-opacity duration-500 ${
                     imageLoading ? "opacity-0" : "opacity-100"
@@ -200,6 +199,7 @@ function PostCard({
           currentUser={currentUser}
         />
       </div>
+    </div>
     </div>
   );
 }

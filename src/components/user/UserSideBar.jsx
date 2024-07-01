@@ -14,24 +14,28 @@ function UserSideBar() {
 
   // Filter users based on search input and exclude the current user
   const filteredUsers = users?.filter(
-    (user) =>
+    (user, index) =>
       (user.name.toLowerCase().includes(searchUser.toLowerCase()) ||
         user.username.toLowerCase().includes(searchUser.toLowerCase())) &&
-      user !== currentUser
+        user?.$id !== currentUser?.$id &&
+        !currentUser?.following.includes(user?.$id)
   );
 
-  return (
-    <div className="bg-black pt-16 ssm:pl-6 sm:pl-5 lg:pl-6 xl:pl-14 text-white hidden xs:block">
+  const limitedUsers = filteredUsers?.slice(0, 4);
 
-      <ul>
+  return (
+    <div className="bg-black text-white hidden xs:block">
+    
+      <ul className='overflow-y-scroll h-screen pt-10 ssm:pl-6 sm:pl-5 lg:pl-6 xl:pl-14 hide-scrollbar'>
+      <p className='text-lg pb-4'>make friends</p>
         {loading ? (
           // skeleton loaders 
           Array.from({ length: 3 }).map((_, index) => (
             <UserSideBarSkeleton key={index} />
           ))
         ) : (
-          filteredUsers?.length > 0 ? (
-            filteredUsers.map((user) => (
+          limitedUsers?.length > 0 ? (
+            limitedUsers.map((user) => (
               <li key={user?.$id}>
                 <User 
                   user={user}

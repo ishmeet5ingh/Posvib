@@ -16,6 +16,7 @@ function LikeFeature({ likes, postId, currentUser }) {
 
   const [likeCount, setLikeCount] = useState(likes?.length)
   const dispatch = useDispatch();
+  const [length, setLength] = useState(0)
 
   
   const posts = useSelector(state => state.config.posts)
@@ -39,7 +40,7 @@ function LikeFeature({ likes, postId, currentUser }) {
       return () => {
         unsubscribe();
       };
-  },[dispatch]);
+  },[length]);
 
   
 
@@ -48,7 +49,10 @@ function LikeFeature({ likes, postId, currentUser }) {
       setIsLiked(prevLike => !prevLike);
       setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1);
 
-      await appwriteService.toggleAppwritePostLike(postId, currentUser?.$id);
+      const post = await appwriteService.toggleAppwritePostLike(postId, currentUser?.$id);
+
+      setLength(post?.likes?.length)
+
       
       // dispatch(updateReduxLike({ userId: currentUser?.$id, postId }));
       // dispatch(updateReduxUserPostLike({ userId: currentUser?.$id, postId }));

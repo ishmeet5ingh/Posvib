@@ -39,7 +39,7 @@ function FileInput({ register, handleFileChange, selectedFile, preview, setSelec
             <img
               src={preview}
               alt="Preview"
-              className="w-full h-9 object-cover rounded"
+              className="w-[60%] h-8 object-cover rounded"
             />
           )}
         </div>

@@ -16,7 +16,7 @@ const Input = React.forwardRef(({
         </label>}
         <input 
         type={type} 
-        className={`text-black p-2  mb-1 border border-blue  rounded-md bg-blue-200 active:bg-blue-200`}
+        className={`text-black p-2   border border-blue  rounded-md bg-blue-200 active:bg-blue-200`}
         ref={ref} // ref pass from there and give state's access to that component
         {...props}
         id={id}

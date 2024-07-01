@@ -23,6 +23,7 @@ const configSlice = createSlice({
 
     createReduxPost: (state, action) => {
       state.posts = [action.payload, ...state.posts]
+      console.log(action.payload)
     },
 
     deleteReduxPost: (state, action) => {

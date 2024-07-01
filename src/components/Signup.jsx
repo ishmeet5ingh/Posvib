@@ -11,6 +11,7 @@ import {
   emailValidation,
   passwordValidation,
 } from "./validation/validationRules";
+import {FaStar} from 'react-icons/fa'
 
 function Signup() {
   const dispatch = useDispatch();
@@ -36,33 +37,43 @@ function Signup() {
 
   return (
     <AuthContainer inup={"up"}>
-      <form className="flex flex-col" onSubmit={handleSubmit(signup)}>
-        <Input
+      <form className="flex flex-col gap-2 text-white" onSubmit={handleSubmit(signup)}>
+       
+       <div>
+       <Input
           label="Name: "
           type="text"
-          className=""
           placeholder="Enter name"
           {...register("name", nameValidation)}
         />
-        {errors.name && <ErrorContainer>{errors.name.message}</ErrorContainer>}
+        {errors.name ? <ErrorContainer>{errors.name.message}</ErrorContainer> : 
+          <p className="text-xs text-gray-500 flex gap-1 "><FaStar style={{marginTop: '3px'}}/> Name can only contain letters, numbers and spaces.</p>
+          
+        }
+       </div>
 
+        <div>
         <Input
           label="Username: "
           type="text"
-          className=""
           placeholder="Enter Username"
           {...register("username", usernameValidation)}
         />
-        {errors.username && <ErrorContainer>{errors.username.message}</ErrorContainer>}
+        {errors.username ? <ErrorContainer>{errors.username.message}</ErrorContainer> : 
+          <p className="text-xs text-gray-500 flex gap-1"><FaStar style={{marginTop: '3px'}}/>  Username can only contain letters, numbers, and underscores.</p>
+        }
+        </div>
 
-        <Input
+       <div>
+       <Input
           label="Email: "
           type="email"
           className=""
           placeholder="Enter Email"
           {...register("email", emailValidation)}
         />
-        {errors.email && <ErrorContainer>{errors.email.message}</ErrorContainer>}
+        {errors.email && <ErrorContainer>{errors.email.message}</ErrorContainer> }
+       </div>
 
         <div>
         <Input
@@ -72,8 +83,9 @@ function Signup() {
           placeholder="Enter password"
           {...register("password", passwordValidation)}
         />
-        
-        {errors.password && <ErrorContainer>{errors.password.message}</ErrorContainer>}
+        {errors.password ? <ErrorContainer>{errors.password.message}</ErrorContainer> : 
+          <p className="text-xs text-gray-500 flex gap-1"><FaStar style={{marginTop: '3px'}}/>  Password must contain at least one uppercase letter, one lowercase letter, and one number.</p>
+        }
         </div>
 
         <p className="my-2 text-sm text-white text-center ">

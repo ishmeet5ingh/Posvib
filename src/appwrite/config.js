@@ -60,7 +60,7 @@ export class Service {
   // To delete post in appwrite
   async deleteAppwritePost(id) {
     try {
-      await this.databases.deleteDocument(
+      return await this.databases.deleteDocument(
         conf.appwriteDatabaseId,
         conf.appwritePostsCollectionId,
         id
@@ -124,7 +124,7 @@ export class Service {
   // To delete file from appwrite
   async deleteAppwriteFile(fileId) {
     try {
-      return await this.bucket.deleteAppwriteFile(
+      return await this.bucket.deleteFile(
         conf.appwriteBucketId,
         fileId
       );

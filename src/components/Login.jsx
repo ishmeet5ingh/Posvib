@@ -10,7 +10,8 @@ import {
   emailValidation,
   passwordValidation,
 } from "./validation/validationRules";
-// import { }
+import {FaStar} from 'react-icons/fa'
+
 
 function Login() {
 
@@ -39,7 +40,7 @@ function Login() {
 
   return (
     <AuthContainer inup={"in"}>
-      <form className='flex flex-col' onSubmit={handleSubmit(login)}>
+      <form className='flex flex-col gap-2 text-white' onSubmit={handleSubmit(login)}>
       <Input
           label="Email: "
           type="email"
@@ -49,14 +50,19 @@ function Login() {
         />
         {errors.email && <ErrorContainer>{errors.email.message}</ErrorContainer>}
         
+       
+        <div>
         <Input
           label="Password: "
           type="password"
+          className=""
           placeholder="Enter password"
           {...register("password", passwordValidation)}
         />
-        
-        {errors.password && <ErrorContainer>{errors.password.message}</ErrorContainer>}
+        {errors.password ? <ErrorContainer>{errors.password.message}</ErrorContainer> : 
+          <p className="text-xs text-gray-400 flex gap-1"><FaStar style={{marginTop: '3px'}}/>  Password must contain at least one uppercase letter, one lowercase letter, and one number.</p>
+        }
+        </div>
           <p className="text-white text-sm my-2 text-center">
 
             Don&apos;t have any account?&nbsp;

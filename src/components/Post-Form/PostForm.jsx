@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import appwriteService from "../../appwrite/config";
 import avatarPlaceholder from "../../../public/avatarPlaceholder.jpeg";
-
 import {
   Avatar,
   ProgressBarComponent,
@@ -23,13 +22,15 @@ import PostFormSkeletonLoader from "../SkeletonLoading/PostFormSkeletonLoader";
 import conf from "../../conf/conf";
 
 function PostForm({ post }) {
-  const { register, handleSubmit, getValues, reset, setContent} =
+  const { register, handleSubmit, getValues, reset, setContent } =
     useFormInitialization(post);
 
-  // State variables 
+  // State variables
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [fileSize, setFileSize] = useState(null);
+  const [createdPost, setCreatedPost] = useState("");
+  const isCreating = useRef(false); // Ref to flag post creation
 
   // Custom hooks for handling textarea input and file change
   const handleTextareaInput = useHandleTextareaInput();
@@ -45,8 +46,7 @@ function PostForm({ post }) {
   const posts = useSelector((state) => state.config.posts);
   const [loading, setLoading] = useState(1);
   const { progress, setProgress } = useProgress(loading, setLoading, fileSize);
-  const [postFeaturedImage, setPostFeaturedImage] = useState(post?.featuredImage)
-
+  const [postFeaturedImage, setPostFeaturedImage] = useState(post?.featuredImage);
 
   useEffect(() => {
     const unsubscribe = appwriteService.client.subscribe(
@@ -56,31 +56,25 @@ function PostForm({ post }) {
       ],
       (response) => {
         if (response.events.includes("databases.*.collections.*.documents.*.create")) {
-        dispatch(createReduxPost(response.payload));// Dispatch action to create new post in Redux store
-        dispatch(setReduxUserPost(response.payload));// Set user's new post in Redux store
+          if (!isCreating.current) {
+            dispatch(createReduxPost(response.payload)); // Dispatch action to create new post in Redux store
+            dispatch(setReduxUserPost(response.payload)); // Set user's new post in Redux store
+          }
         }
 
-        if(response.events.includes("databases.*.collections.*.documents.*.update")){
-          console.log(response)
-         
-        dispatch(updateReduxPost({ id: response.payload.$id, dbPost: response.payload })); // Dispatch action to update post in Redux store
-
-
-        dispatch(updateReduxUserPost(response.payload));// Update user's post in Redux store
-       
-        setContent(response.payload?.content)
-        if(response.payload?.featuredImage)
-        setPostFeaturedImage(response.payload?.featuredImage)
+        if (response.events.includes("databases.*.collections.*.documents.*.update")) {
+          dispatch(updateReduxPost({ id: response.payload.$id, dbPost: response.payload })); // Dispatch action to update post in Redux store
+          dispatch(updateReduxUserPost(response.payload)); // Update user's post in Redux store
+          setContent(response.payload?.content);
+          if (response.payload?.featuredImage) setPostFeaturedImage(response.payload?.featuredImage);
         }
-
       }
     );
 
     return () => {
-      unsubscribe()
+      unsubscribe();
     }
-  }, []);
-
+  }, [createdPost]);
 
   const submit = async (data) => {
     if (data.image[0]) {
@@ -88,49 +82,40 @@ function PostForm({ post }) {
     }
 
     setProgress(0); // Initialize progress to 0%
+    isCreating.current = true; // Set flag to indicate post creation in progress
 
     if (post) {
-      const file = data.image[0]
-        ? await appwriteService.uploadFile(data.image[0]) : null; // Upload new file if provided
-
+      // Existing post update logic
+      const file = data.image[0] ? await appwriteService.uploadAppwriteFile(data.image[0]) : null;
       if (file) {
-        appwriteService.deleteFile(post.featuredImage); // Delete previous file if new file uploaded
+        appwriteService.deleteAppwriteFile(post.featuredImage); // Delete previous file if new file uploaded
       }
-
-      // Update post with new data and new file ID if uploaded
-      const dbPost = await appwriteService.updatePost(post?.$id, {
+      const dbPost = await appwriteService.updateAppwritePost(post?.$id, {
         ...data,
         featuredImage: file ? file?.$id : undefined,
       });
-
-      if(dbPost){
-          navigate(`/post/${dbPost?.$id}`);
-
-      }
-
     } else {
-      // Create new post
+      // New post creation logic
       let file;
       if (data.image[0]) {
         file = await appwriteService.uploadAppwriteFile(data.image[0]); // Upload new file if provided 
       }
       if (file !== undefined) {
-        const fileId = file?.$id;
-        data.featuredImage = fileId;
+        data.featuredImage = file?.$id;
       }
-
-      // create post
       const dbPost = await appwriteService.createAppwritePost({
         ...data,
         userId: userData?.$id,
       });
-
-      // if(dbPost){
-      //    dispatch(createReduxPost(dbPost));
-
-      //    dispatch(setReduxUserPost(dbPost));
-      // }
+      if (dbPost) {
+        // Update Redux store immediately
+        dispatch(createReduxPost(dbPost));
+        dispatch(setReduxUserPost(dbPost));
+        setCreatedPost(dbPost?.$id);
+      }
     }
+
+    isCreating.current = false; // Reset flag after post creation
     setLoading(3); // submission completed
     reset(); // Reset form values
     setSelectedFile(null); // Clear selected file

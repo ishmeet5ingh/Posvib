@@ -20,13 +20,14 @@ function PostCardSkeletonLoading() {
 
       <div className="w-full">
         {/* Post content */}
-        <div className="w-4/5 h-6 rounded-md shimmer-bg mb-2"></div>
+        <div className="w-4/5 h-3 rounded-md shimmer-bg mb-2"></div>
         {/* Post image */}
         <div className="w-full h-64 rounded-md shimmer-bg"></div>
       </div>
 
-      <div className="pl-2 mt-2 flex gap-2 items-center">
+      <div className="pl-2 mt-2 flex gap-4 items-center">
         {/* Post like */}
+        <div className="w-8 h-8 rounded-md shimmer-bg"></div>
         <div className="w-8 h-8 rounded-md shimmer-bg"></div>
       </div>
     </div>
