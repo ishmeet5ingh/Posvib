@@ -74,7 +74,7 @@ function PostForm({ post }) {
     return () => {
       unsubscribe();
     }
-  }, [createdPost]);
+  }, [dispatch]);
 
   const submit = async (data) => {
     if (data.image[0]) {
