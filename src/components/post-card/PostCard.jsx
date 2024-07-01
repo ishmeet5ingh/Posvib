@@ -86,13 +86,13 @@ function PostCard({
 
   const delpost = async () => {
     setLoading(true);
-     await appwriteService.deleteAppwritePost($id);
+    const delPostId = await appwriteService.deleteAppwritePost($id);
     
     if (featuredImage !== null) {
-      const delPostId = appwriteService?.deleteAppwriteFile(featuredImage);
+       appwriteService?.deleteAppwriteFile(featuredImage);
       console.log(delPostId)
-      setDeletedPostId(delPostId.$id)
     }
+    setDeletedPostId(delPostId.$id)
     setLoading(false)
     
   };
