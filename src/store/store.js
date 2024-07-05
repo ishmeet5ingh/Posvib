@@ -4,6 +4,7 @@ import configReducer from './configSlice';
 import userReducer from './userSlice';
 import errorReducer from './errorSlice';
 import loadingReducer from './loadingSlice';
+import submitStateReducer from './submitStateSlice';
 
 // Configure the Redux store
 const store = configureStore({
@@ -13,6 +14,7 @@ const store = configureStore({
     users: userReducer,        // Manages user state
     error: errorReducer,       // Manages error  state
     loading: loadingReducer,   // Manages loading state
+    submitState: submitStateReducer // manages submitState
   },
 });
 

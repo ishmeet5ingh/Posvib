@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import commentsClose from '../../../public/commentsClose.png'
-import commentsOpen from '../../../public/commentsOpen.png'
+import commentsClose from '/commentsClose.png'
+import commentsOpen from '/commentsOpen.png'
 
 function CommentFeature({comments, postId, currentUser, setIsComments, isComments}) {
     const [commentCount, setCommentCount] = useState(comments?.length)  

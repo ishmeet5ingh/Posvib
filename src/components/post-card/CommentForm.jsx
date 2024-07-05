@@ -6,44 +6,72 @@ import {FaPaperPlane} from 'react-icons/fa'
 import { createReduxComment } from '../../store/configSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { addReduxUserPostComment } from '../../store/userSlice'
+import { v4 as uuidv4 } from "uuid";
+import { resetSubmitState, setSubmitState } from '../../store/submitStateSlice'
+import commentService from '../../appwrite/comment'
+import conf from '../../conf/conf'
 
-
-function CommentForm({currentUser, comments, postId}) {
-
-    const posts = useSelector(state => state.config.posts)
-    const users = useSelector(state => state.users.users)
+function CommentForm({currentUser, postId}) {
     
-    const {handleSubmit, register, reset} = useForm({
-        defaultValues: {
-          comment: comments?.comment || "",    
-        },
-      })
+    const {handleSubmit, register, reset} = useForm()
 
     const dispatch = useDispatch()
 
+    useEffect(()=> {
+      const unsubscribe = commentService.client.subscribe(
+        `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteCommentsCollectionId}.documents`,
+        (response) => {
+          if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+            dispatch(createReduxComment({ 
+              comment: response.payload, 
+              postId: response.payload?.postId }));
+
+            dispatch(addReduxUserPostComment({ 
+              comment: response.payload, 
+              postId: response.payload?.postId,
+              userId: response.payload?.userId}));
+          }
+        }
+      )
+      return ()=> {
+        unsubscribe()
+      }
+    }, [
+      commentService.client, 
+      conf.appwriteDatabaseId, 
+      conf.appwriteCommentsCollectionId, 
+      dispatch,
+      createReduxComment,
+      addReduxUserPostComment
+    ])
+
     const submitComment = async (data) => {
         try {
-      
-          // Create the comment
-          const createdComment = await appwriteCommentService.createAppwriteComment({
-            ...data,
-            userId: currentUser?.$id,
+          const tempId = uuidv4();
+          dispatch(setSubmitState({submitState: "posting...", id: tempId}))
+          const newComment = {
+            $id: tempId,
+            comment: data.comment,
+            $createdAt: new Date().toString(),
             postId: postId,
+            userId: currentUser?.$id,
             creatorAvatarUrl: currentUser?.imageUrl,
-            creatorUsername: currentUser?.username
-          });
-      
+            creatorUsername: currentUser?.username,
+            likes: []
+          };  
+
+          dispatch(createReduxComment({ comment: newComment, postId }));
+          reset();
+          const createdComment = await appwriteCommentService.createAppwriteComment(tempId, newComment);
+
           if (createdComment) {
-            // Dispatch actions to update Redux store
-            dispatch(createReduxComment({ comment: createdComment, postId }));
-            dispatch(addReduxUserPostComment({ comment: createdComment, postId, userId: currentUser?.$id }));
+           
       
             // Update comments in Appwrite
             const updatedComment = await appwriteService.createAppwriteCommentInsidePost(postId, createdComment?.$id);
           }
       
-          // Reset the form
-          reset();
+          dispatch(resetSubmitState())
         } catch (error) {
           console.log(error);
         }
@@ -57,7 +85,7 @@ function CommentForm({currentUser, comments, postId}) {
   >
     <img
       src={currentUser?.imageUrl}
-      alt={currentUser?.name || "User Avatar"}
+      alt={currentUser?.name || "Useer Avatar"}
       className="w-9 h-9 rounded-full object-cover"
     />
     <div className="flex-grow">

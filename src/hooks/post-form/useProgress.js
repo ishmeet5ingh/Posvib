@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 const useProgress = (loading, setLoading, fileSize) => {
   const [progress, setProgress] = useState(0);
   let duration;
-  if(fileSize < 900) duration = 20
+  if(!fileSize) duration = 5
+  else if(fileSize < 900) duration = 20
   else if(fileSize > 900 && fileSize < 1500) duration = 30
   else if(fileSize > 1500 && fileSize < 3000) duration = 50
   else if(fileSize > 3000 && fileSize < 6000) duration = 90

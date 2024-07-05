@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { comment } from "postcss";
 
 const initialState = {
   posts: null,
@@ -10,10 +11,12 @@ const configSlice = createSlice({
   name: "config",
   initialState,
   reducers: {
+    // set posts
     setReduxPosts: (state, action) => {
       state.posts = action.payload;
     },
 
+    // add posts
     addReduxPosts: (state, action) => {
       if (state.posts === null) {
         state.posts = []; // Initialize as empty array if null
@@ -21,11 +24,13 @@ const configSlice = createSlice({
       state.posts = [...state.posts, ...action.payload]; // Use spread to merge arrays
     },
 
+    // create post
     createReduxPost: (state, action) => {
-      state.posts = [action.payload, ...state.posts]
-      console.log(action.payload)
+      state.posts = [action.payload, ...state.posts];
+      console.log(action.payload);
     },
 
+    // delete post
     deleteReduxPost: (state, action) => {
       const postId = action.payload;
       const index = state.posts.findIndex((post) => post?.$id === postId);
@@ -41,7 +46,7 @@ const configSlice = createSlice({
       );
     },
 
-    updateReduxLike: (state, action) => {
+    updateReduxPostLike: (state, action) => {
       const { userId, postId } = action.payload;
       state.posts = state.posts.map((post) =>
         post?.$id === postId
@@ -50,6 +55,55 @@ const configSlice = createSlice({
               likes: post?.likes?.includes(userId)
                 ? post?.likes?.filter((id) => id !== userId)
                 : [...post?.likes, userId],
+            }
+          : post
+      );
+    },
+
+    // update like of comment
+    updateReduxCommentLike: (state, action) => {
+      const { userId, postId, commentId } = action.payload;
+      state.posts = state.posts.map((post) =>
+        post?.$id === postId
+          ? {
+              ...post,
+              comments: post.comments.map((comment) =>
+                comment?.$id === commentId
+                  ? {
+                      ...comment,
+                      likes: comment?.likes?.includes(userId)
+                        ? comment?.likes?.filter((id) => id !== userId)
+                        : [...comment?.likes, userId],
+                    }
+                  : comment
+              ),
+            }
+          : post
+      );
+    },
+    updateReduxReplyLike: (state, action) => {
+      const { userId, postId, commentId, replyId } = action.payload;
+      state.posts = state.posts.map((post) =>
+        post?.$id === postId
+          ? {
+              ...post,
+              comments: post.comments.map((comment) =>
+                comment?.$id === commentId
+                  ? {
+                      ...comment,
+                      replies: comment.replies?.map((reply) =>
+                        reply?.$id === replyId
+                          ? {
+                              ...reply,
+                              likes: reply?.likes?.includes(userId)
+                                ? reply?.likes?.filter((id) => id !== userId)
+                                : [...reply?.likes, userId],
+                            }
+                          : reply
+                      ),
+                    }
+                  : comment
+              ),
             }
           : post
       );
@@ -66,15 +120,45 @@ const configSlice = createSlice({
     createReduxComment: (state, action) => {
       const { comment, postId } = action.payload;
 
+      state.posts = state.posts?.map((post) => {
+        if (post?.$id === postId) {
+          if (
+            post.comments.length > 0 &&
+            post.comments[0]?.$id === comment?.$id
+          ) {
+            post.comments.shift();
+            return {
+              ...post,
+              comments: [comment, ...post.comments],
+            };
+          } else {
+            return {
+              ...post,
+              comments: [comment, ...post.comments],
+            };
+          }
+        }
+        return post;
+      });
+    },
+
+    deleteReduxComment: (state, action) => {
+      const { postId, commentId } = action.payload;
+
       state.posts = state.posts?.map((post) =>
         post?.$id === postId
-          ? { ...post, comments: [...post.comments, comment] }
+          ? {
+              ...post,
+              comments: post.comments?.filter(
+                (comment) => comment?.$id !== commentId
+              ),
+            }
           : post
       );
     },
 
-    createReduxReply: (state, action) => {
-      const { reply, replyCreatorImageUrl, commentId, postId } = action.payload;
+    deleteReduxReply: (state, action) => {
+      const { postId, commentId, replyId } = action.payload;
 
       state.posts = state.posts?.map((post) =>
         post?.$id === postId
@@ -82,12 +166,53 @@ const configSlice = createSlice({
               ...post,
               comments: post.comments?.map((comment) =>
                 comment?.$id === commentId
-                  ? { ...comment, replies: [...comment.replies, reply] }
+                  ? {
+                      ...comment,
+                      replies: comment.replies?.filter(
+                        (reply) => reply?.$id !== replyId
+                      ),
+                    }
                   : comment
               ),
             }
           : post
       );
+    },
+
+    // updateReduxComment: (state, action){
+
+    // }
+
+    createReduxReply: (state, action) => {
+      const { reply, commentId, postId } = action.payload;
+      state.posts = state.posts?.map((post) => {
+        if (post?.$id === postId) {
+          return {
+            ...post,
+            comments: post.comments?.map((comment) => {
+              if (comment?.$id === commentId) {
+                if (
+                  comment.replies?.length > 0 &&
+                  comment.replies[0]?.$id === reply?.$id
+                ) {
+                  comment.replies.shift();
+                  return {
+                    ...comment,
+                    replies: [reply, ...comment.replies],
+                  };
+                } else {
+                  return {
+                    ...comment,
+                    replies: [reply, ...comment.replies],
+                  };
+                }
+              }
+              return comment;
+            }),
+          };
+        }
+        return post;
+      });
     },
   },
 });
@@ -95,14 +220,18 @@ const configSlice = createSlice({
 export const {
   setReduxPosts,
   createReduxPost,
-  updateReduxLike,
+  updateReduxPostLike,
   deleteReduxPost,
   updateReduxPost,
   deleteAllReduxPost,
   setReduxPage,
   addReduxPosts,
   createReduxComment,
+  deleteReduxComment,
   createReduxReply,
+  deleteReduxReply,
+  updateReduxCommentLike,
+  updateReduxReplyLike
 } = configSlice.actions;
 
 export default configSlice.reducer;

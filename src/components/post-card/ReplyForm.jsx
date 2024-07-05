@@ -6,45 +6,47 @@ import {FaPaperPlane} from 'react-icons/fa'
 import { createReduxReply } from '../../store/configSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { addReduxUserCommentReply } from '../../store/userSlice'
+import { v4 as uuidv4 } from "uuid";
+import { resetSubmitState, setSubmitState } from '../../store/submitStateSlice'
 
 
 function ReplyForm({currentUser, replies, commentCreator, commentId, postId}) {
 
-    
-    const {handleSubmit, register, reset} = useForm({
-        defaultValues: {
-          reply: replies?.reply || "",    
-        },
-      })
+    const {handleSubmit, register, reset} = useForm()
 
     const dispatch = useDispatch()
 
     const submitReply = async (data) => {
         try {
-      
-          // Create the comment
-          const createdReply = await appwriteReplyService.createAppwriteReply({
-            ...data,
+          const tempId = uuidv4();
+          dispatch(setSubmitState({submitState: "posting...", id: tempId}))
+          const newReply = {
+            $id: tempId,
+            reply: data.reply,
+            $createdAt: new Date().toString(),
             userId: currentUser?.$id,
             commentId: commentId,
             creatorUrl: currentUser?.imageUrl,
-            creatorUsername: currentUser?.username
-          });
-      
-          if (createdReply) {
+            creatorUsername: currentUser?.username,
+            postId: postId,
+          }; 
+          
+          dispatch(createReduxReply({ reply: newReply, commentId, postId}));
+          reset();
 
-            console.log("createdReply", createdReply)
+          const createdReply = await appwriteReplyService.createAppwriteReply(tempId, newReply);
+          
+          if (createdReply) {
+            
             // Dispatch actions to update Redux store
             dispatch(createReduxReply({ reply: createdReply, commentId, postId}));
             dispatch(addReduxUserCommentReply({ reply: createdReply, commentId, postId, userId: currentUser?.$id }));
-      
+            
             // Update comments in Appwrite
             const updatedReply = await appwriteCommentService.createAppwriteReplyInsideComments(commentId, createdReply?.$id);
-            console.log("updatedreply", updatedReply);
           }
-      
-          // Reset the form
-          reset();
+          dispatch(resetSubmitState())
+          
         } catch (error) {
           console.log(error);
         }

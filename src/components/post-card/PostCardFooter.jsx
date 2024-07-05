@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { LikeFeature, CommentFeature, CommentForm, Comments } from "..";
 import { CSSTransition } from "react-transition-group";
+import conf from "../../conf/conf";
 
 function PostCardFooter({ likes, comments, postId, currentUser }) {
   const [isComments, setIsComments] = useState(false);
@@ -8,7 +9,10 @@ function PostCardFooter({ likes, comments, postId, currentUser }) {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (commentSectionRef.current && !commentSectionRef.current.contains(event.target)) {
+      if (
+        commentSectionRef.current &&
+        !commentSectionRef.current.contains(event.target)
+      ) {
         setIsComments(false);
       }
     }
@@ -20,9 +24,16 @@ function PostCardFooter({ likes, comments, postId, currentUser }) {
   }, [commentSectionRef]);
 
   return (
-    <div ref={commentSectionRef} className={`${isComments && "bg-gray-800 rounded-md"}`}>
+    <div
+      ref={commentSectionRef}
+      className={`${isComments && "bg-gray-800 rounded-md"}`}
+    >
       <div className="flex gap-3 mt-2 pb-2 px-3 ">
-        <LikeFeature likes={likes} postId={postId} currentUser={currentUser} />
+        <LikeFeature 
+        likes={likes} 
+        postId={postId} 
+        currentUser={currentUser}
+        collectionId={conf.appwritePostsCollectionId} />
         <CommentFeature
           comments={comments}
           postId={postId}
@@ -38,9 +49,13 @@ function PostCardFooter({ likes, comments, postId, currentUser }) {
         classNames="comment-section"
         unmountOnExit
       >
-        <div className="bg-gray-800 rounded-md " >
+        <div className="bg-gray-800 rounded-md ">
           <CommentForm currentUser={currentUser} postId={postId} />
-          <Comments comments={comments} currentUser={currentUser} postId={postId}/>
+          <Comments
+            comments={comments}
+            currentUser={currentUser}
+            postId={postId}
+          />
         </div>
       </CSSTransition>
 

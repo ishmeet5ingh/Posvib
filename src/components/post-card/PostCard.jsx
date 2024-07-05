@@ -6,9 +6,11 @@ import { FaCircle, FaHeart } from "react-icons/fa";
 import { Button, LikeFeature, CommentFeature, PostCardFooter } from "..";
 import { deleteReduxPost } from "../../store/configSlice";
 import { deleteReduxUserPost } from "../../store/userSlice";
-import placeholderImage from "../../../public/avatarPlaceholder.jpeg";
 import { useElapsedTime } from "../../hooks";
 import conf from "../../conf/conf";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import commentService from "../../appwrite/comment";
 
 function PostCard({
   $id,
@@ -21,52 +23,26 @@ function PostCard({
   comments,
 }) {
   // state Variables
-  const [name, setName] = useState("");
   const currentUser = useSelector((state) => state.users.currentUser);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
   const [imageLoading, setImageLoading] = useState(true); // State for image loading
   const [loading, setLoading] = useState(false);
+
+  const posts = useSelector(state => state.config.posts);
+
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const posts = useSelector(state => state.config.posts)
-  const [deletedPostId, setDeletedPostId] = useState("")
 
 
   const isAuthor = $id && currentUser ? userId === currentUser?.$id : false;
 
 
-
-  useEffect(() => {
-    const unsubscribe = appwriteService.client.subscribe(
-      [
-        `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents.${$id}`,
-        "files",
-      ],
-      (response) => {
-        if (
-          response.events.includes(
-            "databases.*.collections.*.documents.*.delete"
-          )
-        ) {
-          dispatch(deleteReduxPost(response.payload.$id));
-          dispatch(
-            deleteReduxUserPost({
-              userId: response.payload?.userId,
-              postId: response.payload?.$id,
-            })
-          );
-        }
-      }
-    );
-    return () => {
-      unsubscribe();
-    };
-  }, [deletedPostId, dispatch]);
-
   // calculating Elapsed Time
   const elapsedTime = useElapsedTime($createdAt);
 
+  // toggle dropdonw
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
@@ -86,13 +62,29 @@ function PostCard({
 
   const delpost = async () => {
     setLoading(true);
-    const delPostId = await appwriteService.deleteAppwritePost($id);
-    
+
+    const promises = [
+      appwriteService.deleteAppwritePost($id),
+      commentService.deleteAppwriteCommentsAndRepliesByPostId($id)
+    ];
+
     if (featuredImage !== null) {
-       appwriteService?.deleteAppwriteFile(featuredImage);
-      console.log(delPostId)
+     await appwriteService?.deleteAppwriteFile(featuredImage);
     }
-    setDeletedPostId(delPostId.$id)
+
+    await Promise.all(promises);
+
+    dispatch(deleteReduxPost($id));
+    dispatch(
+      deleteReduxUserPost({
+        userId,
+        postId: $id,
+      })
+    );
+    toast.success("Post deleted", {
+      autoClose: 1500,
+      className: "text-sm xmd:mr-10"
+    })
     setLoading(false)
     
   };
@@ -174,7 +166,7 @@ function PostCard({
         {imageLoading && featuredImage && (
           <div className="relative w-full h-[250px] rounded-md  shimmer-bg flex items-center justify-center">
           </div>
-        )}{" "}
+        )}
         {/* progress bar */}
         <div className={`${imageLoading ? "hidden" : "block"}`}>
           {featuredImage !== null ? (

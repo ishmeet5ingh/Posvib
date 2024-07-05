@@ -26,8 +26,7 @@ function UserSideBar() {
   return (
     <div className="bg-black text-white hidden xs:block">
     
-      <ul className='overflow-y-scroll h-screen pt-10 ssm:pl-6 sm:pl-5 lg:pl-6 xl:pl-14 hide-scrollbar'>
-      <p className='text-lg pb-4'>make friends</p>
+      <ul className='overflow-y-scroll h-screen pt-16 ssm:pl-6 sm:pl-5 lg:pl-6 xl:pl-14 hide-scrollbar'>
         {loading ? (
           // skeleton loaders 
           Array.from({ length: 3 }).map((_, index) => (

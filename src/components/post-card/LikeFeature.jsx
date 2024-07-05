@@ -1,67 +1,155 @@
 import React, { useEffect, useState } from "react";
 import appwriteService from "../../appwrite/config";
-import likeIcon from "../../../public/like.png";
-import likedIcon from "../../../public/liked.png";
+import likeIcon from "/like.png";
+import likedIcon from "/liked.png";
 import { useDispatch, useSelector } from "react-redux";
-import { updateReduxLike } from "../../store/configSlice";
+import {
+  updateReduxCommentLike,
+  updateReduxPostLike,
+  updateReduxReplyLike,
+} from "../../store/configSlice";
 import conf from "../../conf/conf";
-import { updateReduxUserPostLike } from "../../store/userSlice";
-import {FaComment, FaHeart} from 'react-icons/fa'
+import {
+  updateReduxUserCommentLike,
+  updateReduxUserPostLike,
+  updateReduxUserReplyLike,
+} from "../../store/userSlice";
+import { FaComment, FaHeart } from "react-icons/fa";
+import commentService from "../../appwrite/comment";
+import replyService from "../../appwrite/reply";
 
+function LikeFeature({
+  likes,
+  postId,
+  commentId,
+  replyId,
+  currentUser,
+  collectionId,
+}) {
+  const [isLiked, setIsLiked] = useState(likes?.includes(currentUser?.$id));
 
-function LikeFeature({ likes, postId, currentUser }) {
-  const [isLiked, setIsLiked] = useState(
-    likes?.includes(currentUser?.$id)
-  );
-
-  const [likeCount, setLikeCount] = useState(likes?.length)
+  const [likeCount, setLikeCount] = useState(likes?.length);
   const dispatch = useDispatch();
-  const [length, setLength] = useState(0)
 
-  
-  const posts = useSelector(state => state.config.posts)
+  const [id, setId] = useState("")
 
+  useEffect(()=> {
+    setLikeCount(likes?.length)
+  }, [])
+
+  useEffect(()=> {
+    if(collectionId === conf.appwritePostsCollectionId){
+      setId(postId)
+    }
+    else if(collectionId === conf.appwriteCommentsCollectionId){
+      setId(commentId)
+    }
+    else if(collectionId === conf.appwriteRepliesCollectionId){
+      setId(replyId)
+    }
+  })
   
+
   useEffect(() => {
-      const unsubscribe = appwriteService.client.subscribe(
-          `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents.${postId}`,
-          response => {
-            console.log(response)
-              if (response.events.includes("databases.*.collections.*.documents.*.update")) {
-                  const updatedLikes = response.payload.likes;
-                  setLikeCount(updatedLikes?.length);
-                  setIsLiked(updatedLikes.includes(currentUser?.$id));
-                  dispatch(updateReduxLike({ userId: response.payload.userId, postId: response.payload.$id }));
-                  dispatch(updateReduxUserPostLike({ userId: response.payload.userId, postId: response.payload.$id}))
-              }
+
+    const unsubscribe = appwriteService.client.subscribe(
+      `databases.${conf.appwriteDatabaseId}.collections.${collectionId}.documents.${id}`,
+      (response) => {
+        console.log(response);
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.update"
+          )
+        ) {
+          const updatedLikes = response.payload.likes;
+          setLikeCount(updatedLikes?.length);
+          setIsLiked(updatedLikes.includes(currentUser?.$id));
+
+          if (collectionId === conf.appwritePostsCollectionId) {
+            dispatch(
+              updateReduxPostLike({
+                userId: response.payload.userId,
+                postId: response.payload.$id,
+              })
+            );
+            dispatch(
+              updateReduxUserPostLike({
+                userId: response.payload.userId,
+                postId: response.payload.$id,
+              })
+            );
+          } else if (collectionId === conf.appwriteCommentsCollectionId) {
+            dispatch(
+              updateReduxCommentLike({
+                userId: response.payload?.userId,
+                postId: response.payload?.postId,
+                commentId: response.payload?.$id,
+              })
+            );
+
+            dispatch(
+              updateReduxUserCommentLike({
+                userId: response.payload?.userId,
+                postId: response.payload?.postId,
+                commentId: response.payload?.$id,
+              })
+            );
+          } else if (collectionId === conf.appwriteRepliesCollectionId) {
+            dispatch(
+              updateReduxReplyLike({
+                userId: response.payload?.userId,
+                postId: response.payload?.postId,
+                commentId: response.payload?.commentId,
+                replyId: response.payload?.$id,
+              })
+            );
+
+            dispatch(
+              updateReduxUserReplyLike({
+                userId: response.payload?.userId,
+                postId: response.payload?.postId,
+                commentId: response.payload?.commentId,
+                replyId: response.payload?.$id,
+              })
+            );
           }
-      );
+        }
+      }
+    );
 
-      return () => {
-        unsubscribe();
-      };
-  },[length]);
-
-  
+    return () => {
+      unsubscribe();
+    };
+  }, [id, collectionId, currentUser?.$id, dispatch]);
 
   const handleLike = async () => {
     try {
-      setIsLiked(prevLike => !prevLike);
-      setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1);
+      setIsLiked((prevLike) => !prevLike);
+      setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
 
-      const post = await appwriteService.toggleAppwritePostLike(postId, currentUser?.$id);
+      if (collectionId === conf.appwritePostsCollectionId) {
+        const post = await appwriteService.toggleAppwritePostLike(
+          postId,
+          currentUser?.$id
+        );
+      } else if (collectionId === conf.appwriteCommentsCollectionId) {
+        const comment = await commentService.toggleAppwriteCommentLike(
+          commentId,
+          currentUser?.$id
+        );
 
-      setLength(post?.likes?.length)
-
-      
-      // dispatch(updateReduxLike({ userId: currentUser?.$id, postId }));
-      // dispatch(updateReduxUserPostLike({ userId: currentUser?.$id, postId }));
+      } else if (collectionId === conf.appwriteRepliesCollectionId) {
+        const reply = await replyService.toggleAppwriteReplyLike(
+          replyId,
+          currentUser?.$id
+        );
+      }
     } catch (error) {
       console.error("Error updating like status:", error.message);
-      
+
       // Rollback optimistic update on error
-      setIsLiked(prevLike => !prevLike);
-      setLikeCount(prevCount => isLiked ? prevCount + 1 : prevCount - 1);
+      setIsLiked((prevLike) => !prevLike);
+      setLikeCount((prevCount) => (isLiked ? prevCount + 1 : prevCount - 1));
     }
   };
 
@@ -72,14 +160,13 @@ function LikeFeature({ likes, postId, currentUser }) {
           className="cursor-pointer "
           src={isLiked ? likedIcon : likeIcon}
           alt="like"
-          width={24}
-          height={24}
+          width={collectionId === conf.appwritePostsCollectionId ? 24 : 18}
+          height={collectionId === conf.appwritePostsCollectionId ? 24 : 18}
           onClick={handleLike}
         />
-        <div className=" bg-black">
-        </div>
-        
-        <p className="text-white">{likeCount}</p>
+        <div className=" bg-black"></div>
+
+        <p className={`text-white ${collectionId !== conf.appwritePostsCollectionId && "text-sm"}`}>{likeCount}</p>
       </div>
     </div>
   );

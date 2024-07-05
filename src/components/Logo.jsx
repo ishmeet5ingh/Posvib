@@ -1,5 +1,5 @@
 import React from 'react'
-import posvibLogo from '../../public/PosvibText.png'
+import posvibLogo from '/PosvibText.png'
 
 function Logo() {
   return (

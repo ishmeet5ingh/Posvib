@@ -9,7 +9,7 @@ function useElapsedTime(createdAt) {
       const currentDate = new Date();
       const timeDifference = currentDate - startDate;
 
-      const seconds = Math.abs(Math.floor(timeDifference / 1000) + 1);
+      const seconds = Math.abs(Math.floor(timeDifference / 1000));
       const minutes = Math.floor(timeDifference / (1000 * 60));
       const hours = Math.floor(timeDifference / (1000 * 60 * 60));
       const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -34,19 +34,18 @@ function useElapsedTime(createdAt) {
       }
     }
 
-    // Call calculateTimeDifference function initially and set the elapsed time
     if (createdAt) {
       const elapsedTime = calculateTimeDifference(createdAt);
       setElapsedTime(elapsedTime);
     }
 
-    // Update elapsed time every minute to ensure accurate time display
-    const interval = setInterval(() => {
+ 
+    // const interval = setInterval(() => {
       const elapsedTime = calculateTimeDifference(createdAt);
       setElapsedTime(elapsedTime);
-    }, 60000); // Update every minute (60000 milliseconds)
+    // }, 60000); 
 
-    return () => clearInterval(interval); // Clean up interval on unmount or change of createdAt
+    // return () => clearInterval(interval); 
   }, [createdAt]);
 
   return elapsedTime;

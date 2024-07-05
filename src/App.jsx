@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import authService from "./appwrite/auth";
-import appwriteService from "./appwrite/config";
+import configService from "./appwrite/config";
 import { login, logout } from "./store/authSlice";
 import { Header, HeaderSkeletonLoader } from "./components";
 import { Outlet } from "react-router-dom";
@@ -29,7 +29,7 @@ function App() {
         const [userData, users, posts] = await Promise.all([
           authService.getUserData(),
           authService.getUsersDataFromDB(),
-          authStatus ? appwriteService.getAppwritePosts(1) : Promise.resolve(null),
+          authStatus ? configService.getAppwritePosts(1) : Promise.resolve(null),
         ]);
 
         if (userData) {

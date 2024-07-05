@@ -1,16 +1,32 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useElapsedTime } from "../../hooks";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEdit, FaTrashAlt, FaTimes } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteReduxComment, deleteReduxReply } from "../../store/configSlice";
+import commentService from "../../appwrite/comment";
+import configService from "../../appwrite/config";
+import replyService from "../../appwrite/reply";
+import { resetSubmitState, setSubmitState } from "../../store/submitStateSlice";
+import LikeFeature from "./LikeFeature";
+import conf from "../../conf/conf";
 
-function CommentOrReply({ comment, reply, children }) {
+function CommentOrReply({ comment, reply, children, postId, commentId }) {
   const currentUser = useSelector((state) => state.users.currentUser);
 
-  const isAuthor = currentUser?.$id === comment?.creatorUsername;
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const submitState = useSelector((state) => state.submitState.submitState);
+
+  const isAuthor =
+    currentUser?.$id === (comment?.creatorUsername || reply?.creatorUsername);
 
   const [showOptions, setShowOptions] = useState(false);
   const elapsedTime = useElapsedTime(comment?.$createdAt || reply?.$createdAt);
+  const [isEditable, setIsEditable] = useState(false);
+  const [data, setData] = useState(comment?.comment || reply?.reply);
   const commentRef = useRef(null);
 
   useEffect(() => {
@@ -26,10 +42,50 @@ function CommentOrReply({ comment, reply, children }) {
     };
   }, [commentRef]);
 
-  const delComment = async () => {};
+  // delete comment
+  const delComment = async () => {
+    dispatch(setSubmitState({ submitState: "deleting...", id: commentId }));
+    setShowOptions(false);
+    await Promise.all([
+      await commentService.deleteAppwriteComment(commentId),
+      await configService.deleteAppwriteCommentInsidePost(postId, commentId),
+      await replyService.deleteAppwriteRepliesByCommentId(commentId),
+    ]);
+    dispatch(deleteReduxComment({ postId, commentId }));
+    dispatch(resetSubmitState());
+  };
+
+  const editable = () => {
+    setIsEditable(true);
+    setShowOptions((prevState) => !prevState);
+  };
+
+  // delete reply
+  const delReply = async () => {
+    dispatch(setSubmitState({ submitState: "deleting...", id: reply?.$id }));
+    setShowOptions(false);
+    await Promise.all([
+      await replyService.deleteAppwriteReply(reply?.$id),
+      await commentService.deleteAppwriteReplyInsideComments(
+        commentId,
+        reply?.$id
+      ),
+    ]);
+    dispatch(deleteReduxReply({ postId, commentId, replyId: reply?.$id }));
+    dispatch(resetSubmitState());
+  };
+
+  const updateCommentOrReply = (e) => {
+    e.preventDefault();
+  };
 
   return (
-    <div ref={commentRef} className="relative">
+    <div
+      ref={commentRef}
+      className={`relative ${
+        submitState.id === (comment?.$id || reply?.$id) && "shimmer-bg-gray"
+      } `}
+    >
       <div
         className={`pl-5  p-2 flex transition-all duration-100 gap-1 ${
           showOptions ? "blur-sm" : "blur-none "
@@ -44,8 +100,10 @@ function CommentOrReply({ comment, reply, children }) {
             alt={comment?.creatorUsername || reply?.creatorUsername}
           />
         </Link>
+        <div className=" w-full">
+        <div className="flex justify-between">
         <div className="w-full">
-          <div className="text-xs flex gap-2  h-fit">
+          <div className="text-xs flex gap-2 h-fit">
             <Link
               to={`/user/${comment?.creatorUsername || reply?.creatorUsername}`}
               className="text-xs text-gray-200"
@@ -54,46 +112,85 @@ function CommentOrReply({ comment, reply, children }) {
             </Link>
             <p className="text-gray-400">{elapsedTime}</p>
           </div>
-          <div
-            onClick={() => setShowOptions((prevState) => !prevState)}
-            className="cursor-pointer"
-          >
-            <p className={`text-gray-200 ${reply ? "text-xs" : "text-sm"}`}>
-              {comment?.comment || reply?.reply}
-            </p>
-          </div>
-          <div>{children}</div>
+
+          {!isEditable ? (
+            <div
+              onClick={() => setShowOptions(true)}
+              className="cursor-pointer"
+            >
+              <p className={`text-gray-200 ${reply ? "text-xs" : "text-sm"}`}>
+                {comment?.comment || reply?.reply}
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={updateCommentOrReply}>
+              <input
+                type="text"
+                value={data}
+                onChange={(e) => setData(e.target.value)}
+                className={`bg-gray-800 ${reply ? "text-xs" : "text-sm"}`}
+              />
+              <button type="submit" className="cursor-pointer"></button>
+              submit
+            </form>
+          )}
         </div>
+          <div className=" w-20 flex justify-end pr-2">
+          <LikeFeature
+            likes={comment?.likes || reply?.likes}
+            postId={postId}
+            commentId={commentId}
+            replyId={reply?.$id}
+            currentUser={currentUser}
+            collectionId={comment ? conf.appwriteCommentsCollectionId : conf.appwriteRepliesCollectionId}
+          />
+        </div>
+        </div>
+          <div>{children}</div>
+          <p className="text-gray-400 text-xs font-bold">
+            {submitState?.id === reply?.$id && submitState.state}
+          </p>
+        </div>
+        
       </div>
-      {/* showOptions */}
-      <div
-        className={`flex  bg-gray-700 text-white absolute top-1 left-2 duration-100 transition-opacity  ${
-          showOptions ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        {isAuthor ? (
-          <div>
-            <button className="p-2 border border-gray-500">
-              <FaEdit />
-            </button>
-            <button className="p-2 border border-gray-500">
-              <FaTrashAlt />
-            </button>
-          </div>
-        ) : (
-          <div>
-            <p className="p-2 border text-xs border-gray-500">
-              {comment ? "Not your comment" : "Not your reply"}
-            </p>
-          </div>
-        )}
-        <button
-          onClick={() => setShowOptions((prevState) => !prevState)}
-          className="p-2 border border-gray-500"
+      
+      {showOptions && (
+        <div
+          className={`flex  bg-gray-700 text-white absolute top-1 left-2 duration-100 transition-opacity  ${
+            showOptions ? "opacity-100" : "opacity-0"
+          }`}
         >
-          <FaTimes />
-        </button>
-      </div>
+          {isAuthor ? (
+            <div>
+              <button onClick={editable} className="p-2 border border-gray-500">
+                <FaEdit />
+              </button>
+              <button
+                onClick={() => {
+                  {
+                    comment ? delComment() : delReply();
+                  }
+                }}
+                className="p-2 border border-gray-500"
+              >
+                <FaTrashAlt />
+              </button>
+            </div>
+          ) : (
+            <div>
+              <p className="p-2 border text-xs border-gray-500">
+                {comment ? "Not your comment" : "Not your reply"}
+              </p>
+            </div>
+          )}
+          <button
+            onClick={() => setShowOptions((prevState) => !prevState)}
+            className="p-2 border border-gray-500"
+          >
+            <FaTimes />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

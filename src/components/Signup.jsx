@@ -12,6 +12,8 @@ import {
   passwordValidation,
 } from "./validation/validationRules";
 import {FaStar} from 'react-icons/fa'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 function Signup() {
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
 
   const signup = async (data) => {
+    toast("Signing up...")
     try {
       const userAccount = await authService.createAccount(data);
       if (userAccount) {
@@ -28,6 +31,7 @@ function Signup() {
         if (userData) {
           dispatch(authLogin({ userData }));
           navigate("/");
+          toast.success("Successfully signed up")
         }
       }
     } catch (error) {
@@ -35,9 +39,19 @@ function Signup() {
     }
   };
 
+  
+  const onError = (errors) => {
+    Object.values(errors).forEach(error => {
+      toast.error(error.message, {
+        className: "hidden xmd:flex",
+        autoClose: 3000
+      });
+    });
+  };
+
   return (
     <AuthContainer inup={"up"}>
-      <form className="flex flex-col gap-2 text-white" onSubmit={handleSubmit(signup)}>
+      <form className="flex flex-col gap-3 text-white" onSubmit={handleSubmit(signup, onError)}>
        
        <div>
        <Input

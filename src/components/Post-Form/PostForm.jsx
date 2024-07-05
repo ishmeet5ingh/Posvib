@@ -20,6 +20,9 @@ import {
 import { setReduxUserPost, updateReduxUserPost } from "../../store/userSlice";
 import PostFormSkeletonLoader from "../SkeletonLoading/PostFormSkeletonLoader";
 import conf from "../../conf/conf";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function PostForm({ post }) {
   const { register, handleSubmit, getValues, reset, setContent } =
@@ -29,8 +32,6 @@ function PostForm({ post }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [fileSize, setFileSize] = useState(null);
-  const [createdPost, setCreatedPost] = useState("");
-  const isCreating = useRef(false); // Ref to flag post creation
 
   // Custom hooks for handling textarea input and file change
   const handleTextareaInput = useHandleTextareaInput();
@@ -46,43 +47,13 @@ function PostForm({ post }) {
   const posts = useSelector((state) => state.config.posts);
   const [loading, setLoading] = useState(1);
   const { progress, setProgress } = useProgress(loading, setLoading, fileSize);
-  const [postFeaturedImage, setPostFeaturedImage] = useState(post?.featuredImage);
+  // const [postFeaturedImage, setPostFeaturedImage] = useState(post?.featuredImage);
 
-  useEffect(() => {
-    const unsubscribe = appwriteService.client.subscribe(
-      [
-        `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents`,
-        "files"
-      ],
-      (response) => {
-        if (response.events.includes("databases.*.collections.*.documents.*.create")) {
-          if (!isCreating.current) {
-            dispatch(createReduxPost(response.payload)); // Dispatch action to create new post in Redux store
-            dispatch(setReduxUserPost(response.payload)); // Set user's new post in Redux store
-          }
-        }
-
-        if (response.events.includes("databases.*.collections.*.documents.*.update")) {
-          dispatch(updateReduxPost({ id: response.payload.$id, dbPost: response.payload })); // Dispatch action to update post in Redux store
-          dispatch(updateReduxUserPost(response.payload)); // Update user's post in Redux store
-          setContent(response.payload?.content);
-          if (response.payload?.featuredImage) setPostFeaturedImage(response.payload?.featuredImage);
-        }
-      }
-    );
-
-    return () => {
-      unsubscribe();
-    }
-  }, [dispatch]);
+  
 
   const submit = async (data) => {
-    if (data.image[0]) {
-      setLoading(2);
-    }
-
+    setLoading(2)
     setProgress(0); // Initialize progress to 0%
-    isCreating.current = true; // Set flag to indicate post creation in progress
 
     if (post) {
       // Existing post update logic
@@ -94,6 +65,17 @@ function PostForm({ post }) {
         ...data,
         featuredImage: file ? file?.$id : undefined,
       });
+
+      if(dbPost){
+        dispatch(updateReduxPost({ id: dbPost?.$id, dbPost})); // Dispatch action to update post in Redux store
+        dispatch(updateReduxUserPost(dbPost)); // Update user's post in Redux store
+        navigate('/')
+        toast.success("Post updated", {
+          autoClose: 1500,
+          className: "text-sm xmd:mr-10"
+        })
+      }
+
     } else {
       // New post creation logic
       let file;
@@ -111,11 +93,13 @@ function PostForm({ post }) {
         // Update Redux store immediately
         dispatch(createReduxPost(dbPost));
         dispatch(setReduxUserPost(dbPost));
+        toast.success("Post created", {
+          autoClose: 1500,
+          className: "text-sm xmd:mr-10"
+        })
       }
-      setCreatedPost(dbPost?.$id);
     }
 
-    isCreating.current = false; // Reset flag after post creation
     setLoading(3); // submission completed
     reset(); // Reset form values
     setSelectedFile(null); // Clear selected file
@@ -171,7 +155,7 @@ function PostForm({ post }) {
             {post && post.featuredImage && (
               <div className="w-full mb-4">
                 <img
-                  src={appwriteService.getFilePreview(postFeaturedImage)}
+                  src={appwriteService.getFilePreview(post.featuredImage)}
                   alt={post.title}
                   className="rounded-lg"
                 />
