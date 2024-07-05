@@ -33,20 +33,21 @@ function LikeFeature({
 
   const [id, setId] = useState("")
 
-  useEffect(() => {
-    setLikeCount(likes?.length);
-  }, [likes]);
+  useEffect(()=> {
+    setLikeCount(likes?.length)
+  }, [])
 
-  useEffect(() => {
-    // Determine the correct document ID based on collection
-    if (collectionId === conf.appwritePostsCollectionId) {
-      setId(postId);
-    } else if (collectionId === conf.appwriteCommentsCollectionId) {
-      setId(commentId);
-    } else if (collectionId === conf.appwriteRepliesCollectionId) {
-      setId(replyId);
+  useEffect(()=> {
+    if(collectionId === conf.appwritePostsCollectionId){
+      setId(postId)
     }
-  }, [postId, commentId, replyId, collectionId]);
+    else if(collectionId === conf.appwriteCommentsCollectionId){
+      setId(commentId)
+    }
+    else if(collectionId === conf.appwriteRepliesCollectionId){
+      setId(replyId)
+    }
+  })
   
 
   useEffect(() => {
