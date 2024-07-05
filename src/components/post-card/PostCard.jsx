@@ -31,7 +31,6 @@ function PostCard({
 
   const posts = useSelector(state => state.config.posts);
 
-  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -48,6 +47,40 @@ function PostCard({
   };
 
   useEffect(() => {
+  const unsubscribe = appwriteService.client.subscribe(
+    [
+      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents.${$id}`,
+      "files",
+    ],
+    (response) => {
+      if (
+        response.events.includes(
+          "databases.*.collections.*.documents.*.delete"
+        )
+      ) {
+        dispatch(deleteReduxPost(response.payload.$id));
+        dispatch(
+          deleteReduxUserPost({
+            userId: response.payload?.userId,
+            postId: response.payload?.$id,
+          })
+        );
+      }
+    }
+  );
+  return () => {
+    unsubscribe();
+  };
+}, [
+  dispatch,
+  $id,
+  conf.appwriteDatabaseId,
+  conf.appwritePostsCollectionId,
+  deleteReduxPost,
+  deleteReduxUserPost,
+  ]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownVisible(false);
@@ -59,6 +92,8 @@ function PostCard({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
+
+
 
   const delpost = async () => {
     setLoading(true);
@@ -74,13 +109,13 @@ function PostCard({
 
     await Promise.all(promises);
 
-    dispatch(deleteReduxPost($id));
-    dispatch(
-      deleteReduxUserPost({
-        userId,
-        postId: $id,
-      })
-    );
+    // dispatch(deleteReduxPost($id));
+    // dispatch(
+    //   deleteReduxUserPost({
+    //     userId,
+    //     postId: $id,
+    //   })
+    // );
     toast.success("Post deleted", {
       autoClose: 1500,
       className: "text-sm xmd:mr-10"

@@ -32,6 +32,7 @@ function PostForm({ post }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [fileSize, setFileSize] = useState(null);
+  const [id, setid] = useState("")
 
   // Custom hooks for handling textarea input and file change
   const handleTextareaInput = useHandleTextareaInput();
@@ -41,15 +42,48 @@ function PostForm({ post }) {
     setFileSize
   );
 
+
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.users.currentUser);
   const posts = useSelector((state) => state.config.posts);
   const [loading, setLoading] = useState(1);
   const { progress, setProgress } = useProgress(loading, setLoading, fileSize);
-  // const [postFeaturedImage, setPostFeaturedImage] = useState(post?.featuredImage);
+  const [postFeaturedImage, setPostFeaturedImage] = useState(post?.featuredImage)
 
-  
+
+  useEffect(() => {
+  const unsubscribe = appwriteService.client.subscribe(
+    [
+      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents`,
+      "files"
+    ],
+    (response) => {
+      console.log(response)
+      if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+          dispatch(createReduxPost(response.payload)); // Dispatch action to create new post in Redux store
+          dispatch(setReduxUserPost(response.payload)); // Set user's new post in Redux store
+      }
+
+      if (response.events.includes("databases.*.collections.*.documents.*.update")) {
+        dispatch(updateReduxPost({ id: response.payload.$id, dbPost: response.payload })); // Dispatch action to update post in Redux store
+        dispatch(updateReduxUserPost(response.payload)); // Update user's post in Redux store
+        setContent(response.payload?.content);
+        if (response.payload?.featuredImage) setPostFeaturedImage(response.payload?.featuredImage);
+      }
+    }
+  );
+
+  return () => {
+    unsubscribe();
+  }
+}, [
+    dispatch, 
+    conf.appwriteDatabaseId,
+    conf.appwritePostsCollectionId,
+    id
+  ]);
 
   const submit = async (data) => {
     setLoading(2)
@@ -67,8 +101,8 @@ function PostForm({ post }) {
       });
 
       if(dbPost){
-        dispatch(updateReduxPost({ id: dbPost?.$id, dbPost})); // Dispatch action to update post in Redux store
-        dispatch(updateReduxUserPost(dbPost)); // Update user's post in Redux store
+        // dispatch(updateReduxPost({ id: dbPost?.$id, dbPost})); // Dispatch action to update post in Redux store
+        // dispatch(updateReduxUserPost(dbPost)); // Update user's post in Redux store
         navigate('/')
         toast.success("Post updated", {
           autoClose: 1500,
@@ -90,9 +124,10 @@ function PostForm({ post }) {
         userId: userData?.$id,
       });
       if (dbPost) {
+        setid(dbPost?.$id)
         // Update Redux store immediately
-        dispatch(createReduxPost(dbPost));
-        dispatch(setReduxUserPost(dbPost));
+        // dispatch(createReduxPost(dbPost));
+        // dispatch(setReduxUserPost(dbPost));
         toast.success("Post created", {
           autoClose: 1500,
           className: "text-sm xmd:mr-10"

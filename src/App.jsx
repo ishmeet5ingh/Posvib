@@ -1,35 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import authService from "./appwrite/auth";
-import configService from "./appwrite/config";
 import { login, logout } from "./store/authSlice";
-import { Header, HeaderSkeletonLoader } from "./components";
+import { Header } from "./components";
 import { Outlet } from "react-router-dom";
 import "./index.css";
-import { setReduxPosts, deleteAllReduxPost } from "./store/configSlice";
-import {  setReduxCurrentUser, setReduxUsers, deleteReduxUsers, deleteReduxCurrentUser} from "./store/userSlice";
+import { setReduxCurrentUser, setReduxUsers, deleteReduxUsers, deleteReduxCurrentUser } from "./store/userSlice";
 import { setLoading } from "./store/loadingSlice";
 
-
-
 function App() {
-  // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
-  const authData = useSelector((state)=> state.auth.userData)
+  const authData = useSelector((state) => state.auth.userData);
   const Loading = useSelector((state) => state.loading.isLoading);
-
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        dispatch(setLoading(true)); // Ensure loading state is set before fetching
+        dispatch(setLoading(true));
 
-        const [userData, users, posts] = await Promise.all([
+        const [userData, users] = await Promise.all([
           authService.getUserData(),
           authService.getUsersDataFromDB(),
-          authStatus ? configService.getAppwritePosts(1) : Promise.resolve(null),
         ]);
 
         if (userData) {
@@ -40,12 +32,6 @@ function App() {
             const currentUser = users.documents.find(user => user.accountId === authData?.$id);
             dispatch(setReduxCurrentUser(currentUser));
           }
-
-          if (authStatus && posts) {
-            dispatch(setReduxPosts(posts));
-          } else {
-            dispatch(deleteAllReduxPost());
-          }
         } else {
           dispatch(deleteReduxUsers());
           dispatch(deleteReduxCurrentUser());
@@ -54,7 +40,7 @@ function App() {
       } catch (error) {
         console.error("Error fetching data", error);
       } finally {
-        dispatch(setLoading(false)); // Ensure loading state is reset after fetching
+        dispatch(setLoading(false));
       }
     };
 
@@ -63,22 +49,20 @@ function App() {
 
   return !Loading ? (
     <div>
-      <div
-       className="sm:flex">
+      <div className="sm:flex">
         <Header />
-        <main
-        className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">{authStatus ? <Outlet /> : <Outlet />}</main>
+        <main className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">
+          <Outlet />
+        </main>
       </div>
     </div>
   ) : (
     <div>
       <div className="sm:flex">
-          <>
-          <Header/>
-            <main className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">
-            <Outlet />
-            </main>
-          </>
+        <Header />
+        <main className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

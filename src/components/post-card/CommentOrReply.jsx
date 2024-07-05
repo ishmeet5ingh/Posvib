@@ -29,6 +29,8 @@ function CommentOrReply({ comment, reply, children, postId, commentId }) {
   const [data, setData] = useState(comment?.comment || reply?.reply);
   const commentRef = useRef(null);
 
+  
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (commentRef.current && !commentRef.current.contains(event.target)) {

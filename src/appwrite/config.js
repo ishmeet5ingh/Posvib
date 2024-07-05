@@ -185,7 +185,7 @@ export class Service {
         postId
       );
 
-      const updatedComments = [commentId, ...post?.comments, ];
+      const updatedComments = [commentId, ...post?.comments];
 
       const updatedPost = await this.databases.updateDocument(
         conf.appwriteDatabaseId,

@@ -31,7 +31,7 @@ function LikeFeature({
   const [likeCount, setLikeCount] = useState(likes?.length);
   const dispatch = useDispatch();
 
-  const [id, setId] = useState("")
+  const [id, setId] = useState("");
 
   useEffect(() => {
     setLikeCount(likes?.length);
@@ -47,10 +47,8 @@ function LikeFeature({
       setId(replyId);
     }
   }, [postId, commentId, replyId, collectionId]);
-  
 
   useEffect(() => {
-
     const unsubscribe = appwriteService.client.subscribe(
       `databases.${conf.appwriteDatabaseId}.collections.${collectionId}.documents.${id}`,
       (response) => {
@@ -136,7 +134,6 @@ function LikeFeature({
           commentId,
           currentUser?.$id
         );
-
       } else if (collectionId === conf.appwriteRepliesCollectionId) {
         const reply = await replyService.toggleAppwriteReplyLike(
           replyId,
@@ -165,7 +162,13 @@ function LikeFeature({
         />
         <div className=" bg-black"></div>
 
-        <p className={`text-white ${collectionId !== conf.appwritePostsCollectionId && "text-sm"}`}>{likeCount}</p>
+        <p
+          className={`text-white ${
+            collectionId !== conf.appwritePostsCollectionId && "text-sm"
+          }`}
+        >
+          {likeCount}
+        </p>
       </div>
     </div>
   );

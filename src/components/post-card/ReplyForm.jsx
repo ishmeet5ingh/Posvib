@@ -8,13 +8,46 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addReduxUserCommentReply } from '../../store/userSlice'
 import { v4 as uuidv4 } from "uuid";
 import { resetSubmitState, setSubmitState } from '../../store/submitStateSlice'
+import replyService from '../../appwrite/reply'
+import conf from '../../conf/conf'
 
 
-function ReplyForm({currentUser, replies, commentCreator, commentId, postId}) {
+function ReplyForm({currentUser, commentCreator, commentId, postId}) {
 
     const {handleSubmit, register, reset} = useForm()
 
     const dispatch = useDispatch()
+
+    useEffect(()=> {
+      const unsubscribe = replyService.client.subscribe(
+        `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteRepliesCollectionId}.documents`,
+        (response) => {
+          if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+            dispatch(createReduxReply({ 
+              reply: response.payload, 
+              commentId: response.payload.commentId, 
+              postId: response.payload.postId}));
+
+              console.log("RESPONSE", response)
+            dispatch(addReduxUserCommentReply({ 
+              reply: response.payload, 
+              commentId: response.payload.commentId, 
+              postId: response.payload.postId, 
+              userId: response.payload.userId }));
+          }
+        }
+      )
+      return ()=> {
+        unsubscribe()
+      }
+    }, [
+      replyService.client, 
+      conf.appwriteDatabaseId, 
+      conf.appwriteRepliesCollectionId, 
+      dispatch,
+      createReduxReply,
+      addReduxUserCommentReply
+    ])
 
     const submitReply = async (data) => {
         try {
@@ -36,12 +69,7 @@ function ReplyForm({currentUser, replies, commentCreator, commentId, postId}) {
 
           const createdReply = await appwriteReplyService.createAppwriteReply(tempId, newReply);
           
-          if (createdReply) {
-            
-            // Dispatch actions to update Redux store
-            dispatch(createReduxReply({ reply: createdReply, commentId, postId}));
-            dispatch(addReduxUserCommentReply({ reply: createdReply, commentId, postId, userId: currentUser?.$id }));
-            
+          if (createdReply) { 
             // Update comments in Appwrite
             const updatedReply = await appwriteCommentService.createAppwriteReplyInsideComments(commentId, createdReply?.$id);
           }
