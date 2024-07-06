@@ -106,6 +106,18 @@ export class Service {
     }
   }
 
+  async getAppwriteAllPosts(){
+    try {
+      const response = await this.databases.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwritePostsCollectionId,
+      );
+      return response.documents;
+    } catch (error) {
+      console.log("Appwrite serive :: getAppwritePosts :: error", error);
+    }
+  }
+
   // To upload file to Appwrite
   async uploadAppwriteFile(file) {
     try {

@@ -98,7 +98,7 @@ function CommentOrReply({ comment, reply, children, postId, commentId }) {
         >
           <img
             className={`rounded-full ${reply ? "w-6 h-6" : "w-8 h-8 "} mr-1`}
-            src={comment?.creatorAvatarUrl || reply?.creatorUrl}
+            src={comment?.creatorAvatarUrl || reply?.creatorAvatarUrl}
             alt={comment?.creatorUsername || reply?.creatorUsername}
           />
         </Link>

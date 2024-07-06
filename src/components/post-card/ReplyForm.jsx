@@ -59,7 +59,7 @@ function ReplyForm({currentUser, commentCreator, commentId, postId}) {
             $createdAt: new Date().toString(),
             userId: currentUser?.$id,
             commentId: commentId,
-            creatorUrl: currentUser?.imageUrl,
+            creatorAvatarUrl: currentUser?.imageUrl,
             creatorUsername: currentUser?.username,
             postId: postId,
           }; 

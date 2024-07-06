@@ -52,19 +52,21 @@ function PostForm({ post }) {
   const { progress, setProgress } = useProgress(loading, setLoading, fileSize);
   const [postFeaturedImage, setPostFeaturedImage] = useState(post?.featuredImage)
 
-
   useEffect(() => {
   const unsubscribe = appwriteService.client.subscribe(
     [
       `databases.${conf.appwriteDatabaseId}.collections.${conf.appwritePostsCollectionId}.documents`,
       "files"
     ],
+    
     (response) => {
       console.log(response)
       if (response.events.includes("databases.*.collections.*.documents.*.create")) {
           dispatch(createReduxPost(response.payload)); // Dispatch action to create new post in Redux store
           dispatch(setReduxUserPost(response.payload)); // Set user's new post in Redux store
       }
+
+      console.log(response)
 
       if (response.events.includes("databases.*.collections.*.documents.*.update")) {
         dispatch(updateReduxPost({ id: response.payload.$id, dbPost: response.payload })); // Dispatch action to update post in Redux store
@@ -82,7 +84,7 @@ function PostForm({ post }) {
     dispatch, 
     conf.appwriteDatabaseId,
     conf.appwritePostsCollectionId,
-    id
+    id,
   ]);
 
   const submit = async (data) => {
