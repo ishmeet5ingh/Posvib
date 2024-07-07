@@ -71,14 +71,7 @@ function PostCard({
   return () => {
     unsubscribe();
   };
-}, [
-  dispatch,
-  $id,
-  conf.appwriteDatabaseId,
-  conf.appwritePostsCollectionId,
-  deleteReduxPost,
-  deleteReduxUserPost,
-  ]);
+}, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
