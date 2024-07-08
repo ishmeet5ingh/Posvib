@@ -12,7 +12,6 @@ function Home() {
   const posts = useSelector((state) => state.config.posts);
 
   useEffect(() => {
-    console.log("hello")
     const fetchPosts = async () => {
       if (authStatus) {
         try {

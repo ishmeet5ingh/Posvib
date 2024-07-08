@@ -11,7 +11,6 @@ import {
   Login,
   Signup,
   EditPost,
-  MyPosts,
   AddPost,
   Post,
   Search,
