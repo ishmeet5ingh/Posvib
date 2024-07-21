@@ -5,6 +5,17 @@
 
 @tailwind utilities;
 
+/* chatbody */
+.chat-body{
+  height: calc(100vh - 105px);
+}
+
+@media (max-width: 640px) {
+  .chat-body {
+    height: 100vh;
+  }
+}
+
 /* text stroke */
 .text-stroke{
   -webkit-text-stroke: 0.3px rgb(58, 55, 55);

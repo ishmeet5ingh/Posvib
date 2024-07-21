@@ -13,7 +13,7 @@ const Profile = ({ user }) => {
   const navigate = useNavigate()
 
   return (
-    <div className="md:border-r md:border-teal-500 text-white min-h-screen pb-20 sm:pb-5 md:w-11/12 xmd:w-10/12 xl:w-9/12">
+    <div className="md:border-r md:border-teal-500 text-white sm:min-h-screen pb-20 sm:pb-5 md:w-11/12 xmd:w-10/12 xl:w-9/12">
       {!user ? (
         <ProfileUserInformationSkeleton />
       ) : (

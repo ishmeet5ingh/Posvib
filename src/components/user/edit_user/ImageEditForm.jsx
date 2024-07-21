@@ -66,7 +66,7 @@ function ImageEditForm({ handleSubmit, currentUser }) {
           InputCss="hidden"
         />
           <button
-            className={`text-blue-500 flex justify-center p-2 border border-blue-500 rounded-md transition-all duration-200 hover:bg-slate-950 hover:text-blue-300 text-xs`}
+            className={`text-blue-500 flex justify-center p-2 border border-blue-500 rounded-md transition-all duration-200 hover:bg-slate-950 hover:text-blue-300 text-sm`}
           >
             {loadingImage ? (
               <div className="flex gap-2 center items-center">

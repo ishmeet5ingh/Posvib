@@ -71,44 +71,46 @@ function ChatFooter({username, chatRoomId, senderId, receiverId }) {
 
   const submit = async (data) => {
     setSelectedImage(null)
-    const tempId = uuidv4();
-    const newMessage = {
-      $id: tempId,
-      chatRoomId,
-      senderId,
-      receiverId,
-      message: data?.message,
-      imageUrl: data?.file[0] ? URL.createObjectURL(data?.file[0]) : "",
-      $createdAt: new Date().toISOString(),
-    };
-    const dataFile = data.file[0]
-    dispatch(addReduxMessage({ chatRoomId, message: newMessage }));
-    reset()
-    let file;
-    if (dataFile) {
-      file = await messageService.uploadAppwriteFile(dataFile);
+    if(data.message || data.file[0]){
+      const tempId = uuidv4();
+      const newMessage = {
+        $id: tempId,
+        chatRoomId,
+        senderId,
+        receiverId,
+        message: data?.message,
+        imageUrl: data?.file[0] ? URL.createObjectURL(data?.file[0]) : "",
+        $createdAt: new Date().toISOString(),
+      };
+      const dataFile = data.file[0]
+      dispatch(addReduxMessage({ chatRoomId, message: newMessage }));
+      reset()
+      let file;
+      if (dataFile) {
+        file = await messageService.uploadAppwriteFile(dataFile);
+      }
+      const message = await messageService.createAppriteMessage(tempId, {
+        ...newMessage,
+        fileId: file?.$id,
+      });
+  
+      await chatRoomService.createAppwriteMessageInsideChatRoom(
+        senderId,
+        receiverId,
+        tempId
+      );
     }
-    const message = await messageService.createAppriteMessage(tempId, {
-      ...newMessage,
-      fileId: file?.$id,
-    });
-
-    await chatRoomService.createAppwriteMessageInsideChatRoom(
-      senderId,
-      receiverId,
-      tempId
-    );
-
+ 
   };
 
   return (
-    <div className="sticky bottom-0 right-0 px-2 pb-2 w-full">
+    <div className="fixed bg-black sm:bg-transparent z-20 sm:sticky bottom-0 right-0 px-2 pb-2 w-full">
       <form onSubmit={handleSubmit(submit)}>
         {selectedImage && (
           
-          <div className="w-full p-10 mb-3 h-screen flex flex-col justify-center items-center bg-black absolute right-0 bottom-0 -z-40">
+          <div className="w-full p-10 mb-3 h-screen flex flex-col justify-center items-center bg-black absolute right-0 bottom-0 -z-10">
           <div className="w-full">
-          <div onClick={() => setSelectedImage(null)} className="w-fit border p-2 rounded-full absolute top-14">
+          <div onClick={() => setSelectedImage(null)} className="w-fit border p-2 rounded-full absolute top-24">
           <FaTimes/>
           </div>
           </div>

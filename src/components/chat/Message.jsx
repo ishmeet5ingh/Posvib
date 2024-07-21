@@ -34,7 +34,7 @@ function Message({ message, currentUserId }) {
           currentUserId === message?.senderId ? "items-end" : "items-start"
         }`}
       >
-        <div className="text-[10px]  text-gray-300 mb-1">{formattedTime}</div>
+        <div className="text-xs  text-gray-300 mb-1">{formattedTime}</div>
         <div
           className={`relative  flex flex-col  w-[80%] rounded-md ${
             currentUserId === message?.senderId ? "items-end" : "items-start"

@@ -53,7 +53,7 @@ function App() {
 
   return !Loading ? (
     <div>
-      <div className="sm:flex ">
+      <div className="sm:flex">
         <Header />
         <main className="w-full sm:ml-[120px] md:ml-[130px] xmd:ml-[220px] lg:ml-[270px] xl:ml-[300px]">
           <Outlet />

@@ -24,7 +24,7 @@ function SearchUser({follow}) {
   const isSearchUser = !follow ? searchUser !== "" : users
 
   return (
-    <div className="bg-black px-5 text-white flex justify-center min-h-screen sm:border-r border-teal-800 w-full sm:w-[350px] md:w-[450px] lg:w-[500px]">
+    <div className="bg-black px-5 text-white flex justify-center sm:min-h-screen sm:border-r border-teal-800 w-full sm:w-[350px] md:w-[450px] lg:w-[500px]">
     <div className='w-11/12'>
     {/* Back Button */}
     <BackButton/>

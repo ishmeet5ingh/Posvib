@@ -17,7 +17,7 @@ function User({user, classname, flexCol, text, imageClasses}) {
         className={`${imageClasses} rounded-full mr-1`}
       />
       {/* user Information */}
-      <div>
+      <div >
         <p className={` ${text} `}>{user?.name}</p>
         <p className={`text-gray-400 ${text} `}>@{user?.username}</p>
       </div>

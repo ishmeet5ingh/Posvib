@@ -32,7 +32,7 @@ function Home() {
   return (
     <>
       {!authStatus && posts === null ? (
-        <div className="min-h-screen"  >
+        <div  >
         {<div className="sm:hidden pl-10 pt-8">
           <Logo/>
        </div> }

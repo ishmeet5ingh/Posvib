@@ -107,7 +107,7 @@ function Header() {
       <div >
       {!isHide && isHeader ? 
         null : (
-          <header className="z-50 text-white h-[68px] w-full sm:w-[120px]  md:w-[130px] xmd:w-[220px] lg:w-[270px] xl:w-[300px] border-r border-teal-900  py-3  shadow sm:min-h-screen fixed  bottom-0 bg-black ">
+          <header className="z-20 text-white h-[68px] w-full sm:w-[120px]  md:w-[130px] xmd:w-[220px] lg:w-[270px] xl:w-[300px] border-r border-teal-900  py-3  shadow sm:min-h-screen fixed  bottom-0 bg-black ">
       <nav className="flex sm:flex-col justify-center items-center">
         <div className="sm:items-start mb-10">{isLogo ? "" : <Logo width="70px" />}</div>
         <div className="w-full sm:w-fit">

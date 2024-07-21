@@ -16,9 +16,8 @@ function ChatBody({ messages, loading }) {
 
   return (
     <div className="text-white ">
-      <ul
-        style={{ height: "calc(100vh - 105px)" }}
-        className=" px-5  overflow-y-scroll hide-scrollbar"
+      <ul 
+        className="px-5 py-14 sm:py-0 chat-body overflow-y-scroll hide-scrollbar"
       >
         {messages?.map((message) => {
           return (

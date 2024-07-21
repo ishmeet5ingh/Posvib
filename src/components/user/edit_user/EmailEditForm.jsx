@@ -74,7 +74,7 @@ function EmailEditForm({
   return (
     <div className="w-full absolute top-[10%] text-white px-5 md:px-20 lg:px-32">
       <button
-        className="text-blue-500 mb-10"
+        className="text-blue-500 my-10"
         onClick={() => setIsEmailEditable(false)}
       >
         <FaTimes size={30} />

@@ -64,7 +64,7 @@ function PostsContainer({ children }) {
       {/* Main container for posts and sidebar */}
       <div
         id="container"
-        className="xs:border-r border-teal-800 h-screen overflow-y-scroll custom-scrollbar scroll-smooth flex flex-col min-h-screen w-full xs:w-[400px] sm:w-[350px] md:w-[450px] lg:w-[500px]"
+        className="xs:border-r border-teal-800 h-screen overflow-y-scroll custom-scrollbar scroll-smooth flex flex-col w-full xs:w-[400px] sm:w-[350px] md:w-[450px] lg:w-[500px]"
       >
         {/* Content wrapper */}
         <div className="mt-4 sm:mt-14 mb-28">

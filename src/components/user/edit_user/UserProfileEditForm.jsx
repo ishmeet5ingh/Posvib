@@ -52,7 +52,7 @@ function UserProfileEditForm() {
   };
 
   return (
-    <div className="relative h-screen md:border-r md:border-teal-500 text-white min-h-screen pb-20 sm:pb-5 md:w-11/12 xmd:w-10/12 xl:w-9/ ">
+    <div className="relative md:border-r md:border-teal-500 text-white sm:min-h-screen pb-20 sm:pb-5 md:w-11/12 xmd:w-10/12 xl:w-9/ ">
       <div
         className={` ${isEmailEditable && "hidden"} ${
           isPasswordEditable && "hidden"
