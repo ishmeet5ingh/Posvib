@@ -98,8 +98,10 @@ function CommentOrReply({ comment, reply, children, postId, commentId }) {
         >
           <img
             className={`rounded-full ${reply ? "w-6 h-6" : "w-8 h-8 "} mr-1`}
-            src={comment?.creatorAvatarUrl || reply?.creatorAvatarUrl}
-            alt={comment?.creatorUsername || reply?.creatorUsername}
+            src={(comment?.creator?.profilePicId ? authService.getFilePreview(comment?.creator?.profilePicId) : comment?.creator?.imageUrl ) || (reply?.profilePicId ? authService.getFilePreview(reply?.profilePicId) : reply?.creatorAvatarUrl )}
+            // src={user.profilePicId ? authService.getFilePreview(user.profilePicId) : user.imageUrl}
+
+            alt={comment?.creator?.username || reply?.creatorUsername}
           />
         </Link>
         <div className=" w-full">
