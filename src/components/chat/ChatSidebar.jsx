@@ -25,7 +25,7 @@ function ChatSidebar() {
   );
 
   return (
-    <div className="bg-black px-5 pt-10 border-2  text-white flex justify-center sm:border-r border-teal-800 w-full md:w-[250px]  lg:w-[500px]">
+    <div className="bg-black px-5 pt-10 text-white flex justify-center sm:min-h-screen sm:border-r border-teal-800 w-full md:w-[250px]  lg:w-[500px]">
     <div className='w-11/12'>
     {/* Back Button */}
     {/* <BackButton/> */}

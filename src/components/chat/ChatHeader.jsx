@@ -24,7 +24,7 @@ function ChatHeader({
 
 
   return (
-    <div className='sticky top-0 px-2 py-2 w-full flex gap-2'>
+    <div className='sticky top-0 px-2 py-2 w-full z-50 flex gap-2'>
     <button 
     className='  text-white ' 
     onClick={()=>navigate(-1)}><FaArrowLeft/></button>

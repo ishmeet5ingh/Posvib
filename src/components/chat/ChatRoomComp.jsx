@@ -51,16 +51,18 @@ function ChatRoomComp({ currentUser_selectedUser }) {
     
     <div
     style={{ backgroundImage: `url(${chatTheme})`, backgroundSize: 'cover' }} 
-    className='w-full text-white border-r border-teal-800'>
-      <div>
+    className='w-full text-white'>
+      
         <ChatHeader 
           name={selectedUser?.name}
           username={selectedUser?.username}
           imageUrl={selectedUser?.imageUrl}
           profilePicId={selectedUser?.profilePicId}
         />
-        <ChatBody messages={chatRoom?.messages}/>
-      </div>
+        
+        <ChatBody  messages={chatRoom?.messages}/>
+    
+
       <ChatFooter 
         username={selectedUser?.username}
         chatRoomId={chatRoom?.$id}

@@ -15,7 +15,7 @@ function ChatBody({ messages, loading }) {
   }, [messages]);
 
   return (
-    <div className="text-white">
+    <div className="text-white ">
       <ul
         style={{ height: "calc(100vh - 105px)" }}
         className=" px-5  overflow-y-scroll hide-scrollbar"
