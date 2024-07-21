@@ -9,7 +9,7 @@ const BackButton = () => {
   return (
     <button
       onClick={() => navigate(-1)}
-      className=" text-white  py-5 rounded-lg"
+      className=" text-white   rounded-lg"
     >
      <FaArrowLeft/>
     </button>

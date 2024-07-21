@@ -34,7 +34,7 @@ function ChatSidebar() {
         placeholder="Search users..."
         value={searchUser}
         onChange={(e) => setSearchUser(e.target.value)}
-        className="mb-5 text-sm w-full p-2 border border-teal-950 text-gray-300 focus:outline-none bg-[#121212] rounded-md"
+        className="mb-5  w-full p-2 border border-teal-950 text-gray-300 focus:outline-none bg-[#121212] rounded-md"
       />
       {/* Users list */}
       <div className='flex flex-col gap-3'>

@@ -24,19 +24,21 @@ function SearchUser({follow}) {
   const isSearchUser = !follow ? searchUser !== "" : users
 
   return (
-    <div className="bg-black px-5 text-white flex justify-center sm:min-h-screen sm:border-r border-teal-800 w-full sm:w-[350px] md:w-[450px] lg:w-[500px]">
+    <div className="bg-black pt-10 text-white flex justify-center sm:min-h-screen sm:border-r border-teal-800 w-full sm:w-[350px] md:w-[450px] lg:w-[500px]">
     <div className='w-11/12'>
-    {/* Back Button */}
+    <div className='flex gap-4 mb-5'>
     <BackButton/>
+    {/* Back Button */}
       <input
         type="text"
         placeholder="Search users..."
         value={searchUser}
         onChange={(e) => setSearchUser(e.target.value)}
-       className="mb-5 text-sm w-full p-2 border border-teal-950 text-gray-300 focus:outline-none bg-[#121212] rounded-md"
+       className="  w-full p-2 border border-teal-950 text-gray-300 focus:outline-none bg-[#121212] rounded-md"
       />
+    </div>
       {/* Users list */}
-      <ul>
+      <ul className='pl-5'>
         {(filteredUsers?.length > 0) && isSearchUser  ? (
           filteredUsers.map((user) => (
             <li key={user?.$id}>
