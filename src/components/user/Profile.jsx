@@ -1,18 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import appwriteService from "../../appwrite/config";
 import LikeFeature from "../post-card/LikeFeature";
 import ProfileUserInformationSkeleton from "./skeleton/ProfileUserInformationSkeleton";
-import {useFollow} from "../../hooks";
+import { useFollow } from "../../hooks";
+import authService from "../../appwrite/auth";
 
 const Profile = ({ user }) => {
-  const {
-    following,
-    currentUserData,
-    loading,
-    followersCount,
-    handleFollow,
-  } = useFollow(user);
+  const { following, currentUserData, loading, followersCount, handleFollow } =
+    useFollow(user);
+
+  const navigate = useNavigate()
 
   return (
     <div className="md:border-r md:border-teal-500 text-white min-h-screen pb-20 sm:pb-5 md:w-11/12 xmd:w-10/12 xl:w-9/12">
@@ -21,16 +19,20 @@ const Profile = ({ user }) => {
       ) : (
         <>
           {/* User Profile Header */}
-          <h2 className="xmd:text-2xl border-t w-full border-b border-teal-700 pt-4 px-5 md:px-8 text-xl font-medium">
+          <h2 className="xmd:text-2xl w-full border-b border-teal-700 pt-4 px-5 md:px-8 text-xl font-medium">
             {user?.name}
           </h2>
-          <div className="flex py-4 px-5 md:px-8 items-start">
+          <div className="flex pt-4 px-5 md:px-8 items-start">
             {/* User Avatar and Information */}
             <div>
               <img
-                src={user?.imageUrl}
+                src={
+                  user.profilePicId
+                    ? authService.getFilePreview(user.profilePicId)
+                    : user.imageUrl
+                }
                 alt={`${user?.name}'s profile`}
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full mr-8 mb-4"
+                className="w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 rounded-full mr-10 mb-4"
               />
               <p className="text-gray-400">@{user?.username}</p>
             </div>
@@ -52,17 +54,34 @@ const Profile = ({ user }) => {
               </div>
               {/* Follow/Unfollow Button */}
               {user?.$id !== currentUserData?.$id && !loading ? (
+                <div className=" flex gap-2 w-6/12 xmd:w-2/4">
                 <button
                   onClick={handleFollow}
-                  className={`w-2/5 py-1 xmd:w-2/4 rounded-lg ${
+                  className={`w-full py-1  rounded-lg ${
                     following ? "bg-gray-800" : "bg-blue-700"
                   }`}
                 >
                   {following ? "Unfollow" : "Follow"}
                 </button>
-              ) : null}
+                {user.following?.includes(currentUserData?.$id ) || user.followers?.includes(currentUserData?.$id) && (
+                  <button onClick={()=> navigate(`/chat/room/${currentUserData?.$id}_${user?.$id}`)}
+                  className={`w-full py-1  rounded-lg bg-blue-700 text-center`}>
+                    Message
+                  </button>
+                )}
+                </div>
+                
+              ) : (
+                <Link
+                  to={`edit-profile`}
+                  className="w-2/5 py-1 xmd:w-2/4 rounded-lg border border-teal-600 text-center text-sm"
+                >
+                  <p>Edit profile</p>
+                </Link>
+              )}
             </div>
           </div>
+          <p className="px-5 md:px-8 pb-5 text-gray-200 text-sm">{user?.bio}</p>
         </>
       )}
 

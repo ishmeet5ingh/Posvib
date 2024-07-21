@@ -5,6 +5,8 @@ import userReducer from './userSlice';
 import errorReducer from './errorSlice';
 import loadingReducer from './loadingSlice';
 import submitStateReducer from './submitStateSlice';
+import hideSlice from './hideSlice';
+import chatRoomReducer from './chatRoomSlice';
 
 // Configure the Redux store
 const store = configureStore({
@@ -14,7 +16,9 @@ const store = configureStore({
     users: userReducer,        // Manages user state
     error: errorReducer,       // Manages error  state
     loading: loadingReducer,   // Manages loading state
-    submitState: submitStateReducer // manages submitState
+    hide: hideSlice, // Manages hide state
+    submitState: submitStateReducer, // manages submitState
+    chatRoom: chatRoomReducer,
   },
 });
 

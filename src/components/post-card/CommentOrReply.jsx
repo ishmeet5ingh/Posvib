@@ -10,10 +10,10 @@ import replyService from "../../appwrite/reply";
 import { resetSubmitState, setSubmitState } from "../../store/submitStateSlice";
 import LikeFeature from "./LikeFeature";
 import conf from "../../conf/conf";
+import authService from "../../appwrite/auth";
 
 function CommentOrReply({ comment, reply, children, postId, commentId }) {
   const currentUser = useSelector((state) => state.users.currentUser);
-
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ function CommentOrReply({ comment, reply, children, postId, commentId }) {
   const submitState = useSelector((state) => state.submitState.submitState);
 
   const isAuthor =
-    currentUser?.$id === (comment?.creatorUsername || reply?.creatorUsername);
+    currentUser?.$id === (comment?.creator?.username || reply?.creatorUsername);
 
   const [showOptions, setShowOptions] = useState(false);
   const elapsedTime = useElapsedTime(comment?.$createdAt || reply?.$createdAt);
@@ -94,12 +94,19 @@ function CommentOrReply({ comment, reply, children, postId, commentId }) {
         }`}
       >
         <Link
-          to={`/user/${comment?.creatorUsername || reply?.creatorUsername}`}
+          to={`/user/${comment?.creator?.username || reply?.creatorUsername}`}
         >
           <img
             className={`rounded-full ${reply ? "w-6 h-6" : "w-8 h-8 "} mr-1`}
+<<<<<<< HEAD
             src={comment?.creatorAvatarUrl || reply?.creatorAvatarUrl}
             alt={comment?.creatorUsername || reply?.creatorUsername}
+=======
+            src={(comment?.creator?.profilePicId ? authService.getFilePreview(comment?.creator?.profilePicId) : comment?.creator?.imageUrl ) || (reply?.profilePicId ? authService.getFilePreview(reply?.profilePicId) : reply?.creatorAvatarUrl )}
+            // src={user.profilePicId ? authService.getFilePreview(user.profilePicId) : user.imageUrl}
+
+            alt={comment?.creator?.username || reply?.creatorUsername}
+>>>>>>> chatFeature
           />
         </Link>
         <div className=" w-full">
@@ -107,10 +114,10 @@ function CommentOrReply({ comment, reply, children, postId, commentId }) {
         <div className="w-full">
           <div className="text-xs flex gap-2 h-fit">
             <Link
-              to={`/user/${comment?.creatorUsername || reply?.creatorUsername}`}
+              to={`/user/${comment?.creator?.username || reply?.creatorUsername}`}
               className="text-xs text-gray-200"
             >
-              {comment?.creatorUsername || reply?.creatorUsername}
+              {comment?.creator?.username|| reply?.creatorUsername}
             </Link>
             <p className="text-gray-400">{elapsedTime}</p>
           </div>

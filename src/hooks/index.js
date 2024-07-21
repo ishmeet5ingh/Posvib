@@ -4,6 +4,7 @@ import useFormInitialization from "./post-form/useFormInitialization";
 import useHandleFileChange from "./post-form/useHandleFileChange";
 import useHandleTextareaInput from "./post-form/useHandleTextareaInput";
 import useProgress from "./post-form/useProgress";
+import useCurrentTime from "./useCurrentTime";
 import useFollow from "./users/useFollow";
 
 
@@ -14,5 +15,6 @@ export {
     useHandleTextareaInput,
     useProgress,
     useFormInitialization,
-    useFollow
+    useFollow,
+    useCurrentTime
 }

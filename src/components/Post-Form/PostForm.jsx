@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import appwriteService from "../../appwrite/config";
-import avatarPlaceholder from "../../../public/avatarPlaceholder.jpeg";
+import avatarPlaceholder from "/avatarPlaceholder.jpeg";
 import {
   Avatar,
   ProgressBarComponent,
@@ -22,6 +22,7 @@ import PostFormSkeletonLoader from "../SkeletonLoading/PostFormSkeletonLoader";
 import conf from "../../conf/conf";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import authService from "../../appwrite/auth";
 
 
 function PostForm({ post }) {
@@ -41,8 +42,6 @@ function PostForm({ post }) {
     setPreview,
     setFileSize
   );
-
-
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -151,8 +150,9 @@ function PostForm({ post }) {
         <>
           <Avatar
             avatarUrl={
-              !userData?.imageUrl ? avatarPlaceholder : userData?.imageUrl
+              !userData?.imageUrl ? avatarPlaceholder : userData?.profilePicId ? authService.getFilePreview(userData?.profilePicId) : userData?.imageUrl 
             }
+
           />
           <form
             onSubmit={handleSubmit(submit)}

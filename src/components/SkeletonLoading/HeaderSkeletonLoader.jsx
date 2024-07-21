@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from "react";
-import Logo from "../Logo";
-import { FaHome, FaSearch, FaPlus, FaUser, FaSignOutAlt} from "react-icons/fa";
+import Logo from "../common/Logo";
+import { FaHome, FaSearch, FaPlus, FaUser, FaSignOutAlt, FaFacebookMessenger} from "react-icons/fa";
 
 
 
@@ -23,6 +23,7 @@ function HeaderSkeletonLoader() {
 
   const navItems = [
     <FaHome />,
+    <FaFacebookMessenger/>,
     <FaUser />,
     <FaSearch />,
     <FaPlus />,

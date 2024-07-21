@@ -17,7 +17,7 @@ export default {
         'xs': '500px',
       },
       height: {
-        'screen-minus-68': 'calc(100vh - 68px)',
+        'screen-minus-68': 'calc(100vh - 100px)',
       },
     },
     

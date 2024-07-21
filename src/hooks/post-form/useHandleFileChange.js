@@ -19,24 +19,11 @@ const useHandleFileChange = (setSelectedFile, setPreview, setFileSize) => {
       const fileSizeInKB = Math.floor((fileSizeInBytes / 1024).toFixed(2))
       setFileSize(`${fileSizeInKB}`);
 
-      const reader = new FileReader();
 
-
-      reader.onloadend = () => {
-        setPreview(reader.result);
-      };
-
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          // setDimensions({ width: img.width, height: img.height });
-        };
-        img.src = e.target.result;
-      };
-
-
+      const imageUrl = URL.createObjectURL(file);
+      setPreview(imageUrl);
+    
       
-      reader.readAsDataURL(file);
     }
   };
 };

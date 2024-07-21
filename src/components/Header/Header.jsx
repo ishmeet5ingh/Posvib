@@ -5,7 +5,8 @@ import { HeaderSkeletonLoader, Logo } from "../index";
 import { useDispatch } from "react-redux";
 import authService from "../../appwrite/auth";
 import { logout } from "../../store/authSlice";
-import { FaHome, FaSearch, FaPlus,FaUser, FaSignOutAlt, FaSignInAlt, FaUserPlus} from "react-icons/fa";
+import { FaHome, FaSearch, FaPlus,FaUser, FaSignOutAlt, FaSignInAlt, FaUserPlus, FaFacebookMessenger} from "react-icons/fa";
+import { setHide } from "../../store/hideSlice";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
@@ -23,22 +24,28 @@ function Header() {
 
   const [isLogo, setIsLogo] = useState(window.innerWidth < 640);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 900);
+  const [isHeader, setIsHeader] = useState(window.innerHeight < 768)
 
-  // useEffect(() => { ... }, []);
-  //This useEffect hook runs once after the initial render. It sets up an event listener to track window resize events and updates the state variables accordingly.
+  const isHide = useSelector(state => state.hide.isHide)
+
+  
+  useEffect(() => {
+    setIsHeader(window.innerWidth < 640)
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
       setIsLogo(window.innerWidth < 640);
       setIsSmallScreen(window.innerWidth < 900);
+      setIsHeader(window.innerWidth < 640)
+
     };
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-    //return () => { ... };
-    //This cleanup function removes the event listener when the component is unmounted, preventing memory leaks.
   }, []);
+
 
   const navItems = [
     {
@@ -46,6 +53,12 @@ function Header() {
       symbol: <FaHome />,
       slug: "/",
       active: true,
+    },
+    {
+      name: "Chat",
+      symbol: <FaFacebookMessenger />,
+      slug: "/chat",
+      active:  authStatus,
     },
     {
       name: "Login",
@@ -91,7 +104,10 @@ function Header() {
     <>
     {!userData && authStatus ? <HeaderSkeletonLoader/> : 
     (
-      <header className="z-50 text-white h-[68px] w-full sm:w-[120px]  md:w-[130px] xmd:w-[220px] lg:w-[270px] xl:w-[300px] border-r border-teal-800  py-3  shadow sm:min-h-screen fixed  bottom-0 bg-black ">
+      <div >
+      {!isHide && isHeader ? 
+        null : (
+          <header className="z-50 text-white h-[68px] w-full sm:w-[120px]  md:w-[130px] xmd:w-[220px] lg:w-[270px] xl:w-[300px] border-r border-teal-900  py-3  shadow sm:min-h-screen fixed  bottom-0 bg-black ">
       <nav className="flex sm:flex-col justify-center items-center">
         <div className="sm:items-start mb-10">{isLogo ? "" : <Logo width="70px" />}</div>
         <div className="w-full sm:w-fit">
@@ -140,6 +156,8 @@ function Header() {
       </nav>
 
     </header>
+        ) }
+      </div>
     )
     }
     

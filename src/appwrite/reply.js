@@ -14,7 +14,11 @@ class ReplyService {
     }
 
     // create Reply 
+<<<<<<< HEAD
     async createAppwriteReply (replyId, {reply, userId, commentId, creatorAvatarUrl, creatorUsername, postId }) {
+=======
+    async createAppwriteReply (replyId, {reply, userId, commentId, creatorAvatarUrl, creatorUsername, postId, profilePicId }) {
+>>>>>>> chatFeature
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -27,7 +31,8 @@ class ReplyService {
                     commentId,
                     creatorAvatarUrl,
                     creatorUsername,
-                    postId
+                    postId,
+                    profilePicId
                 }
             )
         } catch (error) {

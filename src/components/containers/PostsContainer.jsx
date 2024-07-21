@@ -44,6 +44,7 @@ function PostsContainer({ children }) {
     const cont = document.getElementById("container");
 
     const handleScroll = () => {
+      console.table([window.innerHeight, cont.scrollTop, cont.scrollHeight])
       if (window.innerHeight + cont.scrollTop + 1 >= cont.scrollHeight && !loadingRef.current) {
         loadMorePosts();
       }

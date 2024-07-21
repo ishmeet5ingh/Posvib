@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { resetSubmitState, setSubmitState } from '../../store/submitStateSlice'
 import replyService from '../../appwrite/reply'
 import conf from '../../conf/conf'
+import authService from '../../appwrite/auth'
 
 
 function ReplyForm({currentUser, commentCreator, commentId, postId}) {
@@ -62,6 +63,7 @@ function ReplyForm({currentUser, commentCreator, commentId, postId}) {
             creatorAvatarUrl: currentUser?.imageUrl,
             creatorUsername: currentUser?.username,
             postId: postId,
+            profilePicId: currentUser?.profilePicId
           }; 
           
           dispatch(createReduxReply({ reply: newReply, commentId, postId}));
@@ -87,7 +89,7 @@ function ReplyForm({currentUser, commentCreator, commentId, postId}) {
     className="flex items-center space-x-3 bg-gray-800 px-2 rounded-md shadow-sm shadow-slate-900 "
   >
     <img
-      src={currentUser?.imageUrl}
+   src={!currentUser?.imageUrl ? avatarPlaceholder : currentUser?.profilePicId ? authService.getFilePreview(currentUser?.profilePicId) : currentUser?.imageUrl }
       alt={currentUser?.name || "User Avatar"}
       className="w-6 h-6 rounded-full"
     />

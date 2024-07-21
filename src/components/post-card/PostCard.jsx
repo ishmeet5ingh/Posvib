@@ -11,6 +11,7 @@ import conf from "../../conf/conf";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import commentService from "../../appwrite/comment";
+import authService from "../../appwrite/auth";
 
 function PostCard({
   $id,
@@ -129,13 +130,14 @@ function PostCard({
             <div className="pt-1">
               <img
                 className="w-9 h-9 md:w-10 md:h-10 rounded-full"
-                src={creator?.imageUrl}
+                src={creator?.profilePicId ? authService.getFilePreview(creator?.profilePicId) : creator?.imageUrl}
+                
                 alt=""
               />
             </div>
             <div>
-              <div className="flex gap-2 font-medium items-center">
-                <p className="font-medium text-sm md:text-base text-white">
+              <div className="flex gap-2 items-center">
+                <p className="text-white">
                   {creator?.name}
                 </p>
                 <p className="text-teal-600  text-xs">{`${elapsedTime}`}</p>

@@ -17,8 +17,6 @@ class CommentService {
     comment,
     userId,
     postId,
-    creatorAvatarUrl,
-    creatorUsername,
   }) {
     try {
       return await this.databases.createDocument(
@@ -31,8 +29,7 @@ class CommentService {
           userId,
           postId,
           replies: [],
-          creatorAvatarUrl,
-          creatorUsername,
+          creator: userId
         }
       );
     } catch (error) {
