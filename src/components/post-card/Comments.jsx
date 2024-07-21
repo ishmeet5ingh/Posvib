@@ -16,7 +16,7 @@ function Comments({ comments, currentUser, postId}) {
             <Replies
               currentUser={currentUser}
               replies={comment?.replies}
-              commentCreator={comment?.creatorUsername}
+              commentCreator={comment?.creator?.username}
               commentId={comment?.$id}
               postId={postId}
             />

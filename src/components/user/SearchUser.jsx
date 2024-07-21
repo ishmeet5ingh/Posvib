@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import BackButton from '../BackButton';
+import BackButton from '../common/BackButton';
 import User from './User';
 
 function SearchUser({follow}) {
@@ -33,7 +33,7 @@ function SearchUser({follow}) {
         placeholder="Search users..."
         value={searchUser}
         onChange={(e) => setSearchUser(e.target.value)}
-        className="mb-5 w-full text-black p-2 border border-gray-300 rounded-md"
+       className="mb-5 text-sm w-full p-2 border border-teal-950 text-gray-300 focus:outline-none bg-[#121212] rounded-md"
       />
       {/* Users list */}
       <ul>

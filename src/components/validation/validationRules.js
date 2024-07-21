@@ -67,11 +67,18 @@ const createValidation = ({ required, maxLength, minLength, pattern, patternMess
     patternMessage: "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     fieldName: "Password"
   });
-  
+
+  const bioValidation = createValidation({
+    maxLength: 150,
+    fieldName: "Bio"
+  });
+
+
   export {
     nameValidation,
     usernameValidation,
     emailValidation,
     passwordValidation,
+    bioValidation
   };
   

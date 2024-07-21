@@ -5,7 +5,7 @@ import "./index.css";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import store from "./store/store.js";
-import AuthLayout from "./components/AuthLayout.jsx";
+import AuthLayout from "./components/auth/AuthLayout.jsx";
 import {
   Home,
   Login,
@@ -18,6 +18,9 @@ import {
   UserProfile,
   Followers,
   Following,
+  EditProfile,
+  Chat,
+  ChatRoom,
 } from "./pages/index.js";
 import { ToastContainer } from "react-toastify";
 
@@ -29,6 +32,24 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/chat",
+        element: (
+        <AuthLayout authentication>
+        <Chat/>
+        </AuthLayout>
+      ),
+        children: [
+          {
+            path: "/chat/room/:currentUser_selectedUser",
+            element: (
+              <AuthLayout authentication>
+              <ChatRoom/>
+              </AuthLayout>
+            )
+          }
+        ]
       },
       {
         path: "/login",
@@ -70,6 +91,14 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
+     {
+      path: "user/:username/edit-profile",
+      element: (
+        <AuthLayout authentication>
+          <EditProfile/>
+        </AuthLayout>
+      )
+     },
       {
         path: "/search",
         element: (

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import {useFollow}from '../../hooks'
+import authService from '../../appwrite/auth'
 
 function User({user, classname, flexCol, text, imageClasses}) {
 
@@ -11,7 +12,7 @@ function User({user, classname, flexCol, text, imageClasses}) {
     <Link to={`/user/${user?.username}`} className={`flex ${classname} tems-center`}>
     {/* user avatar */}
       <img
-        src={user.imageUrl}
+        src={user.profilePicId ? authService.getFilePreview(user.profilePicId) : user.imageUrl}
         alt={`${user.name}'s profile`}
         className={`${imageClasses} rounded-full mr-1`}
       />

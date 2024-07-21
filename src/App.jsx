@@ -7,6 +7,8 @@ import { Outlet } from "react-router-dom";
 import "./index.css";
 import { setReduxCurrentUser, setReduxUsers, deleteReduxUsers, deleteReduxCurrentUser } from "./store/userSlice";
 import { setLoading } from "./store/loadingSlice";
+import { setHide } from "./store/hideSlice";
+import { deleteReduxChatRooms } from "./store/chatRoomSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -17,8 +19,8 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+       if(authStatus){
         dispatch(setLoading(true));
-
         const [userData, users] = await Promise.all([
           authService.getUserData(),
           authService.getUsersDataFromDB(),
@@ -32,10 +34,12 @@ function App() {
             const currentUser = users.documents.find(user => user.accountId === authData?.$id);
             dispatch(setReduxCurrentUser(currentUser));
           }
+       }
         } else {
           dispatch(deleteReduxUsers());
           dispatch(deleteReduxCurrentUser());
           dispatch(logout());
+          dispatch(deleteReduxChatRooms())
         }
       } catch (error) {
         console.error("Error fetching data", error);
@@ -68,4 +72,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

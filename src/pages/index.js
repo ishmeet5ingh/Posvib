@@ -9,6 +9,9 @@ import Search from './Search'
 import UserProfile from './UserProfile'
 import Followers from './Followers'
 import Following from './Following'
+import EditProfile from './EditProfile'
+import Chat from './Chat'
+import ChatRoom from './ChatRoom'
 
 export {
     Home,
@@ -21,5 +24,8 @@ export {
     Search,
     UserProfile,
     Followers,
-    Following
+    Following,
+    EditProfile,
+    Chat,
+    ChatRoom
 }

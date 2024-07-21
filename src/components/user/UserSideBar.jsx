@@ -39,7 +39,7 @@ function UserSideBar() {
                 <User 
                   user={user}
                   text="text-xs md:text-sm"
-                  imageClasses="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 mr-1 md:mr-2"
+                  imageClasses="w-8 h-8 sm:w-10 sm:h-10 mr-1 md:mr-2"
                   classname="w-full"
                   flexCol="flex-col gap-2"
                 />

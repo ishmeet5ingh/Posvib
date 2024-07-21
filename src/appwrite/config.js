@@ -15,6 +15,7 @@ export class Service {
     this.databases = new Databases(this.client);
     this.bucket = new Storage(this.client);
     this.avatars = new Avatars(this.client);
+    
   }
 
   //To create post in appwrite
@@ -39,7 +40,7 @@ export class Service {
     }
   }
 
-  // To update post in Appwrite
+  //  update post in Appwrite
   async updateAppwritePost(id, { content, featuredImage, status }) {
     try {
       return await this.databases.updateDocument(
@@ -57,7 +58,7 @@ export class Service {
     }
   }
 
-  // To delete post in appwrite
+  //  delete post in appwrite
   async deleteAppwritePost(id) {
     try {
       return await this.databases.deleteDocument(
@@ -72,7 +73,7 @@ export class Service {
     }
   }
 
-  // To get a Single post from appwrite
+  //  get a Single post from appwrite
   async getAppwritePost(id) {
     try {
       return await this.databases.getDocument(
@@ -86,7 +87,7 @@ export class Service {
     }
   }
 
-  // To get all posts from appwrite
+  //  get all posts from appwrite
   async getAppwritePosts(page = 1, limit = 6) {
     const offset = (page - 1) * limit;
     try {
@@ -106,7 +107,7 @@ export class Service {
     }
   }
 
-  // To upload file to Appwrite
+  //  upload file to Appwrite
   async uploadAppwriteFile(file) {
     try {
       return await this.bucket.createFile(
@@ -121,7 +122,7 @@ export class Service {
     }
   }
 
-  // To delete file from appwrite
+  // delete file from appwrite
   async deleteAppwriteFile(fileId) {
     try {
       return await this.bucket.deleteFile(
@@ -135,7 +136,7 @@ export class Service {
     }
   }
 
-  // To get file preview from appwrite
+  // get file preview from appwrite
   getFilePreview(fileId) {
     try {
       return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
@@ -144,7 +145,7 @@ export class Service {
     }
   }
 
-  // To toggle likes of the post of appwrite
+  //ggle likes of the post of appwrite
   async toggleAppwritePostLike(postId, userId) {
     try {
       // Fetch the post
@@ -176,7 +177,7 @@ export class Service {
     }
   }
 
-  // To create comments insite the post in appwrite
+  // create comments insite the post in appwrite
   async createAppwriteCommentInsidePost(postId, commentId) {
     try {
       const post = await this.databases.getDocument(
@@ -204,7 +205,7 @@ export class Service {
     }
   }
 
-  // To delete the comment inside the post in appwrite
+  // delete the comment inside the post in appwrite
   async deleteAppwriteCommentInsidePost(postId, commentId) {
     try {
       const post = await this.databases.getDocument(
@@ -233,7 +234,7 @@ export class Service {
     }
   }
 
-  // To update the comment inside post in appwrite
+  // update the comment inside post in appwrite
   async updateAppwriteCommentInsidePost(postId, comment, commentId) {
     try {
       const post = await this.databases.getDocument(
