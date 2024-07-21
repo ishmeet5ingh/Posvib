@@ -183,7 +183,7 @@ const configSlice = createSlice({
     // }
 
     createReduxReply: (state, action) => {
-      const { reply, creator, commentId, postId,  } = action.payload;
+      const { reply, commentId, postId,  } = action.payload;
       state.posts = state.posts?.map((post) => {
         if (post?.$id === postId) {
           return {
@@ -197,12 +197,12 @@ const configSlice = createSlice({
                   comment.replies.shift();
                   return {
                     ...comment,
-                    replies: [{...reply, ...creator}, ...comment.replies],
+                    replies: [reply, ...comment.replies],
                   };
                 } else {
                   return {
                     ...comment,
-                    replies: [{...reply, ...creator}, ...comment.replies],
+                    replies: [reply, ...comment.replies],
                   };
                 }
               }
