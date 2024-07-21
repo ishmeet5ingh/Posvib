@@ -107,7 +107,6 @@ export class Service {
     }
   }
 
-<<<<<<< HEAD
   async getAppwriteAllPosts(){
     try {
       const response = await this.databases.listDocuments(
@@ -121,9 +120,6 @@ export class Service {
   }
 
   // To upload file to Appwrite
-=======
-  //  upload file to Appwrite
->>>>>>> chatFeature
   async uploadAppwriteFile(file) {
     try {
       return await this.bucket.createFile(
