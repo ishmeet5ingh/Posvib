@@ -126,9 +126,7 @@ function PostForm({ post }) {
       });
       if (dbPost) {
         setid(dbPost?.$id)
-        // Update Redux store immediately
-        // dispatch(createReduxPost(dbPost));
-        // dispatch(setReduxUserPost(dbPost));
+        navigate("/")
         toast.success("Post created", {
           autoClose: 1500,
           className: "text-sm xmd:mr-10"
