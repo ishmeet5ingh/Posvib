@@ -96,8 +96,7 @@ function Login() {
           {errors.password ? (
             <ErrorContainer>{errors.password.message}</ErrorContainer>
           ) : (
-           <InfoMessage message=" Password must contain at least one uppercase letter, one
-                  lowercase letter, and one number."/>
+           <InfoMessage message="Password must contain at least one lowercase letter, and one number."/>
           )}
           <button
             type="button"

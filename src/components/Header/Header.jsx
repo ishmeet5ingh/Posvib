@@ -6,7 +6,8 @@ import { useDispatch } from "react-redux";
 import authService from "../../appwrite/auth";
 import { logout } from "../../store/authSlice";
 import { FaHome, FaSearch, FaPlus,FaUser, FaSignOutAlt, FaSignInAlt, FaUserPlus, FaFacebookMessenger} from "react-icons/fa";
-import { setHide } from "../../store/hideSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
@@ -16,9 +17,11 @@ function Header() {
 
 
   const logoutHandler = () => {
+    toast("Logging out...")
     authService.logout().then(() => {
       dispatch(logout());
       navigate('/')
+      toast.success("Successfully logged out")
     });
   };
 

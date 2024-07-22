@@ -34,8 +34,6 @@ function UserProfileEditForm() {
         updateData: updatedField,
       });
 
-      dispatch(updateReduxCurrentUser(updatedField));
-      dispatch(updateReduxUser({ userId: currentUser?.$id, updatedField }));
 
       let keys = Object.keys(updatedField)
       if(keys[0] === "profilePicId"){

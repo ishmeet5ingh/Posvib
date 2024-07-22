@@ -33,13 +33,12 @@ const useFollow = (user) => {
     }
   }, [user, currentUserData, users]);
 
-
   // useEffect(()=>{
   //   const unsubscribe = appwriteAuthService.client.subscribe(
   //     `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteUsersCollectionId}.documents`,
   //    response => {
-  //     if(response.payload?.$id === user?.$id){
-  //       const payload = response.payload
+  //     if (response.events.includes("databases.*.collections.*.documents.*.update")) {
+  //       console.log(response)
   //     }
   //   })
 
@@ -47,6 +46,7 @@ const useFollow = (user) => {
   //     unsubscribe()
   //   }
   // }, [])
+
 
   // Handle follow/unfollow action
   const handleFollow = async () => {

@@ -44,9 +44,9 @@ function EmailEditForm({
     } else if (password.length < 8) {
       setPasswordError("Password too short");
       isValid = false;
-    } else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
+    } else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/.test(password)) {
       setPasswordError(
-        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
+        "Password must contain at least 8 characters, one lowercase letter, and one number"
       );
       isValid = false;
     } else {

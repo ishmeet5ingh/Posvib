@@ -44,6 +44,7 @@ function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [show, setShow] = useState(false);
 
+
   const signup = async (data) => {
     toast("Signing up...");
     const id = uuidv4();
@@ -141,8 +142,7 @@ function Signup() {
             <ErrorContainer>{errors.password.message}</ErrorContainer>
           ) : (
             <InfoMessage
-              message=" Password must contain at least one uppercase letter, one
-                  lowercase letter, and one number."
+              message="Password must contain at least one lowercase letter, and one number."
             />
           )}
           <button

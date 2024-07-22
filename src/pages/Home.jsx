@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteAllReduxPost, setReduxPosts } from "../store/configSlice";
 import configService from "../appwrite/config";
 import { Link } from "react-router-dom";
+import authService from "../appwrite/auth";
+import conf from "../conf/conf";
 
 
 function Home() {
@@ -11,6 +13,8 @@ function Home() {
 
   const authStatus = useSelector((state) => state.auth.status);
   const posts = useSelector((state) => state.config.posts);
+  
+ 
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -42,7 +46,7 @@ function Home() {
           <p className="max-w-[500px] font-mono text-2xl tracking-wide text-white">Stay connected and share moments with the people who matter most on Posvib</p>
           <div className="flex gap-4">
           <Link to={`/login`} className="text-white py-2 px-4 rounded-md  text-xl bg-blue-800 hover:bg-blue-600 transition-all duration-200">Login</Link>
-          <Link className="text-blue-100 bg-green-800 hover:bg-green-600 transition-all duration-200 py-2 px-4 rounded-md text-xl">Create Account </Link>
+          <Link to={'/signup'} className="text-blue-100 bg-green-800 hover:bg-green-600 transition-all duration-200 py-2 px-4 rounded-md text-xl">Create Account </Link>
           </div>
         </div>
         </div>

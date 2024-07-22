@@ -43,6 +43,16 @@ export const userSlice = createSlice({
       }
     },
 
+    // add new user
+    addReduxUser: (state, action) => {
+       state.users.push(action.payload)
+       try {
+        localStorage.setItem("users", JSON.stringify(state.users));
+      } catch (error) {
+        console.error("Error updating users in localStorage", error);
+      }
+    }, 
+
     // Set current user in state and localStorage
     setReduxCurrentUser: (state, action) => {
       state.currentUser = action.payload;
@@ -362,6 +372,7 @@ export const userSlice = createSlice({
 export const {
   setReduxUsers,
   setReduxCurrentUser,
+  addReduxUser,
   setReduxUserPost,
   updateReduxUserPost,
   deleteReduxUserPost,

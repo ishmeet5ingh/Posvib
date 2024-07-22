@@ -1,9 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaInfoCircle } from 'react-icons/fa';
 
 const InfoMessage = ({ message }) => {
   const [show, setShow] = useState(false);
+
+  useEffect(()=> {
+    setShow((message === `Password must contain at least one lowercase letter, and one number.`) ? true : false)
+  }, [])
 
   return (
     <div className="text-gray-400 mb-1 relative">

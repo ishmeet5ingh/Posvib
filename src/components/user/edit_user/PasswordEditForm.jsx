@@ -24,9 +24,9 @@ function PasswordEditForm({ setIsPasswordEditable }) {
     } else if (oldPassword.length < 8) {
       setOldPasswordError("Password too short");
       isValid = false;
-    } else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(oldPassword)) {
+    } else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/.test(oldPassword)) {
       setOldPasswordError(
-        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
+        "Password must contain at least 8 characters, one lowercase letter, and one number"
       );
       isValid = false;
     } else {

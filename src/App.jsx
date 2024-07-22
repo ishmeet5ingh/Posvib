@@ -5,16 +5,38 @@ import { login, logout } from "./store/authSlice";
 import { Header } from "./components";
 import { Outlet } from "react-router-dom";
 import "./index.css";
-import { setReduxCurrentUser, setReduxUsers, deleteReduxUsers, deleteReduxCurrentUser } from "./store/userSlice";
+import { setReduxCurrentUser, setReduxUsers, deleteReduxUsers, deleteReduxCurrentUser, addReduxUser, updateReduxCurrentUser, updateReduxUser } from "./store/userSlice";
 import { setLoading } from "./store/loadingSlice";
 import { setHide } from "./store/hideSlice";
 import { deleteReduxChatRooms } from "./store/chatRoomSlice";
+import conf from "./conf/conf";
 
 function App() {
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
   const authData = useSelector((state) => state.auth.userData);
   const Loading = useSelector((state) => state.loading.isLoading);
+
+  useEffect(()=> {
+    const unsubscribe = authService.client.subscribe(
+      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteUsersCollectionId}.documents`,
+      (response) => {
+       console.log(response)
+       if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+        dispatch(addReduxUser(response.payload))
+       }
+       if (response.events.includes("databases.*.collections.*.documents.*.update")) {
+      
+        dispatch(updateReduxCurrentUser(response.payload));
+        dispatch(updateReduxUser({ userId: response.payload?.$id, updatedField:  response.payload}));
+       }
+      }
+    )
+    return ()=> {
+      unsubscribe()
+    }
+  }, [])
+
 
   useEffect(() => {
     const fetchData = async () => {
